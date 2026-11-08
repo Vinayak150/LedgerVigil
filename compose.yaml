@@ -1,0 +1,33 @@
+name: ledgervigil-native-dev
+services:
+  db:
+    image: postgres@sha256:3a4264520e121176619f54ff867d12774bc81e95e7b84db58d63bccdb6144b81
+    environment:
+      POSTGRES_DB: ledgervigil_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run scripts/setup first}
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ledgervigil_dev"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  maintenance-redis:
+    image: redis:7.4-alpine@sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f
+    profiles: ["maintenance"]
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec"]
+    ports:
+      - "127.0.0.1:56379:6379"
+    volumes:
+      - maintenance-broker-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 1s
+      retries: 30
+volumes:
+  maintenance-broker-data:
+  pgdata:

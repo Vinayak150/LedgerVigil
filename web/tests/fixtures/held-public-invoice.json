@@ -1,0 +1,16 @@
+{
+  "accounting_status": "UNREVIEWED",
+  "amount": null,
+  "group_id": "ce875ba89cdbf5c04791daf7924ef4361d20f1c6c7a6e5627f80301eae3a37e7",
+  "hold_reasons": [
+    "LINE_INVALID_OR_SUB_MINOR_MONEY"
+  ],
+  "payload_sha256": "46e59820786857c7766f159321ec0d5563776ef4865e81bef8224157a201a395",
+  "posting_eligibility": "UNAVAILABLE",
+  "source_identity": [
+    "invoice",
+    "489435"
+  ],
+  "source_line_count": 4,
+  "status": "HOLD"
+}

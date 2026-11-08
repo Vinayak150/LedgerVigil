@@ -1,0 +1,57 @@
+{
+  "component": "ledger_kernel",
+  "version": "0.1.0-review",
+  "rule_version": "sp1-posting/1.0:settlement-slice",
+  "check_version": "sp1-policies/1.1:settlement-slice",
+  "source_package": "docs/implementation/20261102-143650-codex-accounting-kernel/",
+  "source_manifest_sha256": "0f0986afecb8c233ee4f83221ad12bb69e6d74869381aae01df3280d1be1daf8",
+  "source_status": "IMPLEMENTED_LOCAL_TESTS_PASS_PENDING_INTEGRATION_REVIEW",
+  "accounting_semantics": "UNREVIEWED",
+  "vendoring": "The seven ledger_kernel modules were copied unchanged (byte-identical) into src/ledger_kernel/. Nothing was edited, added or removed in them. The original package, its tests, fixtures, reference oracle and evidence stay in place under docs/implementation and are the authority for the kernel; tests/test_settlement_adapter.py checks these hashes.",
+  "not_vendored": [
+    "tests/test_kernel.py (run from the original package)",
+    "reference/integer_oracle.py",
+    "demo.py",
+    "run_checks.py",
+    "run_mutations.py",
+    "fixtures/*.json",
+    "evidence/"
+  ],
+  "files": {
+    "src/ledger_kernel/__init__.py": {
+      "source": "docs/implementation/20261102-143650-codex-accounting-kernel/ledger_kernel/__init__.py",
+      "sha256": "127d1035773ef59c195d859aa9e82fd81396c643fe0e9b55fe2ed41fd3b61e5f",
+      "bytes": 112
+    },
+    "src/ledger_kernel/canonical.py": {
+      "source": "docs/implementation/20261102-143650-codex-accounting-kernel/ledger_kernel/canonical.py",
+      "sha256": "34aa9b1b0f8cdd9a3ea6ca8d919ffbed15b2887d1a12527d48625b490cba68f9",
+      "bytes": 1854
+    },
+    "src/ledger_kernel/evidence.py": {
+      "source": "docs/implementation/20261102-143650-codex-accounting-kernel/ledger_kernel/evidence.py",
+      "sha256": "e831f4eb83e2d73de5640dd56e2f77d62ac8e63e1a2d19c593fb474fced311fd",
+      "bytes": 2928
+    },
+    "src/ledger_kernel/fixtures.py": {
+      "source": "docs/implementation/20261102-143650-codex-accounting-kernel/ledger_kernel/fixtures.py",
+      "sha256": "81501090db1366a03e7dfbc3abe0735aabbf337299c17a87a8beee8b3da02f4a",
+      "bytes": 1549
+    },
+    "src/ledger_kernel/model.py": {
+      "source": "docs/implementation/20261102-143650-codex-accounting-kernel/ledger_kernel/model.py",
+      "sha256": "acc61f857e3be960986e90c5edb4ccfc195ef82dfad39b9fd6c978da04bab9b5",
+      "bytes": 7532
+    },
+    "src/ledger_kernel/money.py": {
+      "source": "docs/implementation/20261102-143650-codex-accounting-kernel/ledger_kernel/money.py",
+      "sha256": "d7a0ff84ac6bacd62e58a8ae7c235464ee162683e419450d59f7c1b2496a157f",
+      "bytes": 3367
+    },
+    "src/ledger_kernel/settlement.py": {
+      "source": "docs/implementation/20261102-143650-codex-accounting-kernel/ledger_kernel/settlement.py",
+      "sha256": "0dd07161d5a40a0acf94040a5cae89e1051f77082788eceb09dee5895d1fbc94",
+      "bytes": 9298
+    }
+  }
+}

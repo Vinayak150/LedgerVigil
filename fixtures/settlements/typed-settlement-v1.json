@@ -1,0 +1,29 @@
+{
+  "fixture": "ledgervigil.typed-settlement",
+  "version": "1",
+  "data_classification": "SYNTHETIC",
+  "notice": "Synthetic SANDBOX fixture for tools/settlement_demo.py. Not real processor, customer, bank or accounting data. Tenant, ledger and document ids are generated at run time. The ledger setup, opening journal, payment and statement are reused from fixtures/payments/typed-payment-matching-v1.json.",
+  "payment_fixture": "fixtures/payments/typed-payment-matching-v1.json",
+  "settlement_request": {"processor_ref": "processor-1", "payout_id": "STL-3001", "payout_date": "2026-10-14", "currency": "INR",
+                         "gross": "50000.00", "fee": "1000.00", "net": "49000.00", "item_amounts": ["50000.00"],
+                         "description": "SYNTHETIC typed processor settlement; settlement demonstration; not accounting records"},
+  "changed_body": {"fee": "2000.00", "net": "48000.00"},
+  "reuse_payout_id": "STL-3002",
+  "expected": {
+    "basis": "Stated from Stage 2A §5.1, §5.2, §6.1 (I-08, I-09, I-15), §11.3, §19.1 and §19.3, independently of the implementation.",
+    "preview_evidence": {"E-EVD-01": "PASS", "E-SRC-01": "PASS", "E-CUR-01": "PASS", "E-PAY-01": "PASS", "E-AMT-GROSS": "PASS", "E-AMT-FEE": "PASS",
+                         "E-AMT-NET": "PASS", "E-FEE-POST": "PASS", "E-ITEM-01": "PASS", "E-DUP-01": "PASS"},
+    "preview_blocking_reasons": ["P-CLR-01: INSUFFICIENT_EVIDENCE", "P-EVD-01: INSUFFICIENT_EVIDENCE", "P-FEE-01: INSUFFICIENT_EVIDENCE",
+                                 "P-STL-01: INSUFFICIENT_EVIDENCE", "X-EXEC-01: NOT_AVAILABLE"],
+    "settlement_postings": [["BANK_OPERATING", "D", "49000.00"], ["PROCESSOR_FEE_EXPENSE", "D", "1000.00"], ["PROCESSOR_CLEARING", "C", "50000.00"]],
+    "balances_after": {"BANK_OPERATING": "49000.00", "AR_CONTROL": "0.00", "PROCESSOR_CLEARING": "0.00", "OPENING_BALANCE_EQUITY": "0.00",
+                       "REVENUE_DEFAULT": "-50000.00", "SALES_RETURNS": "0.00", "PROCESSOR_FEE_EXPENSE": "1000.00"},
+    "payment_versions_after": {"v1_status_field": null, "v2_status": "SETTLED", "current_version": 2, "posting_entries_for_payment": 1, "posting_source_version": 1},
+    "duplicate_preview_same_payout": "refused by the kernel: DUPLICATE_SETTLEMENT, with E-DUP-01 FAIL evidence",
+    "duplicate_preview_other_payout": "refused by the kernel: ITEM_ALREADY_SETTLED, with E-DUP-01 FAIL evidence",
+    "duplicate_inspection": {"P-DUP-01": "FAIL", "E-DUP-01": "FAIL"},
+    "seed_reuse_under_other_payout": "refused (23505, payment already included in an active settlement); no effects",
+    "seed_changed_body_same_payout": "refused (23505, different content); no effects",
+    "seed_identical_retry": "replayed: same seq, document and entry; every table unchanged"
+  }
+}

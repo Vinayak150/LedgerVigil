@@ -1,0 +1,40 @@
+{
+  "title": "Online Retail II",
+  "creator": "Daqing Chen",
+  "citation": "Chen, D. (2012). Online Retail II [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5CG6D.",
+  "url": "https://archive.ics.uci.edu/dataset/502/online+retail+ii",
+  "download_url": "https://archive.ics.uci.edu/static/public/502/online%2Bretail%2Bii.zip",
+  "doi": "10.24432/C5CG6D",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "classification": "PUBLIC_OBSERVATIONAL",
+  "currency": "GBP",
+  "settlement_ground_truth": false,
+  "accounting_review": "UNREVIEWED",
+  "evaluation_profile": "lv-uci-retail-ii-evaluation/1",
+  "original_archive": {
+    "filename": "online-retail-ii.zip",
+    "bytes": 45622418,
+    "sha256": "572e36277c2390fbfde10664750731e0a86f55e33470d91919085f0408e67bfb",
+    "download_completed_at": "2026-11-04T10:00:33.866403+00:00"
+  },
+  "workbook": {
+    "filename": "online_retail_II.xlsx",
+    "bytes": 45622278,
+    "sha256": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980",
+    "immutable_original": true
+  },
+  "transformations": [
+    "ZIP extraction without editing workbook bytes",
+    "Read OOXML numeric lexemes as strings, never through binary float",
+    "Derive exact GBP minor units with existing Money kernel; retain invalid/incompatible rows",
+    "Retain all source lines, duplicate content, sheet names and physical row numbers",
+    "Aggregate separately for offline evaluation; no financial documents or settlement labels generated"
+  ],
+  "normalization_decision": {
+    "id": "DATA-1",
+    "status": "PROPOSED",
+    "question": "How should Excel near-penny numeric representations be normalized for a future invoice importer?",
+    "current_behavior": "Preserve raw lexeme and quarantine any non-exact-penny price. Diagnostic threshold never changes acceptance."
+  }
+}

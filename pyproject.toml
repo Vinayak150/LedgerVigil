@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ledgervigil-native"
+version = "0.0.1"
+description = "LedgerVigil native application: development foundation"
+requires-python = ">=3.14"
+dependencies = ["fastapi", "uvicorn", "sqlalchemy>=2,<3", "alembic", "psycopg[binary]>=3,<4", "argon2-cffi>=25,<26"]
+
+[project.optional-dependencies]
+dev = ["pytest", "httpx"]
+worker = ["celery[redis]==5.6.3"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

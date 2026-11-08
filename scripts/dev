@@ -1,0 +1,19 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+export PATH="/opt/homebrew/bin:$PATH"
+unset DOCKER_CONTEXT
+export DOCKER_CONFIG="$PWD/.docker-local"
+export DOCKER_HOST="unix://$HOME/.colima/default/docker.sock"
+case "${1:-}" in
+  up) docker-compose up -d --wait ;;
+  stop) docker-compose stop ;;
+  status) docker-compose ps ;;
+  db-prepare) .venv/bin/python -m tools.dev_db prepare ;;
+  migrate) .venv/bin/python -m tools.dev_db migrate ;;
+  demo) .venv/bin/python -m tools.demo_seed ;;
+  guards) .venv/bin/python -m tools.check_guards ;;
+  test) .venv/bin/python -m pytest -q ;;
+  api) .venv/bin/python -m tools.serve_api --local-http ;;
+  *) echo 'Usage: scripts/dev {up|stop|status|db-prepare|migrate|test|guards|demo|api}'; exit 2 ;;
+esac

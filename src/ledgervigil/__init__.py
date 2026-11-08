@@ -1,0 +1,1 @@
+"""Native LedgerVigil application foundation."""

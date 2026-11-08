@@ -1,0 +1,24 @@
+{
+  "format": "ledgervigil.synthetic-processor-statement",
+  "version": "1",
+  "data_classification": "SYNTHETIC",
+  "statement": {
+    "tenant": "00000000-0000-7000-8000-000000000001",
+    "ledger": "00000000-0000-7000-8000-000000000002",
+    "processor": "processor-1",
+    "payout": "STL-3001",
+    "date": "2026-10-14",
+    "currency": "INR",
+    "items": [
+      {
+        "id": "PMT-2001",
+        "kind": "PAYMENT",
+        "amount": "50000.00"
+      }
+    ],
+    "gross": "50000.00",
+    "fee": "1000.00",
+    "net": "49000.00",
+    "memo": "SYNTHETIC example of the LedgerVigil fixture format v1. Not a real processor statement. Replace tenant and ledger with the target SANDBOX ledger before ingesting."
+  }
+}

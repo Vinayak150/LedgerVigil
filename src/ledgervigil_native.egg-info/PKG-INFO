@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: ledgervigil-native
+Version: 0.0.1
+Summary: LedgerVigil native application: development foundation
+Requires-Python: >=3.14
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: sqlalchemy<3,>=2
+Requires-Dist: alembic
+Requires-Dist: psycopg[binary]<4,>=3
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: httpx; extra == "dev"

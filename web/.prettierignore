@@ -1,0 +1,5 @@
+src/lib/api.generated.d.ts
+openapi.json
+package-lock.json
+evidence/
+next-env.d.ts

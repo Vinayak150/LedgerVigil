@@ -1,0 +1,38 @@
+/* Shared with the LedgerVigil Interface foundations Figma file. */
+:root {
+  --color-canvas: #f7f8f5;
+  --color-surface: #ffffff;
+  --color-ink: #1d302b;
+  --color-muted: #5e705f;
+  --color-border: #e3e8e2;
+  --color-brand: #1e5b46;
+  --color-soft: #edf4ed;
+  --color-focus: #528b69;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-dialog: 16px;
+  --type-caption: 12px;
+  --type-body: 14px;
+  --type-section: 18px;
+  --type-title: 32px;
+  --motion-fast: 140ms;
+  --motion-normal: 220ms;
+  --bg: var(--color-canvas);
+  --surface: var(--color-surface);
+  --ink: var(--color-ink);
+  --muted: var(--color-muted);
+  --line: var(--color-border);
+  --green: var(--color-brand);
+  --soft: var(--color-soft);
+  --accent: #b7d9a8;
+  --radius: var(--radius-card);
+  --font-sans: Arial, Helvetica, sans-serif;
+}

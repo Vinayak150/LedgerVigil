@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+cd "$(dirname "$0")/.."
+python3.14 - <<'PY'
+from pathlib import Path
+import os, secrets
+Path('.docker-local').mkdir(mode=0o700, exist_ok=True)
+c = Path('.docker-local/config.json')
+if not c.exists(): c.write_text('{}\n')
+if not Path('.env').exists():
+    fd = os.open('.env', os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, 'w') as f:
+        f.write('POSTGRES_PASSWORD=' + secrets.token_hex(32) + '\n')
+PY
+python3.14 -m venv .venv
+.venv/bin/python -m pip install -r requirements.lock
+.venv/bin/python -m pip install --no-deps -e .
+.venv/bin/python -m pip check
