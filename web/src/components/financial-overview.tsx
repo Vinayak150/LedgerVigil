@@ -392,11 +392,26 @@ export function FinancialOverview({
                     view.
                   </p>
                 </div>
-                <div className="mobile-trial-totals" aria-label="Reported trial balance totals">
-                  <div><span>Debit total · {trial.currency}</span><strong>{formatAmount(trial.total_debit.amount, trial.currency)}</strong></div>
-                  <div><span>Credit total · {trial.currency}</span><strong>{formatAmount(trial.total_credit.amount, trial.currency)}</strong></div>
+                <div
+                  className="mobile-trial-totals"
+                  aria-label="Reported trial balance totals"
+                >
+                  <div>
+                    <span>Debit total · {trial.currency}</span>
+                    <strong>
+                      {formatAmount(trial.total_debit.amount, trial.currency)}
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Credit total · {trial.currency}</span>
+                    <strong>
+                      {formatAmount(trial.total_credit.amount, trial.currency)}
+                    </strong>
+                  </div>
                 </div>
-                <p className="table-scroll-hint">Swipe or scroll the table to see all columns.</p>
+                <p className="table-scroll-hint">
+                  Swipe or scroll the table to see all columns.
+                </p>
                 <div
                   className="table-scroll"
                   role="region"

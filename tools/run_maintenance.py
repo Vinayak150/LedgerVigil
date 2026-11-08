@@ -12,6 +12,8 @@ def main():
     p.add_argument('--database',default=DEV_DB,help='Dedicated local development or guarded disposable test database')
     p.add_argument('--exports-only',action='store_true',help='Worker listens only on the native export queue')
     args=p.parse_args()
+    from ledgervigil import logredact
+    logredact.install()
     require_dev_database(args.database)
     os.environ['LV_WORKER_DATABASE_URL']=make_conninfo(host='127.0.0.1',port=55432,dbname=args.database,user='lv_worker',password=env_file('.env.roles')['WORKER_PASSWORD'])
     os.environ.setdefault('LV_MAINTENANCE_BROKER_URL','redis://127.0.0.1:56379/0')

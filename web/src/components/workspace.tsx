@@ -28,6 +28,13 @@ import {
 import { Button } from "./button";
 import { ProposalBrowser } from "./proposal-browser";
 import { FinancialOverview } from "./financial-overview";
+import { DetectionReview } from "./detection-review";
+import { ProviderConnectionPanel } from "./provider-connection";
+import {
+  AccountSecurity,
+  AuditLogPanel,
+  MembersPanel,
+} from "./organization-admin";
 import { TransactionExplorer } from "./transaction-explorer";
 import { WorkspaceSearch } from "./workspace-search";
 import { OrganizationPicker } from "./organization-picker";
@@ -61,15 +68,15 @@ const spaces = [
   },
   {
     id: "investigations",
-    name: "AI Investigation Workbench",
+    name: "Investigation Workbench",
     short: "Investigations",
     icon: Compass,
     eyebrow: "INVESTIGATE",
-    title: "From a question to evidence.",
+    title: "From a finding to its evidence.",
     description:
-      "A dedicated place to investigate financial discrepancies and review their supporting evidence.",
+      "Review deterministic detection findings against the statements, payments and settlements they cite.",
     requires:
-      "Investigations are not available yet. No AI findings have been generated.",
+      "Detection findings appear here when detection is enabled for this server.",
   },
   {
     id: "simulator",
@@ -299,7 +306,11 @@ function Login({ auth }: { auth: ReturnType<typeof useSession> }) {
           </form>
           <div className="account-help">
             <LockKeyhole size={15} />
-            <span>Need access? Contact your workspace administrator.</span>
+            <span>
+              Need access? Contact your workspace administrator.{" "}
+              <a href="/auth/reset">Forgot your password?</a>{" "}
+              <a href="/auth/verify">Resend the confirmation email</a>
+            </span>
           </div>
           <div className="sandbox-note">
             <strong>Sandbox environment</strong>
@@ -384,13 +395,6 @@ function Access({
           Every action is verified by the service.
         </div>
       </section>
-      <div className="notice">
-        <LockKeyhole size={17} />
-        <span>
-          Member management, password reset and multi-factor authentication are
-          not available yet. Contact your administrator for account changes.
-        </span>
-      </div>
     </>
   );
 }
@@ -673,7 +677,39 @@ export function Workspace() {
             )}
           </div>
           {active === "settings" ? (
-            <Access session={session} tenantName={tenantName} />
+            <>
+              <Access session={session} tenantName={tenantName} />
+              <MembersPanel
+                key={`members:${session.tenant.id}:${session.user.id}`}
+                csrfToken={session.csrf_token}
+                userId={session.user.id}
+                canAdminister={session.permissions.includes("administer")}
+                onSessionRefresh={() => void auth.refresh()}
+              />
+              <AccountSecurity
+                csrfToken={session.csrf_token}
+                onSignedOut={() => void auth.refresh()}
+              />
+              <AuditLogPanel
+                key={`audit:${session.tenant.id}:${session.user.id}`}
+                canRead={session.permissions.includes("audit.read")}
+              />
+              <ProviderConnectionPanel
+                key={session.tenant.id}
+                csrfToken={session.csrf_token}
+                canAdminister={session.permissions.includes("administer")}
+                onSessionRefresh={() => void auth.refresh()}
+              />
+            </>
+          ) : active === "investigations" ? (
+            <DetectionReview
+              key={`${session.tenant.id}:${session.user.id}`}
+              tenantId={session.tenant.id}
+              userId={session.user.id}
+              csrfToken={session.csrf_token}
+              permissions={session.permissions}
+              onSessionRefresh={() => void auth.refresh()}
+            />
           ) : active === "transactions" ? (
             <TransactionExplorer
               key={session.tenant.id}

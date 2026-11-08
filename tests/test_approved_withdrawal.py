@@ -172,13 +172,13 @@ def test_populated_upgrade_preserves_history_and_downgrade_refuses_withdrawal():
   with connection('lv_app',name,autocommit=True) as raw,connection('lv_seed',name,autocommit=True) as s:w=fixture.__wrapped__(name,raw,s)
   application=create_app(AuthSettings(),connect=lambda:connection('lv_app',name))
   a,c,pid,_=ready_fixture.__wrapped__(name,application,w);assert approve(c,pid).status_code==200
-  before=fingerprint(name,{'lv_meta.alembic_version','lv.configuration_change','lv.native_export_job','lv.proof_pack','lv.proof_pack_chain','lv.proof_pack_request','lv.semantic_recheck','lv.balance_dependency_step','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition'});seq=counters(name);migrate(name)
-  assert fingerprint(name,{'lv_meta.alembic_version','lv.configuration_change','lv.native_export_job','lv.proof_pack','lv.proof_pack_chain','lv.proof_pack_request','lv.semantic_recheck','lv.balance_dependency_step','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition'})==before and counters(name)==seq
+  before=fingerprint(name,{'lv_meta.alembic_version','lv.configuration_change','lv.native_export_job','lv.proof_pack','lv.proof_pack_chain','lv.proof_pack_request','lv.semantic_recheck','lv.balance_dependency_step','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition','lv.provider_connection','lv.provider_oauth_state','lv.provider_credential','lv.provider_job','lv.provider_page','lv.provider_object','lv.database_binding','lv.database_binding_history','lv_identity.email_token','lv_identity.token_request','lv_identity.reauthentication'});seq=counters(name);migrate(name)
+  assert fingerprint(name,{'lv_meta.alembic_version','lv.configuration_change','lv.native_export_job','lv.proof_pack','lv.proof_pack_chain','lv.proof_pack_request','lv.semantic_recheck','lv.balance_dependency_step','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition','lv.provider_connection','lv.provider_oauth_state','lv.provider_credential','lv.provider_job','lv.provider_page','lv.provider_object','lv.database_binding','lv.database_binding_history','lv_identity.email_token','lv_identity.token_request','lv_identity.reauthentication'})==before and counters(name)==seq
   assert act(a,pid,'withdraw',match='"v4"').status_code==200
   retained=fingerprint(name,set())
   with pytest.raises(Exception,match='downgrade_no_approved_withdraw'):migrate(name,'0021_native_execution',downgrade=True,disposable=True)
   assert fingerprint(name,set())==retained
-  with connection(database=name) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0033_detection_overlap_dates',)
+  with connection(database=name) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0037_restore_interlock',)
  finally:
   if application:application.state.pool.close()
   with connection(autocommit=True) as db:db.execute(sql.SQL('DROP DATABASE {} WITH (FORCE)').format(sql.Identifier(name)))

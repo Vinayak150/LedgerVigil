@@ -181,4 +181,4 @@ def test_deferred_validator_refuses_missing_atomic_artifact(database,proposal,re
 def test_populated_comment_history_blocks_destructive_downgrade(database,proposal):
     a,pid=proposal;assert post(a,pid).status_code==201
     with pytest.raises(Exception):migrate(database,'0016_source_registry',downgrade=True,disposable=True)
-    with connection(database=database) as c:assert c.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0033_detection_overlap_dates',)
+    with connection(database=database) as c:assert c.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0037_restore_interlock',)

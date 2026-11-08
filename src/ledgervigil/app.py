@@ -30,6 +30,8 @@ from ledgervigil.ingestion.registry import router as source_registry_router
 from ledgervigil.ingestion.index_routes import router as source_index_router
 
 log = logging.getLogger('ledgervigil.app')
+from ledgervigil import logredact  # noqa: E402
+logredact.install()
 REQUEST_ID = re.compile(r'^[A-Za-z0-9._-]{1,64}$')
 
 # D1: the accepted Stage 2B Part 3 `Problem` component. Runtime bodies (auth/problems.py) already match it; before this
@@ -77,7 +79,13 @@ def detection_enabled() -> bool:
     return os.environ.get('LV_DETECTION_ENABLED') == '1'
 
 
-def create_app(settings: AuthSettings | None = None, connect=None, *, detection: bool | None = None) -> FastAPI:
+def provider_sandbox_enabled() -> bool:
+    """PROPOSED PROV-1: the QuickBooks SANDBOX read-only connection is off unless LV_PROVIDER_SANDBOX_ENABLED=1; its routes are
+    then absent from the contract. No setting enables a provider write or a production provider."""
+    return os.environ.get('LV_PROVIDER_SANDBOX_ENABLED') == '1'
+
+
+def create_app(settings: AuthSettings | None = None, connect=None, *, detection: bool | None = None, provider: bool | None = None) -> FastAPI:
     app = FastAPI(title='LedgerVigil', version='0.0.1')
     app.state.auth_settings = settings or load_settings()
     app.state.pool = ConnectionPool(connect or _env_connect)
@@ -108,6 +116,12 @@ def create_app(settings: AuthSettings | None = None, connect=None, *, detection:
 
     @app.exception_handler(Exception)
     async def unexpected(request: Request, exc: Exception):
+        cause = exc
+        while cause is not None:   # restore interlock (0037): a clear, actionable refusal instead of a generic 500
+            if getattr(cause, 'sqlstate', None) == 'LV503':
+                return problem_response(request, 503, 'RECOVERY_VERIFICATION_REQUIRED',
+                                        'this database was restored and has not passed recovery verification; financial writes are paused')
+            cause = cause.__cause__ or cause.__context__
         log.error('unhandled error request_id=%s type=%s', getattr(request.state, 'request_id', None), type(exc).__name__)
         return problem_response(request, 500, 'INTERNAL', 'unexpected error')
 
@@ -120,6 +134,8 @@ def create_app(settings: AuthSettings | None = None, connect=None, *, detection:
     from ledgervigil.proofpacks.routes import router as pack_router
     app.include_router(pack_router)
     app.include_router(auth_router)
+    from ledgervigil.auth.lifecycle import router as lifecycle_router
+    app.include_router(lifecycle_router)
     app.include_router(source_registry_router)
     app.include_router(source_index_router)
     app.include_router(ledgers_router)
@@ -137,6 +153,9 @@ def create_app(settings: AuthSettings | None = None, connect=None, *, detection:
     if detection_enabled() if detection is None else detection:
         from ledgervigil.detection.routes import router as detection_router
         app.include_router(detection_router)
+    if provider_sandbox_enabled() if provider is None else provider:
+        from ledgervigil.provider.routes import router as provider_router
+        app.include_router(provider_router)
 
     default_openapi = app.openapi
 

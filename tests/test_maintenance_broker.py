@@ -18,9 +18,39 @@ from test_period_staleness import world,seed,api,setup_job,worker,age  # noqa:F4
 
 ROOT=Path(__file__).resolve().parents[1]
 
+def _free_port():
+    import socket
+    with socket.socket() as s:
+        s.bind(('127.0.0.1', 0)); return s.getsockname()[1]
+
+
+def _docker():
+    """Docker client for the disposable broker: LV_DOCKER, then PATH, then the Mac Homebrew location (N6 portability)."""
+    import shutil
+    for candidate in (os.environ.get('LV_DOCKER'), shutil.which('docker'), '/opt/homebrew/bin/docker'):
+        if candidate and Path(candidate).exists():
+            return candidate
+    return None
+
+
 @pytest.fixture(scope='session')
 def broker():
-    name='lv-staleness-test-'+uuid4().hex[:10];docker='/opt/homebrew/bin/docker'
+    """A disposable Redis: LV_TEST_REDIS_URL (CI service, flushed first), else a local redis-server process, else Docker."""
+    import shutil
+    if os.environ.get('LV_TEST_REDIS_URL'):
+        url=os.environ['LV_TEST_REDIS_URL'];client=redis.Redis.from_url(url);wait(lambda:client.ping());client.flushdb()
+        yield url,client;return
+    server=shutil.which('redis-server')
+    if server:
+        port=_free_port();proc=subprocess.Popen([server,'--port',str(port),'--bind','127.0.0.1','--save','','--appendonly','no'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+        try:
+            url=f'redis://127.0.0.1:{port}/0';client=redis.Redis.from_url(url);wait(lambda:client.ping())
+            yield url,client
+        finally:proc.terminate();proc.wait(10)
+        return
+    docker=_docker()
+    if docker is None:pytest.fail('no disposable Redis available: set LV_TEST_REDIS_URL, install redis-server, or install Docker')
+    name='lv-staleness-test-'+uuid4().hex[:10]
     subprocess.run([docker,'run','-d','--rm','--name',name,'-p','127.0.0.1::6379','redis:7.4-alpine','redis-server','--save','','--appendonly','no'],check=True,capture_output=True)
     try:
         port=int(subprocess.check_output([docker,'port',name,'6379/tcp'],text=True).strip().rsplit(':',1)[1]);url=f'redis://127.0.0.1:{port}/0'

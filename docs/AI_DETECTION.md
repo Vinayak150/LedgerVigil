@@ -78,6 +78,7 @@ through the normal proposal lifecycle.
 | DET-7 | Synchronous run, ≤ 200 statements, ledger counter `FOR SHARE` for the run | Family 7 uses jobs for model latency; this baseline needs none |
 | DET-9 | Detector 1.1.0 rule PAYMENT_CLAIMED_BY_OTHER_PAYOUT (class POTENTIAL_CONFLICT), §8 | Overlapping claims were a documented gap |
 | DET-10 | Detector 1.1.0 rule PAYOUT_DATE_DIFFERS (class DISCREPANCY), calendar dates, no tolerance, §8 | Payout dates were a documented gap |
+| DET-11 | Exact server-side finding filters (kind, review status, statement, detector version), rule-description endpoint and review UI, §9 | Review UI needed bounded discovery without client-side search |
 | DET-8 | Routes `/ledgers/{id}/detection-runs`, `/detection-runs/{id}`, `/ledgers/{id}/detection-findings`, `/detection-findings/{id}`, `/detection-findings/{id}/dispositions` | Family 7 `/investigations` is reserved for the model investigator |
 
 ## 4. Method choice (primary sources)
@@ -175,3 +176,29 @@ rerun sees the new claim.
 
 **Limits.** Items whose only other claims are excluded are not reported. A payment claimed by a payout whose statement has
 not been ingested is invisible. Business effectiveness is NOT ESTABLISHED (synthetic, author-labelled evaluation only).
+
+## 9. Review UI and bounded filters (migration 0034; PROPOSED DET-11)
+
+**Server-side filters.** `GET /ledgers/{id}/detection-findings` accepts `kind`, `review_status` (current review row),
+`staged_document_id` and `detector_version`, each an exact match, combined with AND, backed by indexes (0034, indexes only).
+A cursor is bound to its filter set and does not verify under another. Freshness is computed per finding when it is read, so it is
+shown on every item but is **not** a filter; the UI says so instead of filtering on the client.
+
+**Rule descriptions.** `GET /detection-configuration` (read) returns the detector version, its configuration and each rule's
+condition in words, with `basis: DETERMINISTIC_COMPARISON` and `model: NONE`. Its presence also tells a client the gate is on.
+
+**Review UI** (Investigations workspace, `web/src/components/detection-review.tsx`):
+- Discovery: ledger picker, server filters, paged list with kind, class, freshness and review status.
+- Detail: separate panels for the rule, the statement observation, the ledger records, the rule's computed result, the cited
+  evidence (with input fingerprints), the interpretation slot ("no model is configured"), the reviewer conclusion and the
+  immutable decision history.
+- Potential overlapping claims show this statement's line next to every other payout's line, with links that open the other
+  statement's findings; excluded claims are listed as "not counted" with the reason. Date differences show both calendar dates
+  and the exact signed day count; the wording is "date difference" and "shown, not judged".
+- Decisions use only what the API accepts (confirm only on current inputs, dismiss with a reason, reopen after a decision),
+  with `If-Match` and an `Idempotency-Key`; a decision whose response is lost survives a reload (session storage, scoped to
+  tenant, user and finding) and is resent unchanged. 409/412 reload the latest state.
+- States: loading, empty, gate off (404), denied, failed, stale and concurrent update. The component is keyed by tenant and
+  user, so switching organization discards everything shown.
+
+Browser evidence (Chromium, axe WCAG 2.1 A/AA, keyboard, 390 px) is in the review package; it ran in Claude's workspace, not on the Mac.

@@ -1,0 +1,170 @@
+# LedgerVigil deployment-validation stack (NOT deployed by this package; see deploy/README.md).
+# Each process runs as its own non-root identity. Secrets are mounted only into the service that needs them:
+#   api              lv_app DSN, KEK PUBLIC key, QuickBooks API config (no client secret)      uid 10001
+#   web              nothing secret                                                              uid 10002
+#   maintenance      lv_worker DSN, broker URL (no provider key material)                         uid 10003
+#   provider-worker  lv_worker DSN, broker URL, QuickBooks worker config + KEK PRIVATE key       uid 10004
+#   scheduler        lv_worker DSN, broker URL                                                    uid 10005
+# The KEK private key and the QuickBooks client secret are mounted ONLY into provider-worker. All secret files live in
+# $LV_SECRETS_DIR, a private directory OUTSIDE the repository. Redis sits on its own internal network: the API cannot reach it.
+# Gates stay off: LV_DETECTION_ENABLED and LV_PROVIDER_SANDBOX_ENABLED are unset unless an operator opts in for a sandbox
+# validation session. Production QuickBooks and every provider write are disabled in code.
+name: ledgervigil
+services:
+  db:
+    security_opt: ["no-new-privileges:true"]
+    image: postgres@sha256:3a4264520e121176619f54ff867d12774bc81e95e7b84db58d63bccdb6144b81   # PostgreSQL 18 (same digest as the dev stack)
+    environment:
+      POSTGRES_DB: ledgervigil
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/pg_superuser_password
+    secrets: [pg_superuser_password]
+    volumes: [pgdata:/var/lib/postgresql]
+    networks: [backend]
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U postgres -d ledgervigil"], interval: 5s, timeout: 3s, retries: 30}
+    deploy: {resources: {limits: {memory: 2g}}}
+  broker:
+    image: redis:7.4-alpine@sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec"]
+    volumes: [broker-data:/data]
+    networks: [queue]
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    healthcheck: {test: ["CMD", "redis-cli", "ping"], interval: 5s, timeout: 2s, retries: 30}
+    deploy: {resources: {limits: {memory: 256m}}}
+  migrate:   # one-shot, run explicitly: docker compose run --rm migrate
+    build: {context: .., dockerfile: deploy/Dockerfile.api}
+    user: "10006:10006"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    command: ["python", "-m", "tools.deploy_entry", "migrate"]
+    read_only: true
+    tmpfs: [/tmp]
+    environment:
+      LV_MIGRATOR_DATABASE_URL_FILE: /run/secrets/migrator_dsn
+    secrets: [migrator_dsn]
+    networks: [backend]
+    profiles: ["migrate"]
+    depends_on: {db: {condition: service_healthy}}
+  api:
+    build: {context: .., dockerfile: deploy/Dockerfile.api}
+    user: "10001:10001"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    command: ["python", "-m", "tools.deploy_entry", "api", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      LV_ENVIRONMENT: production
+      LV_ALLOWED_ORIGINS: "https://${LV_PUBLIC_HOST:?set the public host name}"
+      LV_CURSOR_KEY_FILE: /run/secrets/cursor_key
+      LV_FORWARDED_ALLOW_IPS: "*"   # only the proxy can reach this port (edge network); tighten to the proxy address if known
+      LV_DATABASE_URL_FILE: /run/secrets/app_dsn
+      LV_ANCHOR_REPOSITORY: /var/lib/ledgervigil/anchors
+      # LV_PROVIDER_SANDBOX_ENABLED: "1"                      # sandbox validation session only
+      LV_PROVIDER_API_CONFIG: /run/secrets/qbo_api_env
+    secrets: [app_dsn, cursor_key, qbo_api_env, kek_public]
+    volumes: ["anchors:/var/lib/ledgervigil/anchors:ro"]
+    networks: [backend, edge]
+    depends_on: {db: {condition: service_healthy}}
+    healthcheck: {test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=2)"], interval: 10s, timeout: 3s, retries: 5}
+    deploy: {resources: {limits: {memory: 512m}}}
+  web:
+    build: {context: .., dockerfile: deploy/Dockerfile.web}
+    user: "10002:10002"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    environment: {NODE_ENV: production, LV_API_ORIGIN: "http://api:8000"}
+    networks: [edge]
+    depends_on: [api]
+    deploy: {resources: {limits: {memory: 512m}}}
+  maintenance:
+    build: {context: .., dockerfile: deploy/Dockerfile.api}
+    user: "10003:10003"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    command: ["python", "-m", "tools.deploy_entry", "worker", "-Q", "maintenance,native-exports"]
+    environment:
+      LV_WORKER_DATABASE_URL_FILE: /run/secrets/worker_dsn
+      LV_MAINTENANCE_BROKER_URL: redis://broker:6379/0
+      LV_ANCHOR_REPOSITORY: /var/lib/ledgervigil/anchors
+    secrets: [worker_dsn]
+    volumes: ["anchors:/var/lib/ledgervigil/anchors"]
+    networks: [backend, queue]
+    depends_on: {db: {condition: service_healthy}, broker: {condition: service_healthy}}
+    stop_grace_period: 60s
+    deploy: {resources: {limits: {memory: 512m}}}
+  provider-worker:   # only service holding QuickBooks decryption material
+    build: {context: .., dockerfile: deploy/Dockerfile.api}
+    user: "10004:10004"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    command: ["python", "-m", "tools.deploy_entry", "worker", "-Q", "integration"]
+    environment:
+      LV_WORKER_DATABASE_URL_FILE: /run/secrets/worker_dsn
+      LV_MAINTENANCE_BROKER_URL: redis://broker:6379/0
+      LV_PROVIDER_WORKER_CONFIG: /run/secrets/qbo_worker_env
+    secrets: [worker_dsn, qbo_worker_env, kek_private, kek_public_worker]
+    networks: [backend, queue, egress]
+    depends_on: {db: {condition: service_healthy}, broker: {condition: service_healthy}}
+    stop_grace_period: 60s
+    profiles: ["provider-sandbox"]
+    deploy: {resources: {limits: {memory: 256m}}}
+  scheduler:
+    build: {context: .., dockerfile: deploy/Dockerfile.api}
+    user: "10005:10005"
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    command: ["python", "-m", "tools.deploy_entry", "scheduler"]
+    environment:
+      LV_WORKER_DATABASE_URL_FILE: /run/secrets/worker_dsn
+      LV_MAINTENANCE_BROKER_URL: redis://broker:6379/0
+      # LV_PROVIDER_SANDBOX_ENABLED: "1"   # with the provider-sandbox profile only: relays QuickBooks jobs to the integration queue
+    secrets: [worker_dsn]
+    networks: [backend, queue]
+    depends_on: {db: {condition: service_healthy}, broker: {condition: service_healthy}}
+    stop_grace_period: 30s
+    deploy: {resources: {limits: {memory: 128m}}}
+  proxy:
+    image: caddy:2.10-alpine   # pin by digest before a validation run (deploy/README.md, "Before you start")
+    ports: ["443:443", "80:80"]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    volumes: ["./proxy/Caddyfile:/etc/caddy/Caddyfile:ro", "caddy-data:/data", "caddy-config:/config"]
+    environment: {LV_PUBLIC_HOST: "${LV_PUBLIC_HOST:?set the public host name}"}
+    networks: [edge]
+    depends_on: [web, api]
+    deploy: {resources: {limits: {memory: 128m}}}
+secrets:
+  pg_superuser_password: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/pg_superuser_password}
+  migrator_dsn: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/migrator_dsn}
+  app_dsn: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/app_dsn}
+  cursor_key: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/cursor_key}
+  worker_dsn: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/worker_dsn}
+  kek_public: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/api/kek-public.pem}
+  qbo_api_env: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/api/api.env}
+  kek_public_worker: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/worker/kek-public.pem}
+  kek_private: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/worker/kek-private.pem}
+  qbo_worker_env: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/worker/worker.env}
+volumes:
+  pgdata:
+  broker-data:
+  anchors:   # trusted-anchor working copy; the authoritative anchors must ALSO be kept off this host (deploy/RUNBOOK.md §Anchors)
+  caddy-data:
+  caddy-config:
+networks:
+  backend: {internal: true}
+  queue: {internal: true}
+  edge:
+  egress:

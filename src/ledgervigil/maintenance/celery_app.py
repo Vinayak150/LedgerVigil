@@ -1,7 +1,19 @@
 """ADR-010 Celery transport. Never import this module into the financial kernel/API."""
 import os
 from celery import Celery
+from celery.signals import after_setup_logger, after_setup_task_logger
+from ledgervigil import logredact
 from .runtime import run_job
+
+
+@after_setup_logger.connect
+@after_setup_task_logger.connect
+def _redact_logs(logger=None, **kwargs):   # secret shapes and query strings never reach worker log handlers
+    logredact.install()
+    if logger is not None:
+        for handler in logger.handlers:
+            if logredact._FILTER not in handler.filters:
+                handler.addFilter(logredact._FILTER)
 
 application=Celery('ledgervigil.maintenance',broker=os.environ.get('LV_MAINTENANCE_BROKER_URL','redis://127.0.0.1:6379/0'))
 application.conf.update(
@@ -33,3 +45,11 @@ def proof_pack_build(tenant_id,job_id):
     return pack_run(tenant_id,job_id)
 def publish_pack(tenant_id,job_id):
     application.send_task('ledgervigil.proof_pack_build',args=[tenant_id,job_id],queue=os.environ.get('LV_EXPORT_QUEUE','native-exports'),retry=False)
+
+@application.task(name='ledgervigil.provider_job',ignore_result=True)
+def provider_job(tenant_id,job_id):
+    # Runs only in the integration worker, the one process started with LV_PROVIDER_WORKER_CONFIG (client secret, KEK private key).
+    from ledgervigil.provider.runtime import run_job as provider_run
+    return provider_run(tenant_id,job_id)
+def publish_provider(tenant_id,job_id):
+    application.send_task('ledgervigil.provider_job',args=[tenant_id,job_id],queue=os.environ.get('LV_PROVIDER_QUEUE','integration'),retry=False)

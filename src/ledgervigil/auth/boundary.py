@@ -48,7 +48,9 @@ class RequestContext:
 
 
 def source_key(request: Request) -> str:
-    """The direct peer address. X-Forwarded-For is NOT trusted (no reverse proxy is declared for local deployment)."""
+    """The client address used for rate limits and audit. Locally this is the direct peer (no proxy headers are trusted:
+    tools/serve_api runs uvicorn with proxy_headers=False). In the deployment layout uvicorn trusts X-Forwarded-For only from
+    LV_FORWARDED_ALLOW_IPS, and the Caddy proxy overwrites that header with the real peer address (deploy/proxy/Caddyfile)."""
     host = request.client.host if request.client else 'unknown'
     return SOURCE_RE.sub('_', host)[:64] or 'unknown'
 

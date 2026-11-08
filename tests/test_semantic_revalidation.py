@@ -159,7 +159,7 @@ def test_recheck_history_blocks_destructive_downgrade(database,pair):
  with pytest.raises(Exception):migrate(database,'0030_override_independence',downgrade=True,disposable=True)
  with connection(database=database) as db:
   # The whole multi-step downgrade is one refused Alembic run, so the head stays at the newest revision (0032 after the rebase).
-  assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0033_detection_overlap_dates',)
+  assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0037_restore_interlock',)
   assert db.execute('SELECT count(*) FROM lv.semantic_recheck WHERE proposal_id=%s',(second,)).fetchone()==(1,)
 
 @pytest.mark.parametrize('winner',['revocation','recheck'])
@@ -227,7 +227,7 @@ def test_populated_predecessor_upgrade_preserves_every_existing_nonversion_table
  before=fingerprint(database,{'lv_meta.alembic_version'})
  migrate(database)
  # New evidence/provenance tables start empty; existing table contents remain exact.
- after=fingerprint(database,{'lv_meta.alembic_version','lv.balance_dependency_step','lv.semantic_recheck','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition'})
+ after=fingerprint(database,{'lv_meta.alembic_version','lv.balance_dependency_step','lv.semantic_recheck','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition','lv.provider_connection','lv.provider_oauth_state','lv.provider_credential','lv.provider_job','lv.provider_page','lv.provider_object','lv.database_binding','lv.database_binding_history','lv_identity.email_token','lv_identity.token_request','lv_identity.reauthentication'})
  assert before==after
 
 @pytest.fixture

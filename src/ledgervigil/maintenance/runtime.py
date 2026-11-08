@@ -63,7 +63,7 @@ def relay(c,publish,*,after_publish=None):
             sent+=1
     return sent
 
-def scheduler_once(c,publish,*,publish_exports=None,publish_packs=None):
+def scheduler_once(c,publish,*,publish_exports=None,publish_packs=None,publish_provider=None):
     with c.transaction():swept=c.execute('SELECT lv.maintenance_sweep(100)').fetchone()[0]
     from ledgervigil.exports.runtime import relay as export_relay
     answer={'swept':swept,'published':relay(c,publish)}
@@ -71,6 +71,9 @@ def scheduler_once(c,publish,*,publish_exports=None,publish_packs=None):
     if publish_packs is not None:
         from ledgervigil.proofpacks.runtime import relay as pack_relay
         answer['packs_published']=pack_relay(c,publish_packs)
+    if publish_provider is not None:
+        from ledgervigil.provider.runtime import relay as provider_relay
+        answer['provider_published']=provider_relay(c,publish_provider)
     return answer
 
 SCHEDULER_LOCK=597920714029
@@ -84,8 +87,9 @@ def scheduler(connection_factory,publish,stop,*,poll_seconds=1):
         c.commit()
         while not stop.is_set():
             try:
-                from .celery_app import publish_export,publish_pack
-                scheduler_once(c,publish,publish_exports=publish_export,publish_packs=publish_pack)
+                from .celery_app import publish_export,publish_pack,publish_provider
+                scheduler_once(c,publish,publish_exports=publish_export,publish_packs=publish_pack,
+                               publish_provider=publish_provider if os.environ.get('LV_PROVIDER_SANDBOX_ENABLED')=='1' else None)
                 with c.transaction():health=c.execute('SELECT lv.maintenance_health()').fetchone()[0]
                 dead=health.get('DEAD',0)
                 if dead and dead!=last_dead:log.error('maintenance DEAD jobs require operator attention: count=%s',dead)

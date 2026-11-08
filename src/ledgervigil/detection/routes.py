@@ -9,7 +9,7 @@ from typing import Annotated, Any, Literal
 from uuid import UUID
 
 import psycopg
-from fastapi import APIRouter, Depends, Header, Request
+from fastapi import APIRouter, Depends, Header, Query, Request
 from fastapi.responses import JSONResponse
 from psycopg.types.json import Jsonb
 from pydantic import BaseModel, ConfigDict, Field
@@ -90,6 +90,7 @@ class FindingPage(BaseModel):
     ledger_id: str
     items: list[DetectionFinding]
     next_cursor: str | None
+    filters: dict[str, str | None]
 
 
 WRITE_ERRORS = {**NOT_FOUND, 400: {'description': 'IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER', **PROBLEM},
@@ -185,21 +186,85 @@ def get_run(run_id: UUID, request: Request, ctx: Annotated[RequestContext, Depen
     return render(request, DetectionRun, row[0])
 
 
+RULES = [
+    {'kind': 'SETTLEMENT_NOT_RECORDED', 'class': 'DISCREPANCY', 'label': 'Settlement not recorded',
+     'condition': "No settlement is recorded for the statement's payout identity. Reports the statement totals and the received payments still in clearing."},
+    {'kind': 'SETTLEMENT_AMOUNTS_DIFFER', 'class': 'DISCREPANCY', 'label': 'Settlement amounts differ',
+     'condition': 'A settlement is recorded and its gross, fee or net differs from the statement (statement, ledger and statement minus ledger per field).'},
+    {'kind': 'SETTLEMENT_ITEMS_DIFFER', 'class': 'DISCREPANCY', 'label': 'Settlement items differ',
+     'condition': 'A settlement is recorded and the payments it includes differ from the payments the statement lists (both directions).'},
+    {'kind': 'STATEMENT_ITEM_SETTLED_ELSEWHERE', 'class': 'DISCREPANCY', 'label': 'Payment settled in another payout',
+     'condition': "A payment the statement lists is already included in another payout's recorded settlement."},
+    {'kind': 'STATEMENT_ITEM_AMOUNT_DIFFERS', 'class': 'DISCREPANCY', 'label': 'Payment amount differs',
+     'condition': "A linked payment's amount differs from the statement line (exact decimal)."},
+    {'kind': 'STATEMENT_ITEM_UNRESOLVED', 'class': 'EVIDENCE_GAP', 'label': 'Statement line not identified',
+     'condition': 'The line has no identity link, the id exists only under another processor, or it matches several payments. Equal amounts never link.'},
+    {'kind': 'PAYMENT_CLAIMED_BY_OTHER_PAYOUT', 'class': 'POTENTIAL_CONFLICT', 'label': 'Potential overlapping claim',
+     'condition': 'Another unrecorded payout of the same processor, ledger and tenant lists the same identified, received and unsettled payment. '
+                  'Identity is exact; amounts never establish it. Not a conclusion about cause.'},
+    {'kind': 'PAYOUT_DATE_DIFFERS', 'class': 'DISCREPANCY', 'label': 'Date difference',
+     'condition': "The statement's payout date differs from the recorded settlement's payout date. Calendar dates as recorded; no timezone, "
+                  'business-day tolerance or cutoff. A difference can be legitimate; it is not judged.'}]
+assert [r['kind'] for r in RULES] == list(detector.KINDS)
+
+
+class DetectionConfiguration(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    detector: str
+    detector_version: str
+    config: dict[str, Any]
+    basis: Literal['DETERMINISTIC_COMPARISON']
+    model: Literal['NONE']
+    accounting_review_status: Literal['UNREVIEWED']
+    rules: list[dict[str, str]]
+    abstentions: list[str]
+    reasons: list[str]
+    limits: list[str]
+
+
+@router.get('/detection-configuration', response_model=DetectionConfiguration, operation_id='getDetectionConfiguration', responses=READ_ERRORS,
+            openapi_extra={'x-lv-permission': 'read', 'x-lv-contract-choices': CONTRACT})
+def get_configuration(request: Request, ctx: Annotated[RequestContext, Depends(require_read_only('read'))]):
+    """The deterministic rules this server runs, in words, for reviewers. Its presence also tells a client the gate is on."""
+    check_query(request, ())
+    return render(request, DetectionConfiguration, {
+        'detector': detector.DETECTOR, 'detector_version': detector.VERSION, 'config': detector.CONFIG, 'basis': 'DETERMINISTIC_COMPARISON',
+        'model': 'NONE', 'accounting_review_status': 'UNREVIEWED', 'rules': RULES, 'abstentions': list(detector.CONFIG['abstain']),
+        'reasons': list(REASONS),
+        'limits': ['Deterministic comparison of synthetic statements with native SANDBOX ledger records only; no model, score or confidence.',
+                   'Business effectiveness is NOT ESTABLISHED: evaluation labels are synthetic and author-generated.',
+                   'A finding is not an accounting conclusion and not a fraud determination; reviewer decisions change no financial record.']})
+
+
+KIND = Annotated[str | None, Query(pattern='^(' + '|'.join(detector.KINDS) + ')$', description='Only findings of this kind')]
+REVIEW = Annotated[str | None, Query(pattern='^(OPEN|CONFIRMED|DISMISSED)$', description='Only findings whose current review status is this')]
+STATEMENT = Annotated[str | None, Query(pattern=UUID_TEXT, description='Only findings about this staged statement')]
+VERSION = Annotated[str | None, Query(pattern=r'^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$', description='Only findings made by this detector version')]
+
+
 @router.get('/ledgers/{ledger_id}/detection-findings', response_model=FindingPage, operation_id='listDetectionFindings',
             responses={**READ_ERRORS, **NOT_FOUND}, openapi_extra={'x-lv-permission': 'read', 'x-lv-order': 'id ascending (uuidv7, creation order)',
+                                                                   'x-lv-filters': 'server-side and exact: kind, review_status, staged_document_id, '
+                                                                   'detector_version (PROPOSED DET-11). Freshness is computed per item and is not a filter.',
                                                                    'x-lv-contract-choices': CONTRACT})
 def list_findings(ledger_id: UUID, request: Request, ctx: Annotated[RequestContext, Depends(require_read_only('read'))],
-                  limit: LIMIT = None, cursor: CURSOR = None):
-    check_query(request, ('limit', 'cursor'))
+                  limit: LIMIT = None, cursor: CURSOR = None, kind: KIND = None, review_status: REVIEW = None,
+                  staged_document_id: STATEMENT = None, detector_version: VERSION = None):
+    check_query(request, ('limit', 'cursor', 'kind', 'review_status', 'staged_document_id', 'detector_version'))
     if ctx.conn.execute('SELECT 1 FROM lv.ledger WHERE id = %s', (ledger_id,)).fetchone() is None:
         raise ProblemError(404, 'NOT_FOUND', 'ledger not found')
     size = parse_limit(limit)
-    context = list_context('listDetectionFindings', ctx.tenant_id, str(ledger_id), 'id.asc')
+    filters = {'kind': kind, 'review_status': review_status, 'staged_document_id': staged_document_id, 'detector_version': detector_version}
+    # A cursor is bound to its filters: it never verifies under a different filter set.
+    context = list_context('listDetectionFindings', ctx.tenant_id, str(ledger_id), 'id.asc', filters if any(filters.values()) else None)
     after = codec(request).decode(context, cursor, 1) if cursor is not None else ['00000000-0000-0000-0000-000000000000']
-    rows = ctx.conn.execute('SELECT lv.detection_finding_json(f) FROM lv.detection_finding f WHERE f.ledger_id = %s AND f.id > %s::uuid '
-                            'ORDER BY f.id LIMIT %s', (ledger_id, after[0], size + 1)).fetchall()
+    rows = ctx.conn.execute('SELECT lv.detection_finding_json(f) FROM lv.detection_finding f JOIN lv.detection_review r ON r.tenant_id = f.tenant_id AND r.finding_id = f.id '
+                            'WHERE f.ledger_id = %s AND f.id > %s::uuid AND (%s::text IS NULL OR f.kind = %s) AND (%s::text IS NULL OR r.status = %s) '
+                            'AND (%s::uuid IS NULL OR f.staged_document_id = %s::uuid) AND (%s::text IS NULL OR f.detector_version = %s) ORDER BY f.id LIMIT %s',
+                            (ledger_id, after[0], kind, kind, review_status, review_status, staged_document_id, staged_document_id,
+                             detector_version, detector_version, size + 1)).fetchall()
     items, next_cursor = page([r[0] for r in rows], size, codec(request), context, lambda row: [row['id']])
-    return render(request, FindingPage, {'ledger_id': str(ledger_id), 'items': items, 'next_cursor': next_cursor})
+    return render(request, FindingPage, {'ledger_id': str(ledger_id), 'items': items, 'next_cursor': next_cursor, 'filters': filters})
 
 
 @router.get('/detection-findings/{finding_id}', response_model=DetectionFinding, operation_id='getDetectionFinding',

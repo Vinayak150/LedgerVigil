@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
+  // The QuickBooks callback URL carries a single-use code and state: never log incoming request lines (dev or prod).
+  logging: { incomingRequests: false },
   async rewrites() {
     return [
       {
         source: "/api/v1/:path*",
-        destination: "http://127.0.0.1:8000/api/v1/:path*",
+        destination: `${process.env.LV_API_ORIGIN ?? "http://127.0.0.1:8000"}/api/v1/:path*`,
       },
     ];
   },

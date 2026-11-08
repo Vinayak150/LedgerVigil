@@ -1,0 +1,31 @@
+-- Refused while any provider connection exists in any tenant (a validating CHECK sees every row regardless of RLS):
+-- dropping would erase stored credentials' audit context and the provider-sandbox replica. Disconnect is not enough;
+-- an operator must decide explicitly what happens to retained provider history.
+ALTER TABLE lv.provider_connection ADD CONSTRAINT no_provider_downgrade CHECK (false);
+ALTER TABLE lv.provider_connection DROP CONSTRAINT no_provider_downgrade;
+DROP FUNCTION lv.provider_rewrap(uuid,uuid,integer,text,text,bytea);
+DROP FUNCTION lv.provider_kek_inventory(text,integer);
+DROP FUNCTION lv.provider_revoke_finish(uuid,uuid,text,bigint,text,integer);
+DROP FUNCTION lv.provider_job_finish(uuid,uuid,text,bigint,text,text,jsonb);
+DROP FUNCTION lv.provider_sync_page(uuid,uuid,text,bigint,text,integer,integer,bytea,text,text,text,jsonb);
+DROP FUNCTION lv.provider_credential_current(uuid,uuid,text,bigint);
+DROP FUNCTION lv.provider_refresh_finish(uuid,uuid,text,bigint,integer,text,bytea,bigint,bigint,text);
+DROP FUNCTION lv.provider_refresh_claim(uuid,uuid,text,bigint);
+DROP FUNCTION lv.provider_exchange_finish(uuid,uuid,text,bigint,text,bytea,bigint,bigint);
+DROP FUNCTION lv.provider_claim(uuid,uuid,text);
+DROP FUNCTION lv.provider_dispatch(uuid,uuid);
+DROP FUNCTION lv.provider_due(integer);
+DROP FUNCTION lv.provider_settle_connection(lv.provider_job,text);
+DROP FUNCTION lv.provider_lease_ok(lv.provider_job,text,bigint);
+DROP FUNCTION lv.provider_api(bytea,text,uuid,text,text,jsonb,jsonb,text,text);
+DROP FUNCTION lv.provider_object_json(lv.provider_object,boolean);
+DROP FUNCTION lv.provider_connection_json(lv.provider_connection);
+DROP FUNCTION lv.provider_job_json(lv.provider_job);
+DROP TABLE lv.provider_object;
+DROP TABLE lv.provider_page;
+DROP TABLE lv.provider_job;
+DROP TABLE lv.provider_credential;
+DROP TABLE lv.provider_oauth_state;
+DROP TABLE lv.provider_connection;
+DROP FUNCTION lv.guard_provider_retained();
+DROP FUNCTION lv.guard_provider_append_only();

@@ -1,8 +1,26 @@
+# Python
 .venv/
-.env
 __pycache__/
 *.pyc
 .pytest_cache/
 *.egg-info/
-.docker-local/
+# Local secrets and runtime state: never committed
+.env
 .env.*
+.docker-local/
+.provider-private/
+deploy/secrets/
+*.pem
+*.key
+*.dump
+*.backup
+*.sqlite
+anchors/
+data/
+recovery/
+# Frontend
+web/node_modules/
+web/.next/
+web/test-results/
+web/playwright-report/
+web/tsconfig.tsbuildinfo

@@ -5146,3 +5146,264 @@ select:focus-visible,
   outline: 3px solid var(--color-focus);
   outline-offset: 3px;
 }
+
+/* Detection review and QuickBooks sandbox panels: compositions of the existing record/card system, tokens only. */
+.detection-rules ul {
+  margin: 0;
+  padding: var(--space-3) var(--space-5);
+  display: grid;
+  gap: var(--space-3);
+}
+.detection-rules li p {
+  margin: var(--space-1) 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.detection-run {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.detection-run p {
+  margin: 0;
+  flex-basis: 100%;
+}
+.detection-detail {
+  border-top: 1px solid var(--line);
+  padding: var(--space-5) var(--space-5) var(--space-6);
+}
+.detection-detail-anchor:focus {
+  outline: none;
+}
+.detection-detail-anchor:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: -3px;
+}
+.detection-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  padding: var(--space-4);
+  margin-top: var(--space-4);
+  background: var(--surface);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.detection-panel h4 {
+  margin: 0 0 var(--space-3);
+  font-size: 13px;
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+.detection-panel h5 {
+  margin: 0 0 var(--space-2);
+  font-size: 12px;
+  color: var(--muted);
+}
+.detection-facts,
+.detection-claims {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.detection-facts > .detection-panel {
+  margin-top: var(--space-4);
+}
+.detection-claims {
+  border-top: 1px dashed var(--line);
+  padding-top: var(--space-3);
+  margin-top: var(--space-3);
+}
+.detection-excluded {
+  margin-top: var(--space-3);
+  color: var(--muted);
+  font-size: 12px;
+}
+.detection-evidence,
+.detection-history,
+.detection-list,
+.provider-jobs,
+.provider-objects {
+  margin: 0;
+  padding-left: var(--space-5);
+  display: grid;
+  gap: var(--space-3);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.detection-json {
+  white-space: pre-wrap;
+  font-size: 11px;
+}
+.detection-review-form {
+  display: grid;
+  gap: var(--space-3);
+}
+.detection-review-form label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  display: block;
+  margin-bottom: var(--space-2);
+}
+.detection-review-form textarea,
+.detection-review-form select {
+  width: 100%;
+  max-width: 560px;
+}
+.record-table tr[aria-selected="true"] td {
+  background: var(--soft);
+}
+.provider-card {
+  margin-top: var(--space-5);
+}
+.provider-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+.provider-replica {
+  margin-top: var(--space-5);
+}
+.provider-replica h3 {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: 15px;
+}
+.provider-objects li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+.provider-objects .record-text {
+  flex-basis: 100%;
+}
+@media (max-width: 850px) {
+  .detection-facts,
+  .detection-claims {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .detection-detail {
+    padding: var(--space-4);
+  }
+}
+/* Nested evidence facts stay readable on narrow screens: one column inside detection panels, compact margins. */
+.detection-panel .record-facts .record-facts {
+  margin: 8px 0 0;
+  gap: 10px 16px;
+}
+@media (max-width: 600px) {
+  .detection-panel .record-facts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
+/* Organization administration (0036) — existing tokens only */
+.admin-members {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+.admin-members > li {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  padding: var(--space-3);
+  display: grid;
+  gap: 8px;
+}
+.admin-members > li.is-removed {
+  opacity: 0.75;
+}
+.admin-check {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-weight: 400;
+}
+.admin-edit fieldset,
+.admin-invite fieldset {
+  border: 0;
+  padding: 0;
+  margin: 8px 0;
+  display: grid;
+  gap: 6px;
+}
+.admin-invite {
+  display: grid;
+  gap: 8px;
+  margin-top: var(--space-4);
+  max-width: 40rem;
+}
+.admin-invite h3 {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.admin-reauth {
+  display: grid;
+  gap: 6px;
+  margin-bottom: var(--space-3);
+}
+.admin-inline {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.admin-inline input {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+.table-scroll {
+  overflow-x: auto;
+}
+.admin-audit {
+  border-collapse: collapse;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+.admin-audit th,
+.admin-audit td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.admin-reauth input:not([type="checkbox"]),
+.admin-invite input:not([type="checkbox"]) {
+  height: 40px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius-control);
+  padding: 0 12px;
+  color: var(--ink);
+}
+.admin-reauth label,
+.admin-invite label:not(.admin-check),
+.admin-edit legend,
+.admin-invite legend {
+  font-size: 12px;
+  font-weight: 600;
+}
+.admin-check input {
+  margin-top: 3px;
+}

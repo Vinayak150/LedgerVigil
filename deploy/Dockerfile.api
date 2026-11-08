@@ -1,0 +1,18 @@
+# API, workers, scheduler and migrations share one image; each service runs as its own uid (deploy/compose.yaml).
+# Pin the base image by digest before a validation run (deploy/README.md, "Before you start").
+FROM python:3.14-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
+WORKDIR /app
+COPY requirements.lock worker-requirements.lock ./
+RUN pip install --no-deps -r requirements.lock -r worker-requirements.lock && pip check
+COPY pyproject.toml alembic.ini ./
+COPY src ./src
+COPY migrations ./migrations
+COPY tools ./tools
+COPY api ./api
+RUN pip install --no-deps -e . && python -m compileall -q src tools \
+ && groupadd -g 10001 lvapi && useradd -u 10001 -g 10001 -M -s /usr/sbin/nologin lvapi \
+ && for u in 10003 10004 10005 10006; do groupadd -g $u lv$u && useradd -u $u -g $u -M -s /usr/sbin/nologin lv$u; done
+USER 10001:10001
+EXPOSE 8000
+CMD ["python", "-m", "tools.deploy_entry", "api", "--host", "0.0.0.0", "--port", "8000"]

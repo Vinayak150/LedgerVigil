@@ -7,7 +7,7 @@ from pathlib import Path
 from uuid import uuid4
 import argparse,hashlib,json,os,subprocess,time,re
 from psycopg import sql
-from .dev_db import connection,require_dev_database,ROOT
+from .dev_db import connection,require_dev_database,ROOT,env_file
 from ledgervigil.ledger.replay import replay_events
 from tools import recovery_database as database_profile
 
@@ -17,8 +17,34 @@ def restore_target(name):
  require_dev_database(name)
 
 
-def docker_args():
- return ['/opt/homebrew/bin/docker','--config',str(ROOT/'.docker-local'),'--host','unix:///Users/vinayakmahindrakar/.colima/default/docker.sock','exec','-i','ledgervigil-native-dev-db-1']
+MAC_DOCKER='/opt/homebrew/bin/docker'
+
+
+def pg_client(command):
+ """How to run a PostgreSQL client (pg_dump/pg_restore) against the development server. N6 portability:
+  LV_PG_CLIENT=local   run the client from LV_PG_BIN (or PATH) over TCP to 127.0.0.1:55432 as postgres (password via
+                       PGPASSWORD from .env, never on the command line); the client major version must match the server.
+  LV_PG_CLIENT=docker  'docker exec' into LV_DB_CONTAINER (default ledgervigil-native-dev-db-1) with LV_DOCKER/LV_DOCKER_HOST.
+  unset                docker when the Mac Homebrew Docker and Colima socket exist (the original setup), otherwise local."""
+ import shutil
+ mode=os.environ.get('LV_PG_CLIENT')
+ colima=Path.home()/'.colima/default/docker.sock'
+ if mode is None:mode='docker' if Path(MAC_DOCKER).exists() and colima.exists() else 'local'
+ if mode=='docker':
+  docker=os.environ.get('LV_DOCKER') or (MAC_DOCKER if Path(MAC_DOCKER).exists() else shutil.which('docker'))
+  if not docker:raise RuntimeError('PG_CLIENT_UNAVAILABLE')
+  host=os.environ.get('LV_DOCKER_HOST') or ('unix://'+str(colima) if colima.exists() else None)
+  return [docker,'--config',str(ROOT/'.docker-local')]+(['--host',host] if host else [])+['exec','-i',os.environ.get('LV_DB_CONTAINER','ledgervigil-native-dev-db-1'),command]
+ if mode!='local':raise RuntimeError('LV_PG_CLIENT must be local or docker')
+ binary=str(Path(os.environ['LV_PG_BIN'])/command) if os.environ.get('LV_PG_BIN') else shutil.which(command)
+ if not binary:raise RuntimeError('PG_CLIENT_UNAVAILABLE')
+ return [binary,'-h','127.0.0.1','-p','55432']
+
+
+def pg_env():
+ env=dict(os.environ)
+ if (ROOT/'.env').exists():env['PGPASSWORD']=env_file('.env')['POSTGRES_PASSWORD']
+ return env
 
 
 def normalize_constraint(text):
@@ -124,12 +150,15 @@ def run(source,output,*,application=None):
    with os.fdopen(fd_profile,'w') as f:json.dump(profile,f,sort_keys=True,indent=2);f.write('\n')
    capture=application.capture(original,output) if application is not None else None
    fd=os.open(archive,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
-   with os.fdopen(fd,'wb') as f:subprocess.run(docker_args()+['pg_dump','-U','postgres','-Fc','--snapshot',snap,source],stdout=f,stderr=subprocess.PIPE,check=True)
+   with os.fdopen(fd,'wb') as f:subprocess.run(pg_client('pg_dump')+['-U','postgres','-Fc','--snapshot',snap,source],stdout=f,stderr=subprocess.PIPE,check=True,env=pg_env())
   target_oid=database_profile.create_target(destination,profile);created=True
-  with archive.open('rb') as f:subprocess.run(docker_args()+['pg_restore','-U','postgres','--exit-on-error','-d',destination],stdin=f,stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True)
+  with archive.open('rb') as f:subprocess.run(pg_client('pg_restore')+['-U','postgres','--exit-on-error','-d',destination],stdin=f,stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True,env=pg_env())
   restored_profile=database_profile.apply(source,destination,target_oid,profile)
   with connection(database=destination) as recovered:
    recovered.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY');after=fingerprints(recovered);assert_match(before,after);restored_replay=replay(recovered);restored_schema=schema_digest(recovered)
+   # 0037 restore interlock: a restored copy must refuse financial writes until its verification is recorded.
+   interlock=recovered.execute("SELECT CASE WHEN to_regprocedure('lv.recovery_state()') IS NULL THEN 'NOT_INSTALLED' ELSE lv.recovery_state() END").fetchone()[0]
+   if interlock not in ('RESTORED_UNVERIFIED','NOT_INSTALLED'):raise ValueError('RECOVERY_INTERLOCK_NOT_ENGAGED')
    anchored={'status':'NOT_CONFIGURED','unanchored_tail':'NOT_ATTESTED'}
    if os.environ.get('LV_ANCHOR_REPOSITORY'):
     from ledgervigil.proofpacks.anchors import GitAnchors
@@ -149,7 +178,7 @@ def run(source,output,*,application=None):
    database_profile.assert_profile(profile,database_profile.capture(unchanged))
    if database_profile.role_fingerprint(unchanged)!=global_roles:raise ValueError('RECOVERY_GLOBAL_ROLE_DRIFT')
   restored_profile.update(source_profile_unchanged=True,global_roles_memberships_and_global_role_settings_unchanged=True,profile_sha256=hashlib.sha256(database_profile.canonical(profile).encode()).hexdigest(),scoped_settings_count=len(profile['settings']),effective_database_acl_entries=len(profile['acl']))
-  report={'status':'PASS','scope':'local PostgreSQL logical backup/restore; source held at one exported read-only snapshot','source_database':source,'snapshot_consistent':True,'tables_verified':len(before),'total_rows_verified':sum(r['rows'] for r in before.values()),'table_fingerprints':before,'schema_sha256':schema,'schema_owners_grants_policies_constraints_and_functions_match':True,'external_anchor':anchored,'ledger_replay':restored_replay,'security':boundaries,'database_profile':restored_profile,'archive_sha256':hashlib.sha256(archive.read_bytes()).hexdigest(),'archive_bytes':archive.stat().st_size,'archive_private_mode':oct(archive.stat().st_mode&0o777),'observed_seconds':round(time.monotonic()-start,3),'limits':['Same-host logical restore with existing cluster roles and extensions; not offsite recovery','Role passwords, external source/artifact files and broker state are outside the database archive','No production RPO/RTO, failover or full application acceptance claim']}
+  report={'status':'PASS','scope':'local PostgreSQL logical backup/restore; source held at one exported read-only snapshot','source_database':source,'snapshot_consistent':True,'tables_verified':len(before),'total_rows_verified':sum(r['rows'] for r in before.values()),'table_fingerprints':before,'schema_sha256':schema,'schema_owners_grants_policies_constraints_and_functions_match':True,'external_anchor':anchored,'restore_interlock':interlock,'ledger_replay':restored_replay,'security':boundaries,'database_profile':restored_profile,'archive_sha256':hashlib.sha256(archive.read_bytes()).hexdigest(),'archive_bytes':archive.stat().st_size,'archive_private_mode':oct(archive.stat().st_mode&0o777),'observed_seconds':round(time.monotonic()-start,3),'limits':['Same-host logical restore with existing cluster roles and extensions; not offsite recovery','Role passwords, external source/artifact files and broker state are outside the database archive','No production RPO/RTO, failover or full application acceptance claim']}
  finally:
   if created:
    with connection(autocommit=True) as c:c.execute(sql.SQL('DROP DATABASE {} WITH (FORCE)').format(sql.Identifier(destination)))

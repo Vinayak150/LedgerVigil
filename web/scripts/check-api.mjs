@@ -1,7 +1,7 @@
 import { readFileSync, mkdtempSync, rmSync, existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 const source = process.env.LV_OPENAPI_SOURCE || resolve("../api/openapi.json");
 if (!existsSync(source))
   throw new Error(
@@ -29,6 +29,26 @@ try {
   )
     throw new Error(
       "Generated API types have drifted. Run npm run generate:api.",
+    );
+  // Gated contracts (detection + QuickBooks sandbox): api/openapi.full.json -> src/lib/api.optional.generated.d.ts.
+  const optional = join(dir, "optional.d.ts");
+  execFileSync(
+    process.execPath,
+    [
+      "node_modules/openapi-typescript/bin/cli.js",
+      resolve(dirname(source), "openapi.full.json"),
+      "-o",
+      optional,
+    ],
+    { stdio: "pipe" },
+  );
+  if (
+    !readFileSync(optional).equals(
+      readFileSync("src/lib/api.optional.generated.d.ts"),
+    )
+  )
+    throw new Error(
+      "Generated optional API types have drifted. Regenerate from api/openapi.full.json.",
     );
   console.log("Owning OpenAPI and generated TypeScript match byte for byte.");
 } finally {

@@ -1,0 +1,65 @@
+# TLS edge for LedgerVigil. Caddy obtains a certificate for {$LV_PUBLIC_HOST} automatically (ACME); for an internal host
+# use `tls internal` or mount your own certificate. API calls go straight to the API; everything else to the frontend.
+{
+	admin off
+	# Caddy's own logs (errors from reverse_proxy include the request URI): same redaction as the access log below.
+	log default {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>uri query {
+					delete code
+					delete state
+					delete realmId
+					delete error
+					delete token
+				}
+				request>headers>Cookie delete
+				request>headers>Authorization delete
+				request>headers>X-Csrf-Token delete
+			}
+		}
+	}
+}
+
+{$LV_PUBLIC_HOST} {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+	# The QuickBooks callback carries a single-use code and state in its query string: access logs never record query
+	# strings, cookies or authorization headers (matches src/ledgervigil/logredact.py on the API side).
+	log {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>uri query {
+					delete code
+					delete state
+					delete realmId
+					delete error
+					delete token
+				}
+				request>headers>Cookie delete
+				request>headers>Authorization delete
+				request>headers>X-Csrf-Token delete
+				resp_headers>Set-Cookie delete
+			}
+		}
+	}
+	@api path /api/v1/*
+	handle @api {
+		reverse_proxy api:8000 {
+			# Overwrite (never append) the client address: the API's per-source rate limits read it through uvicorn's
+			# proxy-header support, so a client-supplied X-Forwarded-For must never reach the API.
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto https
+		}
+	}
+	handle {
+		reverse_proxy web:3000
+	}
+}
