@@ -90,6 +90,38 @@ def test_operator_bind_rejects_bare_pass_marker_before_connecting(tmp_path, monk
         deploy_entry.bind_restored(report)
 
 
+def test_operator_bind_checks_configured_anchors_even_before_first_pack(database, tmp_path, monkeypatch):
+    from uuid import uuid4
+
+    from ledgervigil.proofpacks.anchors import GitAnchors
+    from ledgervigil.proofpacks.integrity import IntegrityError, ZERO
+    from tools import deploy_entry
+    from tools.verify_recovery import fingerprints, replay, schema_digest
+
+    unbind(database)
+    with connection(database=database) as db:
+        report = {
+            'status': 'PASS', 'snapshot_consistent': True, 'restore_interlock': 'RESTORED_UNVERIFIED',
+            'schema_owners_grants_policies_constraints_and_functions_match': True,
+            'table_fingerprints': fingerprints(db), 'schema_sha256': schema_digest(db),
+            'ledger_replay': replay(db), 'external_anchor': {'status': 'NOT_CONFIGURED'},
+        }
+    path = tmp_path / 'report.json'
+    path.write_text(json.dumps(report))
+    monkeypatch.setattr(deploy_entry, '_secret', lambda _: 'postgresql://synthetic.invalid')
+    # Use the real test-cluster connection without exporting its credentials.
+    with connection(database=database) as db, monkeypatch.context() as m:
+        m.setattr(psycopg, 'connect', lambda _: db)
+        store = GitAnchors(tmp_path / 'trusted').initialize()
+        store.append({'tenant_id': str(uuid4()), 'chain_seq': 1,
+                      'previous_chain_head': ZERO, 'chain_hash': '1' * 64})
+        m.setenv('LV_ANCHOR_REPOSITORY', str(store.root))
+        with pytest.raises(IntegrityError, match='older'):
+            deploy_entry.bind_restored(path)
+    with connection(database=database) as db:
+        assert db.execute('SELECT lv.recovery_state()').fetchone() == ('RESTORED_UNVERIFIED',)
+
+
 def test_cluster_identifier_mismatch_refuses_same_database_oid(database):
     # Simulate a logical restore whose destination OID coincides with the source.
     with connection(database=database) as c:

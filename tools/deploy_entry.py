@@ -158,7 +158,9 @@ def bind_restored(report_path):
             or not isinstance(report.get('table_fingerprints'), dict)
             or not report['table_fingerprints']
             or not re.fullmatch(r'[0-9a-f]{64}', str(report.get('schema_sha256', '')))
-            or report.get('ledger_replay', {}).get('sequence_heads_and_balances_match') is not True):
+            or not isinstance(report.get('ledger_replay'), dict)
+            or report['ledger_replay'].get('sequence_heads_and_balances_match') is not True
+            or not isinstance(report.get('external_anchor'), dict)):
         raise RuntimeError('a complete logical restore verification report is required')
     # A dedicated operator connection reads across FORCE RLS for comparison. Never mount
     # this credential in an API, worker or issuer. Runtime connections must be stopped.
@@ -179,9 +181,11 @@ def bind_restored(report_path):
         has_packs = c.execute("""SELECT EXISTS(SELECT 1 FROM lv.proof_pack
             WHERE state IN ('SEALED','ANCHORED','ANCHOR_FAILED'))""").fetchone()[0]
         anchor_path = os.environ.get('LV_ANCHOR_REPOSITORY')
-        if has_packs or report.get('external_anchor', {}).get('status') == 'ANCHORED_PREFIX_VERIFIED':
-            if not anchor_path:
-                raise RuntimeError('the independent anchor repository is required for this restore')
+        if not anchor_path and (has_packs or report['external_anchor'].get('status') == 'ANCHORED_PREFIX_VERIFIED'):
+            raise RuntimeError('the independent anchor repository is required for this restore')
+        # A backup can predate the first proof pack. Its own lack of evidence cannot
+        # decide whether a configured independent repository should be checked.
+        if anchor_path:
             from ledgervigil.proofpacks.anchors import GitAnchors
             from ledgervigil.proofpacks.recovery import check_database
             check_database(c, GitAnchors(anchor_path))

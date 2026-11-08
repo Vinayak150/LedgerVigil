@@ -39,3 +39,8 @@ can preserve all three values. Keep services stopped, restore logically into
 a fresh database, and bind the exact verified snapshot using the operator
 procedure in deploy/RUNBOOK.md. Same-host and fresh-cluster drills are required
 before claiming this behavior as verified.
+
+When an independent anchor repository is configured, binding checks it even
+if the restored backup predates the first proof pack. Keep the trusted
+repository configuration in place throughout recovery; an unconfigured
+local drill cannot attest that the restored data is current.
