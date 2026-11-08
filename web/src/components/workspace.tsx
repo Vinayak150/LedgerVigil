@@ -1,4 +1,5 @@
 "use client";
+import { Authenticator } from "./authenticator";
 import { canAuthorOverride } from "@/lib/override-recovery";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
@@ -689,6 +690,10 @@ export function Workspace() {
               <AccountSecurity
                 csrfToken={session.csrf_token}
                 onSignedOut={() => void auth.refresh()}
+              />
+              <Authenticator
+                key={`mfa:${session.user.id}:${session.tenant.id}`}
+                csrfToken={session.csrf_token}
               />
               <AuditLogPanel
                 key={`audit:${session.tenant.id}:${session.user.id}`}

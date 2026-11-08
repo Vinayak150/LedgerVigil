@@ -54,7 +54,7 @@ def test_runtime_grants_change_on_upgrade_and_restore_on_downgrade():
                 """, (role,))} for role in (*RUNTIME, 'lv_authn')}
         before = permissions()
         assert {'login_prepare','login_finish','reauth_finish','member_api','token_issue','token_consume'} <= before['lv_app']
-        migrate(db)
+        migrate(db, '0038_identity_issuer')
         after = permissions()
         assert after['lv_authn'] == ISSUER_FUNCTIONS
         assert after['lv_app'] == {'session_context', 'audit_page'}
@@ -127,7 +127,7 @@ def test_populated_0029_upgrade_preserves_all_original_tables():
         assert before['lv_identity.app_user']['rows'] > 0
         assert before['lv.journal_line']['rows'] > 0
 
-        migrate(db)
+        migrate(db, '0038_identity_issuer')
         with connection(database=db) as c:
             after = fingerprints(c)
             assert c.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0038_identity_issuer',)

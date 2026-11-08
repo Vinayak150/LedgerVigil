@@ -56,7 +56,7 @@ def _statement(database, cfg, payout, items, gross, fee, net):
         'gross': gross, 'fee': fee, 'net': net, 'memo': 'SYNTHETIC statement; not a real processor file'}}).encode()
     with connection(database=database) as db:head=db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()[0]
     writer=ingest_statement
-    if head not in ('0021_native_execution','0022_approved_withdrawal','0023_configuration_boundary','0024_proof_export_authority','0025_export_jobs','0026_proof_packs','0027_account_lock_order','0028_workflow_lock_order','0029_account_patch','0030_override_independence','0031_semantic_revalidation','0032_detection_findings','0033_detection_overlap_dates','0034_detection_review_filters','0035_provider_connections','0036_identity_lifecycle','0037_restore_interlock','0038_identity_issuer'):
+    if head not in ('0021_native_execution','0022_approved_withdrawal','0023_configuration_boundary','0024_proof_export_authority','0025_export_jobs','0026_proof_packs','0027_account_lock_order','0028_workflow_lock_order','0029_account_patch','0030_override_independence','0031_semantic_revalidation','0032_detection_findings','0033_detection_overlap_dates','0034_detection_review_filters','0035_provider_connections','0036_identity_lifecycle','0037_restore_interlock','0038_identity_issuer','0039_mfa'):
         from legacy_ingestion_0020 import ingest_statement as writer
     with connection('lv_ingest', database, autocommit=True) as c:
         result = writer(c, cfg['tenant'], cfg['ledger'], raw, declared_format=fmt.FORMAT, declared_version=fmt.VERSION)

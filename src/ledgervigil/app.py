@@ -102,7 +102,8 @@ def _issuer_path(path: str) -> bool:
 
 def _include_identity(app, mode):
     from ledgervigil.auth.lifecycle import router as lifecycle_router
-    for source in (auth_router, lifecycle_router):
+    from ledgervigil.auth.mfa import router as mfa_router
+    for source in (auth_router, lifecycle_router, mfa_router):
         if mode == 'combined':
             app.include_router(source)
             continue

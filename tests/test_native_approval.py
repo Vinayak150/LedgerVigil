@@ -174,7 +174,7 @@ def test_deferred_proof_rejects_missing_atomic_artifact(database,ready,missing):
 def test_retained_decision_refuses_downgrade(database,ready):
  _,c,pid,_=ready;assert post(c,pid).status_code==200
  with pytest.raises(Exception):migrate(database,'0018_evidence_overrides',downgrade=True,disposable=True)
- with connection(database=database) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0038_identity_issuer',)
+ with connection(database=database) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0039_mfa',)
 
 
 def test_exact_cached_approval_receipt_is_required_at_commit(database,ready):

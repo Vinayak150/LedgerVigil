@@ -1,0 +1,10 @@
+# Optional SANDBOX authenticator configuration; apply with the primary compose file.
+services:
+  issuer:
+    environment:
+      LV_MFA_KEY_FILE: /run/secrets/mfa_key
+    secrets:
+      - mfa_key
+secrets:
+  mfa_key:
+    file: ${LV_SECRETS_DIR:?set the private secrets directory}/mfa_key

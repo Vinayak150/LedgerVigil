@@ -210,4 +210,4 @@ def test_deferred_guards_refuse_missing_atomic_artifacts(database,blocked,missin
 def test_override_history_blocks_destructive_downgrade(database,blocked):
     _,c,pid,_=blocked;assert post(c,pid).status_code==200
     with pytest.raises(Exception):migrate(database,'0017_proposal_comments',downgrade=True,disposable=True)
-    with connection(database=database) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0038_identity_issuer',)
+    with connection(database=database) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0039_mfa',)

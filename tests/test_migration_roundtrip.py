@@ -56,7 +56,7 @@ def test_upgrade_from_0002_preserves_synthetic_records():
         before=snapshot()
         migrate(name)
         with connection(database=name) as c:
-            assert c.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0038_identity_issuer',)
+            assert c.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0039_mfa',)
         after=snapshot()
         assert after==before
         assert replay_events(after[1])['head']==after[0]['counter'][0][3]

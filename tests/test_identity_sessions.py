@@ -557,7 +557,7 @@ def test_runtime_database_privileges_are_narrow(database):
     with connection(database=database) as admin:
         tables = [r[0] for r in admin.execute("SELECT c.oid::regclass::text FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace "
                                               "WHERE n.nspname = 'lv_identity' AND c.relkind = 'r'").fetchall()]
-        assert len(tables) == 11   # 0036 adds email_token, token_request, reauthentication (no runtime privilege either)
+        assert len(tables) == 13   # includes issuer MFA factors and attempts
         for table in tables:
             for role in ('lv_app', 'lv_seed', 'lv_ingest'):
                 for privilege in ('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'REFERENCES', 'TRIGGER'):
@@ -570,7 +570,7 @@ def test_runtime_database_privileges_are_narrow(database):
         assert executable == {'session_context', 'audit_page'}
         assert {f[0] for f in functions if f[1]} == executable | {
             'login_prepare', 'login_finish', 'logout', 'switch_tenant', 'token_issue', 'token_consume',
-            'member_list', 'member_api', 'reauth_prepare', 'reauth_finish', 'revoke_my_sessions'}
+            'member_list', 'member_api', 'reauth_prepare', 'reauth_finish', 'revoke_my_sessions', 'mfa_prepare', 'mfa_finish'}
         for name, definer, config, owner, _, seed_exec, ingest_exec in functions:
             assert owner == 'lv_owner' and not seed_exec and not ingest_exec, name
             assert config is not None and 'search_path=pg_catalog, pg_temp' in config, name
@@ -648,7 +648,7 @@ def test_authentication_does_not_grant_developer_seeding_or_financial_writes(dat
                      '/api/v1/proposals/{proposal_id}/submit','/api/v1/proposals/{proposal_id}/withdraw', '/api/v1/proposals/{proposal_id}/resimulate', '/api/v1/proposals/{proposal_id}/revalidate', '/api/v1/proposals/{proposal_id}/simulations', '/api/v1/source-plan-registrations', '/api/v1/source-plan-registrations/{registration_id}', '/api/v1/source-plan-registrations/{registration_id}/groups', '/api/v1/source-plan-registrations/{registration_id}/groups/{group_id}', '/api/v1/source-plan-registrations/{registration_id}/groups/{group_id}/rows', '/api/v1/proposals/{proposal_id}/comments', '/api/v1/proposals/{proposal_id}/execute', '/api/v1/executions/{execution_id}', '/api/v1/executions/{execution_id}/proof', '/api/v1/proposals/{proposal_id}/execution', '/api/v1/proposals/{proposal_id}/approve', '/api/v1/proposals/{proposal_id}/reject', '/api/v1/proposals/{proposal_id}/overrides', '/api/v1/proposals/{proposal_id}/reviews',
                      # 0036 completes Stage 2B Family 1 and the ADR-027 account lifecycle; no financial route
                      '/api/v1/auth/email-verification', '/api/v1/auth/email-verification/confirm', '/api/v1/auth/password-reset',
-                     '/api/v1/auth/password-reset/confirm', '/api/v1/auth/invitation/accept', '/api/v1/auth/reauthenticate', '/api/v1/auth/sessions/revoke-all',
+                     '/api/v1/auth/password-reset/confirm', '/api/v1/auth/invitation/accept', '/api/v1/auth/reauthenticate', '/api/v1/auth/mfa', '/api/v1/auth/sessions/revoke-all',
                      '/api/v1/members', '/api/v1/members/{user_id}', '/api/v1/members/{user_id}/sessions/revoke', '/api/v1/audit-events'}
     # Every GET route added for reads is read-only at the database level (auth.boundary.require_read_only).
     spec = create_app(AuthSettings()).openapi()
@@ -762,7 +762,7 @@ def test_fresh_chain_reaches_0007_and_downgrade_removes_the_identity_schema():
     with disposable('0006_processor_settlements') as name:
         migrate(name)
         with connection(database=name) as admin:
-            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0038_identity_issuer',)
+            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0039_mfa',)
         migrate(name, '0006_processor_settlements', downgrade=True, disposable=True)
         with connection(database=name) as admin:
             assert admin.execute("SELECT to_regnamespace('lv_identity')").fetchone() == (None,)

@@ -20,6 +20,7 @@ ships (see docs/release/COMPLETION_MATRIX.md).
 | Service | uid | Database login | Secrets mounted | Network |
 |---|---|---|---|---|
 | api | 10001 | `lv_app` | app DSN, cursor key, KEK **public** key, QuickBooks API config (no client secret) | backend, edge |
+| issuer | 10007 | `lv_authn` | issuer DSN; optional private MFA key via `compose.mfa.yaml` | issuer-db, issuer-edge |
 | web | 10002 | none | none | edge |
 | maintenance | 10003 | `lv_worker` | worker DSN | backend, queue |
 | provider-worker | 10004 | `lv_worker` | worker DSN, QuickBooks worker config, KEK **private** key | backend, queue, egress |
@@ -104,3 +105,5 @@ For operator readiness, provide all four database DSNs (application, worker,
 issuer, migrator) and the anchor repository. Never mount operator credentials
 into the runtime services. Local combined mode uses two database roles under
 one Mac OS process and is not an OS isolation boundary.
+
+See [SANDBOX authenticator setup](../docs/MFA_SANDBOX.md) for the optional issuer-only key mount. The production MFA gate is still closed.

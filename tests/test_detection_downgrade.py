@@ -14,6 +14,6 @@ def test_populated_downgrade_is_refused_for_a_run_in_another_tenant(database, da
         migrate(database, '0031_semantic_revalidation', downgrade=True, disposable=True)
     assert 'no_detection_v11_downgrade' in str(refused.value)   # 0033's guard is reached first (a 1.1.0 run exists)
     with connection(database=database) as db:
-        assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0038_identity_issuer',)
+        assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0039_mfa',)
         assert db.execute('SELECT count(*) FROM lv.detection_run WHERE tenant_id = %s', (world['B'],)).fetchone()[0] == 1
         assert db.execute("SELECT to_regclass('lv.detection_finding') IS NOT NULL").fetchone()[0]

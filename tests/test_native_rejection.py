@@ -145,7 +145,7 @@ def test_deferred_guards_detect_missing_atomic_artifact(database,ready,missing):
 def test_downgrade_refuses_retained_rejection(database,ready):
  _,c,pid,_=ready;assert post(c,pid).status_code==200
  with pytest.raises(Exception):migrate(database,'0019_native_approval',downgrade=True,disposable=True)
- with connection(database=database) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0038_identity_issuer',)
+ with connection(database=database) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0039_mfa',)
 
 
 @pytest.mark.parametrize('comment',['', ' \n\t', '\u00a0\u3000', '\u001c\u0085', 'x'*4001])

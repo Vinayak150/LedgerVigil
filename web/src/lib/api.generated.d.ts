@@ -448,6 +448,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/mfa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Status */
+        get: operations["getAuthenticatorState"];
+        put?: never;
+        /** Change */
+        post: operations["changeAuthenticator"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/source-plan-registrations": {
         parameters: {
             query?: never;
@@ -1234,6 +1252,16 @@ export interface components {
             /** Next Before */
             next_before: string | null;
             chain: components["schemas"]["AuditChain"];
+        };
+        /** Change */
+        Change: {
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "START" | "CONFIRM" | "CHALLENGE" | "RECOVERY" | "REGENERATE";
+            /** Code */
+            code?: string | null;
         };
         /** ClosedPeriod */
         ClosedPeriod: {
@@ -2185,6 +2213,13 @@ export interface components {
             /** Fresh Until */
             fresh_until: string;
         };
+        /** Receipt */
+        Receipt: {
+            /** Setup Key */
+            setup_key?: string | null;
+            /** Recovery Codes */
+            recovery_codes?: string[] | null;
+        };
         /** RecordCounts */
         RecordCounts: {
             /** Valid */
@@ -2744,6 +2779,15 @@ export interface components {
              * @description QUEUED when the close commits; no worker consumes it yet (see milestone limitations)
              */
             state: string;
+        };
+        /** State */
+        State: {
+            /** Configured */
+            configured: boolean;
+            /** Enrolled */
+            enrolled: boolean;
+            /** Verified At */
+            verified_at: string | null;
         };
         /** SubmissionResult */
         SubmissionResult: {
@@ -4444,6 +4488,94 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
+            };
+        };
+    };
+    getAuthenticatorState: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["State"];
+                };
+            };
+        };
+    };
+    changeAuthenticator: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Change"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Receipt"];
+                };
+            };
+            /** @description No session or proof refused */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Reauthentication required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Wrong enrollment state */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Rate limited */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Authenticator key unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

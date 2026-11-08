@@ -525,9 +525,8 @@ export function AccountSecurity({
       <div className="card-content">
         <p className="small">
           Change your password from the sign-in page (“Forgot your password?”);
-          a reset signs out every session. Multi-factor authentication is{" "}
-          <strong>not available yet</strong>, so this deployment stays limited
-          to sandbox ledgers and provider sandboxes (ADR-027).
+          a reset signs out every session. This deployment supports sandbox
+          ledgers and provider sandboxes only.
         </p>
         <div className="financial-actions">
           {confirming ? (
