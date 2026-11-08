@@ -44,7 +44,10 @@ Proposed policy (no owning RPO/RTO target exists in Stage 2A-2C; these are propo
 3. A restored copy refuses financial writes by every runtime login until its verification is recorded (restore interlock,
    docs/RESTORE_INTERLOCK.md); reads and diagnostics keep working. After the verification report says PASS:
    `python -m tools.deploy_entry bind-restored --report REPORT.json`. Use logical restores into a new database; a physical
-   file-level restore keeps the database identity and is not detected.
+   file-level restore keeps the database identity and is not detected. Stop application, issuer and workers first.
+   Point the operator-only LV_SUPERUSER_DATABASE_URL_FILE at the restored target, and configure the independent anchor
+   repository. The bind command checks the target table fingerprints, schema and replay under database locks before
+   recording the binding. A bare PASS marker or a report for different contents is refused.
 4. Recovery client: `LV_PG_CLIENT=local LV_PG_BIN=<PostgreSQL 18 bin>` or `LV_PG_CLIENT=docker LV_DB_CONTAINER=<name>`; no
    Mac-specific path is required any more.
 

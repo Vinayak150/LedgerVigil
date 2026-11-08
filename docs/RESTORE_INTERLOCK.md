@@ -28,3 +28,14 @@ The interlock does not decide whether a backup is current; the anchor checks do 
 
 **Tests:** `tests/test_restore_interlock.py` (3 tests: seed refused then allowed after binding, owner-only binding with a
 report digest, API 503 with nothing written). Workspace only.
+
+
+### 0038 candidate
+
+The logical binding compares database name, OID and PostgreSQL system
+identifier. A 0037 binding that predates the 0038 migration transaction has
+no trustworthy cluster identity and requires verification. Physical restores
+can preserve all three values. Keep services stopped, restore logically into
+a fresh database, and bind the exact verified snapshot using the operator
+procedure in deploy/RUNBOOK.md. Same-host and fresh-cluster drills are required
+before claiming this behavior as verified.

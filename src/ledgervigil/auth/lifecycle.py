@@ -175,7 +175,7 @@ def _token(value):
 def _issue(request, background, purpose, email):
     source, request_id = _public(request)
     token, digest = _new_token()
-    with request.app.state.pool.connection() as conn:
+    with request.app.state.issuer_pool.connection() as conn:
         with conn.transaction():
             r = conn.execute('SELECT lv_identity.token_issue(%s,%s,%s,%s,%s)', (purpose, email, digest, source, request_id)).fetchone()[0]
     if r['throttled']:
@@ -189,8 +189,8 @@ def _issue(request, background, purpose, email):
 def _consume(request, purpose, token, password=None):
     source, request_id = _public(request)
     digest = _token(token)
-    password_hash = hash_password(password) if password is not None else None
-    with request.app.state.pool.connection() as conn:
+    with request.app.state.issuer_pool.connection() as conn:
+        password_hash = hash_password(password) if password is not None else None
         with conn.transaction():
             r = conn.execute('SELECT lv_identity.token_consume(%s,%s,%s,%s,%s)', (purpose, digest, password_hash, source, request_id)).fetchone()[0]
     if r.get('throttled'):
@@ -245,16 +245,17 @@ def _session_call(request):
              openapi_extra={'x-lv-permission': 'any-session'})
 def reauthenticate(body: PasswordRequest, request: Request):
     token, source, request_id = _session_call(request)
-    with request.app.state.pool.connection() as conn:
+    with request.app.state.issuer_pool.connection() as conn:
         with conn.transaction():
             prepared = conn.execute('SELECT lv_identity.reauth_prepare(%s,%s,%s)', (token_hash(token), source, request_id)).fetchone()[0]
-        if not prepared['valid']:
-            raise ProblemError(401, 'UNAUTHENTICATED', 'no valid session')
-        if prepared['throttled']:
-            raise ProblemError(429, 'RATE_LIMITED', 'too many attempts; try again later', headers={'Retry-After': str(prepared['retry_after_seconds'])})
-        ok = verify_password(prepared['password_hash'], body.password)
-        with conn.transaction():
-            done = conn.execute('SELECT lv_identity.reauth_finish(%s,%s,%s,%s)', (token_hash(token), ok, source, request_id)).fetchone()[0]
+            if prepared['valid'] and not prepared['throttled']:
+                # Keep the account/source throttle locks until the verdict is recorded.
+                ok = verify_password(prepared['password_hash'], body.password)
+                done = conn.execute('SELECT lv_identity.reauth_finish(%s,%s,%s,%s)', (token_hash(token), ok, source, request_id)).fetchone()[0]
+    if not prepared['valid']:
+        raise ProblemError(401, 'UNAUTHENTICATED', 'no valid session')
+    if prepared['throttled']:
+        raise ProblemError(429, 'RATE_LIMITED', 'too many attempts; try again later', headers={'Retry-After': str(prepared['retry_after_seconds'])})
     if not done['valid'] or not done.get('accepted'):
         raise ProblemError(401, 'UNAUTHENTICATED', 'the password was not accepted')
     return Reauthenticated(fresh_until=done['fresh_until'])
@@ -264,7 +265,7 @@ def reauthenticate(body: PasswordRequest, request: Request):
              responses={401: {'description': 'UNAUTHENTICATED'}}, openapi_extra={'x-lv-permission': 'any-session'})
 def revoke_all(request: Request):
     token, source, request_id = _session_call(request)
-    with request.app.state.pool.connection() as conn:
+    with request.app.state.issuer_pool.connection() as conn:
         with conn.transaction():
             r = conn.execute('SELECT lv_identity.revoke_my_sessions(%s,%s,%s)', (token_hash(token), source, request_id)).fetchone()[0]
     if not r['valid']:
@@ -295,7 +296,7 @@ def _respond(result, model=None):
 def list_members(request: Request):
     check_query(request, ())
     try:
-        with session_transaction(request, touch=True) as ctx:
+        with session_transaction(request, touch=True, pool=request.app.state.issuer_pool) as ctx:
             r = ctx.conn.execute('SELECT lv_identity.member_list(%s,%s,%s)', (token_hash(ctx.session_token), source_key(request), request.state.request_id)).fetchone()[0]
     except psycopg.errors.InsufficientPrivilege as e:
         _unauthenticated(e)
@@ -312,7 +313,7 @@ def _member_write(request, action, target, args, if_match, idempotency_key, back
     rhash = hashlib.sha256(repr((action, str(target), sorted(args.items()), match)).encode()).hexdigest()
     unusable = hash_password(secrets.token_urlsafe(32)) if action == 'INVITE' else None   # never usable: replaced on acceptance
     try:
-        with session_transaction(request, touch=False) as ctx:
+        with session_transaction(request, touch=False, pool=request.app.state.issuer_pool) as ctx:
             r = ctx.conn.execute('SELECT lv_identity.member_api(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', (
                 token_hash(ctx.session_token), action, target, Jsonb(args), match, idempotency_key, rhash,
                 invite_token[1] if invite_token else None, unusable, source_key(request), request.state.request_id)).fetchone()[0]

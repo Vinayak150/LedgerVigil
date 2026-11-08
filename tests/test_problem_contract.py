@@ -67,7 +67,7 @@ def _conforms(body):
 
 def test_runtime_problem_bodies_conform_to_the_schema(database):
     from fastapi.testclient import TestClient
-    app = create_app(AuthSettings(), connect=lambda: connection('lv_app', database))
+    app = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
     try:
         c = TestClient(app, base_url='http://127.0.0.1')
         samples = [c.get('/api/v1/me'), c.get('/api/v1/ledgers'), c.get('/api/v1/nowhere'),

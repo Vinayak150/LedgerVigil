@@ -24,8 +24,8 @@ import threading
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-ROLES = ('lv_owner', 'lv_migrator', 'lv_app', 'lv_seed', 'lv_ingest', 'lv_worker')
-EXPECTED_HEAD = '0037_restore_interlock'
+ROLES = ('lv_owner', 'lv_migrator', 'lv_app', 'lv_seed', 'lv_ingest', 'lv_worker', 'lv_authn')
+EXPECTED_HEAD = '0038_identity_issuer'
 
 
 def _secret(var):
@@ -73,7 +73,7 @@ def prepare():
         admin.execute('GRANT lv_owner TO lv_migrator WITH INHERIT FALSE, SET TRUE, ADMIN FALSE')
         admin.execute('CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public')
         admin.execute(sql.SQL('REVOKE ALL ON DATABASE {} FROM PUBLIC').format(sql.Identifier(database)))
-        admin.execute(sql.SQL('GRANT CONNECT ON DATABASE {} TO lv_migrator,lv_app,lv_seed,lv_ingest,lv_worker').format(sql.Identifier(database)))
+        admin.execute(sql.SQL('GRANT CONNECT ON DATABASE {} TO lv_migrator,lv_app,lv_seed,lv_ingest,lv_worker,lv_authn').format(sql.Identifier(database)))
         admin.execute(sql.SQL('GRANT CREATE ON DATABASE {} TO lv_owner').format(sql.Identifier(database)))
         admin.execute('REVOKE CREATE ON SCHEMA public FROM PUBLIC')
         admin.execute('CREATE SCHEMA IF NOT EXISTS lv_meta AUTHORIZATION lv_owner')
@@ -97,24 +97,37 @@ def readiness():
     """Preflight without secrets: the runtime logins are the restricted roles, the schema is at the expected head, gates are
     as configured, and the anchor directory is present. Exit status 0 only when every check passes."""
     import psycopg
-    checks = {}
-    for var, role in (('LV_DATABASE_URL', 'lv_app'), ('LV_WORKER_DATABASE_URL', 'lv_worker')):
-        _from_file(var, var + '_FILE')
-        if not os.environ.get(var):
-            continue
+    from ledgervigil.auth.pool import verify_runtime_role
+    checks = {'restore_interlock': 'NOT_CHECKED'}
+    required = (('LV_DATABASE_URL', 'lv_app'), ('LV_WORKER_DATABASE_URL', 'lv_worker'),
+                ('LV_AUTHN_DATABASE_URL', 'lv_authn'))
+    for var, role in required:
         try:
+            _from_file(var, var + '_FILE')
+            if not os.environ.get(var):
+                checks[f'{role}_login'] = 'MISSING'
+                continue
             with psycopg.connect(os.environ[var], connect_timeout=3) as c:
-                who = c.execute('SELECT current_user, session_user').fetchone()
-                checks[f'{role}_login'] = who == (role, role)
+                if role != 'lv_worker':
+                    verify_runtime_role(c, role)
+                    checks[f'{role}_login'] = True
+                else:
+                    checks[f'{role}_login'] = c.execute(
+                        """SELECT current_user,session_user,rolsuper,rolbypassrls
+                           FROM pg_roles WHERE rolname=current_user"""
+                    ).fetchone() == (role, role, False, False)
                 if role == 'lv_app':
                     checks['restore_interlock'] = c.execute('SELECT lv.recovery_state()').fetchone()[0]
         except Exception as exc:
             checks[f'{role}_login'] = 'FAILED:' + type(exc).__name__
+    checks['migration_head'] = 'MISSING'
     if os.environ.get('LV_MIGRATOR_DATABASE_URL_FILE'):
         try:
             url = _secret('LV_MIGRATOR_DATABASE_URL_FILE').replace('postgresql+psycopg://', 'postgresql://')
             with psycopg.connect(url, connect_timeout=3) as c:
-                c.execute('SET ROLE lv_owner')
+                if c.execute('SELECT current_user,session_user').fetchone() != ('lv_migrator','lv_migrator'):
+                    raise RuntimeError('wrong migration role')
+                c.execute('SET LOCAL ROLE lv_owner')
                 head = c.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()
                 checks['migration_head'] = (head[0] if head else None) == EXPECTED_HEAD
         except Exception as exc:
@@ -125,28 +138,69 @@ def readiness():
     checks['provider_sandbox_gate'] = 'ON' if os.environ.get('LV_PROVIDER_SANDBOX_ENABLED') == '1' else 'OFF'
     checks['environment'] = os.environ.get('LV_ENVIRONMENT', 'production')
     ok = all(v is True for k, v in checks.items() if k.endswith('_login') or k in ('anchor_repository_present', 'migration_head')) \
-        and checks.get('restore_interlock', 'BOUND') == 'BOUND'
+        and checks['restore_interlock'] == 'BOUND'
     return {'status': 'READY' if ok else 'NOT_READY', 'checks': checks}
 
 
 def bind_restored(report_path):
-    """Record that THIS database passed recovery verification. Refuses unless the report says PASS; stores only its SHA-256."""
+    """Recheck the report against the stopped, restored target before recording a binding."""
     import hashlib
     import psycopg
+    from psycopg import sql
+    from tools.verify_recovery import assert_match, fingerprints, replay, schema_digest
+
     data = Path(report_path).read_bytes()
-    if json.loads(data).get('status') != 'PASS':
-        raise RuntimeError('the verification report does not say PASS')
-    url = _secret('LV_MIGRATOR_DATABASE_URL_FILE').replace('postgresql+psycopg://', 'postgresql://')
+    report = json.loads(data)
+    if (not isinstance(report, dict) or report.get('status') != 'PASS'
+            or report.get('snapshot_consistent') is not True
+            or report.get('restore_interlock') != 'RESTORED_UNVERIFIED'
+            or report.get('schema_owners_grants_policies_constraints_and_functions_match') is not True
+            or not isinstance(report.get('table_fingerprints'), dict)
+            or not report['table_fingerprints']
+            or not re.fullmatch(r'[0-9a-f]{64}', str(report.get('schema_sha256', '')))
+            or report.get('ledger_replay', {}).get('sequence_heads_and_balances_match') is not True):
+        raise RuntimeError('a complete logical restore verification report is required')
+    # A dedicated operator connection reads across FORCE RLS for comparison. Never mount
+    # this credential in an API, worker or issuer. Runtime connections must be stopped.
+    url = _secret('LV_SUPERUSER_DATABASE_URL_FILE').replace('postgresql+psycopg://', 'postgresql://')
     with psycopg.connect(url) as c:
-        c.execute('SET ROLE lv_owner')
-        state = c.execute('SELECT lv.recovery_bind(%s)', (hashlib.sha256(data).hexdigest(),)).fetchone()[0]
-    return {'status': state, 'report_sha256': hashlib.sha256(data).hexdigest()}
+        c.execute("SET LOCAL lock_timeout = '3s'")
+        if c.execute("SELECT rolsuper FROM pg_roles WHERE rolname=current_user").fetchone() != (True,):
+            raise RuntimeError('restore verification requires the operator connection')
+        if c.execute('SELECT lv.recovery_state()').fetchone() != ('RESTORED_UNVERIFIED',):
+            raise RuntimeError('target is not an unverified logical restore')
+        tables = c.execute("""SELECT schemaname,tablename FROM pg_tables
+            WHERE schemaname IN ('lv','lv_identity','lv_meta') ORDER BY 1,2""").fetchall()
+        c.execute(sql.SQL('LOCK TABLE {} IN SHARE MODE NOWAIT').format(
+            sql.SQL(',').join(sql.Identifier(schema, table) for schema, table in tables)))
+        assert_match(report['table_fingerprints'], fingerprints(c))
+        if schema_digest(c) != report['schema_sha256'] or replay(c) != report['ledger_replay']:
+            raise RuntimeError('restore report does not match target schema and replay')
+        has_packs = c.execute("""SELECT EXISTS(SELECT 1 FROM lv.proof_pack
+            WHERE state IN ('SEALED','ANCHORED','ANCHOR_FAILED'))""").fetchone()[0]
+        anchor_path = os.environ.get('LV_ANCHOR_REPOSITORY')
+        if has_packs or report.get('external_anchor', {}).get('status') == 'ANCHORED_PREFIX_VERIFIED':
+            if not anchor_path:
+                raise RuntimeError('the independent anchor repository is required for this restore')
+            from ledgervigil.proofpacks.anchors import GitAnchors
+            from ledgervigil.proofpacks.recovery import check_database
+            check_database(c, GitAnchors(anchor_path))
+        c.execute('SET LOCAL ROLE lv_owner')
+        digest = hashlib.sha256(data).hexdigest()
+        state = c.execute('SELECT lv.recovery_bind(%s)', (digest,)).fetchone()[0]
+    return {'status': state, 'report_sha256': digest}
 
 
-def api(host, port):
-    _from_file('LV_DATABASE_URL', 'LV_DATABASE_URL_FILE')
-    _from_file('LV_CURSOR_KEY', 'LV_CURSOR_KEY_FILE')
-    if os.environ.get('LV_ENVIRONMENT', 'production') != 'development' and not os.environ.get('LV_CURSOR_KEY'):
+def api(host, port, *, issuer=False):
+    os.environ['LV_SERVICE_MODE'] = 'issuer' if issuer else 'api'
+    if issuer:
+        _from_file('LV_AUTHN_DATABASE_URL', 'LV_AUTHN_DATABASE_URL_FILE')
+        if not os.environ.get('LV_AUTHN_DATABASE_URL'):
+            raise RuntimeError('the issuer database credential is required')
+    else:
+        _from_file('LV_DATABASE_URL', 'LV_DATABASE_URL_FILE')
+        _from_file('LV_CURSOR_KEY', 'LV_CURSOR_KEY_FILE')
+    if not issuer and os.environ.get('LV_ENVIRONMENT', 'production') != 'development' and not os.environ.get('LV_CURSOR_KEY'):
         raise RuntimeError('LV_CURSOR_KEY(_FILE) is required outside development so list cursors survive restarts')
     from ledgervigil import logredact
     logredact.install()
@@ -180,7 +234,7 @@ def main(argv=None):
     from ledgervigil import logredact
     logredact.install()   # every process started here redacts secrets at the log record (scheduler and workers included)
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument('action', choices=['prepare', 'migrate', 'readiness', 'bind-restored', 'api', 'worker', 'scheduler'])
+    p.add_argument('action', choices=['prepare', 'migrate', 'readiness', 'bind-restored', 'api', 'issuer', 'worker', 'scheduler'])
     p.add_argument('--report')
     p.add_argument('--host', default='127.0.0.1')
     p.add_argument('--port', type=int, default=8000)
@@ -198,8 +252,8 @@ def main(argv=None):
         result = readiness()
         print(json.dumps(result))
         return 0 if result['status'] == 'READY' else 1
-    elif a.action == 'api':
-        api(a.host, a.port)
+    elif a.action in {'api','issuer'}:
+        api(a.host, a.port, issuer=a.action=='issuer')
     elif a.action == 'worker':
         worker(a.queues)
     else:

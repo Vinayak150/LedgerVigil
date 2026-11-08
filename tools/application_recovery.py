@@ -2,7 +2,7 @@
 from pathlib import Path,PurePosixPath
 import hashlib,importlib.metadata,json,os,re,shutil,stat,subprocess,sys
 from psycopg.conninfo import make_conninfo
-from tools.dev_db import ROOT,env_file
+from tools.dev_db import DEV_PORT,ROOT,env_file
 from ledgervigil.execution.proof_export import export_proof
 from ledgervigil.execution.proof_verify import verify
 from ledgervigil.ingestion.plan_index import IndexReader,MANIFEST,DATABASE
@@ -129,7 +129,7 @@ class ApplicationAcceptance:
   env.update(PYTHONPATH=str(app/'src')+os.pathsep+str(app),PYTHONNOUSERSITE='1',PYTHONDONTWRITEBYTECODE='1')
   for role,key in [('ADMIN','POSTGRES_PASSWORD'),('APP','APP_PASSWORD'),('WORKER','WORKER_PASSWORD')]:
    password=env_file('.env' if role=='ADMIN' else '.env.roles')[key]
-   env['LV_RECOVERY_'+role+'_DSN']=make_conninfo(host='127.0.0.1',port=55432,dbname=database,user='postgres' if role=='ADMIN' else 'lv_'+role.lower(),password=password)
+   env['LV_RECOVERY_'+role+'_DSN']=make_conninfo(host='127.0.0.1',port=DEV_PORT,dbname=database,user='postgres' if role=='ADMIN' else 'lv_'+role.lower(),password=password)
   child=subprocess.run([sys.executable,str(app/'tools/recovery_probe.py'),str(self.bundle)],cwd=app,env=env,capture_output=True,text=True,timeout=180)
   if child.returncode:raise ValueError('RECOVERY_APPLICATION_PROBE_FAILED')
   result=json.loads(child.stdout)

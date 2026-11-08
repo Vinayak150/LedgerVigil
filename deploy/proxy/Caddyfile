@@ -8,13 +8,7 @@
 		format filter {
 			wrap json
 			fields {
-				request>uri query {
-					delete code
-					delete state
-					delete realmId
-					delete error
-					delete token
-				}
+				request>uri delete
 				request>headers>Cookie delete
 				request>headers>Authorization delete
 				request>headers>X-Csrf-Token delete
@@ -36,18 +30,19 @@
 		format filter {
 			wrap json
 			fields {
-				request>uri query {
-					delete code
-					delete state
-					delete realmId
-					delete error
-					delete token
-				}
+				request>uri delete
 				request>headers>Cookie delete
 				request>headers>Authorization delete
 				request>headers>X-Csrf-Token delete
 				resp_headers>Set-Cookie delete
 			}
+		}
+	}
+	@issuer path /api/v1/auth/* /api/v1/members /api/v1/members/*
+	handle @issuer {
+		reverse_proxy issuer:8000 {
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto https
 		}
 	}
 	@api path /api/v1/*

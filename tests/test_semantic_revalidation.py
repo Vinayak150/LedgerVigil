@@ -159,7 +159,7 @@ def test_recheck_history_blocks_destructive_downgrade(database,pair):
  with pytest.raises(Exception):migrate(database,'0030_override_independence',downgrade=True,disposable=True)
  with connection(database=database) as db:
   # The whole multi-step downgrade is one refused Alembic run, so the head stays at the newest revision (0032 after the rebase).
-  assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0037_restore_interlock',)
+  assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0038_identity_issuer',)
   assert db.execute('SELECT count(*) FROM lv.semantic_recheck WHERE proposal_id=%s',(second,)).fetchone()==(1,)
 
 @pytest.mark.parametrize('winner',['revocation','recheck'])
@@ -197,12 +197,14 @@ def test_empty_roundtrip_restores_every_predecessor_function_and_grant(migration
  database=migration_database
  def catalog():
   with connection(database=database) as db:return db.execute("SELECT p.oid::regprocedure::text,pg_get_functiondef(p.oid),p.proacl::text,pg_get_userbyid(p.proowner) FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname IN ('lv','lv_identity') ORDER BY 1").fetchall()
+ migrate(database,'0037_restore_interlock',downgrade=True,disposable=True)
  head=catalog();migrate(database,'0030_override_independence',downgrade=True,disposable=True);old=catalog()
  assert len(head)>len(old)
  baseline=dict((r[0],r[1:]) for r in old)
  for signature,definition,grants,owner in head:
   if signature in baseline:assert baseline[signature][1:]==(grants,owner)
- migrate(database);assert catalog()==head
+ migrate(database,'0037_restore_interlock');assert catalog()==head
+ migrate(database)
 
 def test_revalidated_but_unexecuted_pack_anchors_the_fresh_financial_prefix(fresh_pair,tmp_path):
  database,world,pair=fresh_pair

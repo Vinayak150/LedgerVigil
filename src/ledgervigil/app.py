@@ -5,11 +5,11 @@ import re
 import uuid
 
 import psycopg
-from fastapi import FastAPI, Request
+from fastapi import APIRouter, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from ledgervigil.auth.pool import ConnectionPool
+from ledgervigil.auth.pool import ConnectionPool, RuntimeRoleError
 from ledgervigil.auth.problems import ProblemError, problem_response
 from ledgervigil.auth.routes import router as auth_router
 from ledgervigil.auth.settings import AuthSettings, load_settings
@@ -85,10 +85,46 @@ def provider_sandbox_enabled() -> bool:
     return os.environ.get('LV_PROVIDER_SANDBOX_ENABLED') == '1'
 
 
-def create_app(settings: AuthSettings | None = None, connect=None, *, detection: bool | None = None, provider: bool | None = None) -> FastAPI:
-    app = FastAPI(title='LedgerVigil', version='0.0.1')
-    app.state.auth_settings = settings or load_settings()
-    app.state.pool = ConnectionPool(connect or _env_connect)
+def _env_issuer_connect():
+    url = os.environ.get('LV_AUTHN_DATABASE_URL')
+    if not url:
+        raise RuntimeRoleError('identity issuer connection is not configured')
+    return psycopg.connect(url, autocommit=False)
+
+
+def _issuer_path(path: str) -> bool:
+    return path.startswith('/api/v1/auth/') or path == '/api/v1/members' or path.startswith('/api/v1/members/')
+
+
+def _include_identity(app, mode):
+    from ledgervigil.auth.lifecycle import router as lifecycle_router
+    for source in (auth_router, lifecycle_router):
+        if mode == 'combined':
+            app.include_router(source)
+            continue
+        selected = APIRouter()
+        selected.routes.extend(r for r in source.routes if _issuer_path(r.path) == (mode == 'issuer'))
+        app.include_router(selected)
+
+
+def create_app(settings: AuthSettings | None = None, connect=None, *, detection: bool | None = None, provider: bool | None = None,
+               issuer_connect=None, service_mode: str = 'combined') -> FastAPI:
+    if service_mode not in {'combined', 'api', 'issuer'}:
+        raise ValueError('unknown LedgerVigil service mode')
+    if service_mode == 'api' and (issuer_connect is not None or any(os.environ.get(k) for k in
+            ('LV_AUTHN_DATABASE_URL', 'LV_AUTHN_DATABASE_URL_FILE'))):
+        raise ValueError('API-only service must not receive the issuer credential')
+    if service_mode == 'issuer' and (connect is not None or any(os.environ.get(k) for k in
+            ('LV_DATABASE_URL', 'LV_DATABASE_URL_FILE'))):
+        raise ValueError('issuer-only service must not receive the API credential')
+    resolved = settings or load_settings()
+    if service_mode == 'combined' and resolved.environment != 'development' and os.environ.get('LV_AUTHN_DATABASE_URL'):
+        raise ValueError('deploy the API and identity issuer as separate services')
+    app = FastAPI(title='LedgerVigil', version='0.0.1', openapi_url=None if service_mode == 'issuer' else '/openapi.json')
+    app.state.auth_settings = resolved
+    app.state.pool = None if service_mode == 'issuer' else ConnectionPool(connect or _env_connect)
+    app.state.issuer_pool = None if service_mode == 'api' else ConnectionPool(
+        issuer_connect or _env_issuer_connect, max_size=4, expected_role='lv_authn', reuse=False)
 
     @app.middleware('http')
     async def request_id(request: Request, call_next):
@@ -122,6 +158,8 @@ def create_app(settings: AuthSettings | None = None, connect=None, *, detection:
                 return problem_response(request, 503, 'RECOVERY_VERIFICATION_REQUIRED',
                                         'this database was restored and has not passed recovery verification; financial writes are paused')
             cause = cause.__cause__ or cause.__context__
+        if isinstance(exc, (RuntimeRoleError, psycopg.OperationalError)):
+            return problem_response(request, 503, 'DEPENDENCY_UNAVAILABLE', 'database service unavailable')
         log.error('unhandled error request_id=%s type=%s', getattr(request.state, 'request_id', None), type(exc).__name__)
         return problem_response(request, 500, 'INTERNAL', 'unexpected error')
 
@@ -129,13 +167,15 @@ def create_app(settings: AuthSettings | None = None, connect=None, *, detection:
     def health():
         return {'status': 'ok', 'milestone': 'development-foundation'}
 
+    if service_mode == 'issuer':
+        _include_identity(app, service_mode)
+        return app
+
     from ledgervigil.exports.routes import router as export_router
     app.include_router(export_router)
     from ledgervigil.proofpacks.routes import router as pack_router
     app.include_router(pack_router)
-    app.include_router(auth_router)
-    from ledgervigil.auth.lifecycle import router as lifecycle_router
-    app.include_router(lifecycle_router)
+    _include_identity(app, service_mode)
     app.include_router(source_registry_router)
     app.include_router(source_index_router)
     app.include_router(ledgers_router)
@@ -168,4 +208,4 @@ def create_app(settings: AuthSettings | None = None, connect=None, *, detection:
     return app
 
 
-app = create_app()
+app = create_app(service_mode=os.environ.get('LV_SERVICE_MODE', 'combined'))

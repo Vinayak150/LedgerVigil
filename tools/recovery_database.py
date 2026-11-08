@@ -4,7 +4,7 @@ from psycopg import sql
 from tools.dev_db import connection,require_dev_database,DEV_DB
 
 FORMAT='lv-local-database-recovery/1'
-ROLES=frozenset({'postgres','lv_owner','lv_migrator','lv_app','lv_seed','lv_ingest','lv_worker'})
+ROLES=frozenset({'postgres','lv_owner','lv_migrator','lv_app','lv_seed','lv_ingest','lv_worker','lv_authn'})
 PRIVILEGES=frozenset({'CREATE','CONNECT','TEMPORARY'})
 SETTINGS=frozenset({'statement_timeout','lock_timeout','idle_in_transaction_session_timeout','idle_session_timeout','default_transaction_isolation','default_transaction_read_only','timezone','datestyle','client_encoding','search_path','work_mem','maintenance_work_mem','temp_file_limit'})
 FIELDS={'format','owner','connection_limit','encoding','locale_provider','lc_collate','lc_ctype','locale','collation_version','tablespace','allow_connections','is_template','acl','settings'}

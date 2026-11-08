@@ -409,7 +409,7 @@ def test_cursors_are_bound_to_operation_ledger_filters_tenant_and_key(database, 
             {'pointer': '/query/cursor', 'code': 'invalid'}]
     b = signed_in(api, world, 'analystB')
     problem(b.get(f'{BASE}/imports', params={'cursor': imports_cursor}), 400, 'CURSOR_MISMATCH')
-    other = create_app(AuthSettings(), connect=lambda: connection('lv_app', database))
+    other = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
     try:
         problem(signed_in(other, world, 'analyst').get(l1, params={'limit': '1', 'cursor': plain}), 400, 'CURSOR_MISMATCH')
     finally:

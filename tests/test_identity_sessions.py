@@ -83,7 +83,7 @@ def _close_pools():
 
 
 def make_app(database, settings=None):
-    application = create_app(settings or AuthSettings(), connect=lambda: connection('lv_app', database))
+    application = create_app(settings or AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
     _OPEN_APPS.append(application)
     return application
 
@@ -491,7 +491,7 @@ def test_unknown_permission_cannot_be_declared():
 
 # ------------------------------------------------------------------------------------------- connection reuse and privileges
 def context_app(database, connect):
-    application = create_app(AuthSettings(), connect=connect)
+    application = create_app(AuthSettings(), connect=connect, issuer_connect=lambda: connection('lv_authn', database))
     application.state.pool = ConnectionPool(connect, max_size=1)
     _OPEN_APPS.append(application)
 
@@ -567,10 +567,10 @@ def test_runtime_database_privileges_are_narrow(database):
                                   "has_function_privilege('lv_seed', p.oid, 'EXECUTE'), has_function_privilege('lv_ingest', p.oid, 'EXECUTE') "
                                   "FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace WHERE n.nspname = 'lv_identity'").fetchall()
         executable = {f[0] for f in functions if f[4]}
-        assert executable == {'login_prepare', 'login_finish', 'session_context', 'logout', 'switch_tenant',
-                              # 0036 identity lifecycle entry points (each takes the session token hash or is a public, throttled token step)
-                              'token_issue', 'token_consume', 'member_list', 'member_api', 'reauth_prepare', 'reauth_finish', 'revoke_my_sessions', 'audit_page'}
-        assert {f[0] for f in functions if f[1]} == executable                      # exactly the runtime entry points are SECURITY DEFINER
+        assert executable == {'session_context', 'audit_page'}
+        assert {f[0] for f in functions if f[1]} == executable | {
+            'login_prepare', 'login_finish', 'logout', 'switch_tenant', 'token_issue', 'token_consume',
+            'member_list', 'member_api', 'reauth_prepare', 'reauth_finish', 'revoke_my_sessions'}
         for name, definer, config, owner, _, seed_exec, ingest_exec in functions:
             assert owner == 'lv_owner' and not seed_exec and not ingest_exec, name
             assert config is not None and 'search_path=pg_catalog, pg_temp' in config, name
@@ -662,9 +662,9 @@ def test_authentication_does_not_grant_developer_seeding_or_financial_writes(dat
 def test_definer_functions_resist_caller_temporary_objects(database, ids):
     """R-01 regression for the identity entry points: a caller-created temporary domain must never be resolved."""
     with connection(database=database, autocommit=True) as admin:
-        admin.execute(sql.SQL('GRANT TEMPORARY ON DATABASE {} TO lv_app').format(sql.Identifier(database)))
+        admin.execute(sql.SQL('GRANT TEMPORARY ON DATABASE {} TO lv_authn').format(sql.Identifier(database)))
     try:
-        with connection('lv_app', database, autocommit=True) as c:
+        with connection('lv_authn', database, autocommit=True) as c:
             c.execute("""
               CREATE FUNCTION pg_temp.shadow_probe(v text) RETURNS boolean LANGUAGE plpgsql AS $$
               BEGIN RAISE EXCEPTION 'SHADOW EXECUTED AS %', current_user; END $$;
@@ -681,7 +681,7 @@ def test_definer_functions_resist_caller_temporary_objects(database, ids):
                 assert c.execute('SELECT lv_identity.session_context(%s, true)', (b'\x00' * 32,)).fetchone()[0] == {'valid': False, 'reason': 'UNKNOWN'}
     finally:
         with connection(database=database, autocommit=True) as admin:
-            admin.execute(sql.SQL('REVOKE TEMPORARY ON DATABASE {} FROM lv_app').format(sql.Identifier(database)))
+            admin.execute(sql.SQL('REVOKE TEMPORARY ON DATABASE {} FROM lv_authn').format(sql.Identifier(database)))
 
 
 def test_authentication_requests_leave_financial_records_unchanged(database, app, ids):
@@ -762,7 +762,7 @@ def test_fresh_chain_reaches_0007_and_downgrade_removes_the_identity_schema():
     with disposable('0006_processor_settlements') as name:
         migrate(name)
         with connection(database=name) as admin:
-            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0037_restore_interlock',)
+            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0038_identity_issuer',)
         migrate(name, '0006_processor_settlements', downgrade=True, disposable=True)
         with connection(database=name) as admin:
             assert admin.execute("SELECT to_regnamespace('lv_identity')").fetchone() == (None,)
@@ -791,9 +791,11 @@ def test_upgrade_from_populated_0006_preserves_records_then_authenticates():
         with owner_transaction(name) as conn:
             uid = create_user(conn, 'upgrade@test.ledgervigil.invalid', 'Synthetic', password)
             grant(conn, tenant, uid, ['CONTROLLER'])
+        migrate(name)
+        before_sign_in = lv_hashes(name)
         application = make_app(name)
         c = client_for(application)
         r = c.post('/api/v1/auth/login', json={'email': 'upgrade@test.ledgervigil.invalid', 'password': password})
         assert r.status_code == 200 and c.get('/api/v1/tenants/current').json()['id'] == str(tenant)
         application.state.pool.close()
-        assert lv_hashes(name) == before
+        assert lv_hashes(name) == before_sign_in

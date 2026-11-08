@@ -88,3 +88,19 @@ add them with `-v` or a temporary override file and remove them afterwards. `rea
 | `LV_PROVIDER_KEK_PRIVATE_PREVIOUS` | provider-worker (in its config) | Old private keys kept during a key rotation |
 | `LV_FORWARDED_ALLOW_IPS` | api | Proxy addresses trusted for `X-Forwarded-*` |
 | `LV_API_ORIGIN` | web | Where the frontend forwards `/api/v1` (default `http://127.0.0.1:8000`) |
+
+
+### Identity issuer (0038 candidate)
+
+Provision a distinct restricted lv_authn login and private issuer_dsn. The issuer
+service receives this DSN and no application or provider credential; the API
+receives app_dsn and no issuer DSN. The TLS proxy sends /api/v1/auth/* and
+/api/v1/members* to the issuer; other API paths go to the API service.
+The gateway is the only component on both edge networks. Neither issuer port
+nor database port is published. If configuring SMTP, put its delivery secret
+on the issuer only. Real mail delivery has not been verified.
+
+For operator readiness, provide all four database DSNs (application, worker,
+issuer, migrator) and the anchor repository. Never mount operator credentials
+into the runtime services. Local combined mode uses two database roles under
+one Mac OS process and is not an OS isolation boundary.

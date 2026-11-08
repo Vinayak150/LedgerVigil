@@ -12,7 +12,8 @@ from alembic import command
 
 ROOT = Path(__file__).resolve().parents[1]
 DEV_DB = 'ledgervigil_dev'
-ROLE_PASSWORD_KEYS = {'lv_app':'APP_PASSWORD','lv_migrator':'MIGRATOR_PASSWORD','lv_seed':'SEED_PASSWORD','lv_ingest':'INGEST_PASSWORD','lv_worker':'WORKER_PASSWORD'}
+DEV_PORT = int(os.environ.get('LV_DEV_DB_PORT', '55432'))
+ROLE_PASSWORD_KEYS = {'lv_app':'APP_PASSWORD','lv_migrator':'MIGRATOR_PASSWORD','lv_seed':'SEED_PASSWORD','lv_ingest':'INGEST_PASSWORD','lv_worker':'WORKER_PASSWORD','lv_authn':'AUTHN_PASSWORD'}
 
 def env_file(name):
     return dict(line.split('=',1) for line in (ROOT/name).read_text().splitlines() if line and not line.startswith('#'))
@@ -20,7 +21,7 @@ def env_file(name):
 def connection(user='postgres', database=DEV_DB, *, autocommit=False):
     require_dev_database(database)
     password = env_file('.env')['POSTGRES_PASSWORD'] if user == 'postgres' else env_file('.env.roles')[ROLE_PASSWORD_KEYS[user]]
-    return psycopg.connect(host='127.0.0.1',port=55432,dbname=database,user=user,password=password,autocommit=autocommit)
+    return psycopg.connect(host='127.0.0.1',port=DEV_PORT,dbname=database,user=user,password=password,autocommit=autocommit)
 
 def require_dev_database(name):
     import re
@@ -29,7 +30,7 @@ def require_dev_database(name):
 
 def bootstrap_roles():
     with connection() as admin:
-        names = ['lv_owner','lv_migrator','lv_app','lv_seed','lv_ingest','lv_worker']
+        names = ['lv_owner','lv_migrator','lv_app','lv_seed','lv_ingest','lv_worker','lv_authn']
         existing = admin.execute('SELECT rolname FROM pg_roles WHERE rolname = ANY(%s)',(names,)).fetchall()
         path=ROOT/'.env.roles'
         if existing and not path.exists():
@@ -57,6 +58,11 @@ def bootstrap_roles():
                 raise RuntimeError('Existing maintenance role without owned credential')
             with path.open('a') as f: f.write('WORKER_PASSWORD='+secrets.token_hex(32)+'\n')
             cfg=env_file('.env.roles')
+        if 'AUTHN_PASSWORD' not in cfg:
+            if ('lv_authn',) in existing:
+                raise RuntimeError('Existing issuer role without an owned credential')
+            with path.open('a') as f: f.write('AUTHN_PASSWORD='+secrets.token_hex(32)+'\n')
+            cfg=env_file('.env.roles')
         for role in names:
             if (role,) not in existing:
                 login = sql.SQL('NOLOGIN') if role=='lv_owner' else sql.SQL('LOGIN PASSWORD {}').format(sql.Literal(cfg[ROLE_PASSWORD_KEYS[role]]))
@@ -76,7 +82,7 @@ def prepare_database(name=DEV_DB):
     with connection(database=name) as admin:
         admin.execute('CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public')
         admin.execute(sql.SQL('REVOKE ALL ON DATABASE {} FROM PUBLIC').format(sql.Identifier(name)))
-        admin.execute(sql.SQL('GRANT CONNECT ON DATABASE {} TO lv_migrator,lv_app,lv_seed,lv_ingest,lv_worker').format(sql.Identifier(name)))
+        admin.execute(sql.SQL('GRANT CONNECT ON DATABASE {} TO lv_migrator,lv_app,lv_seed,lv_ingest,lv_worker,lv_authn').format(sql.Identifier(name)))
         admin.execute(sql.SQL('GRANT CREATE ON DATABASE {} TO lv_owner').format(sql.Identifier(name)))
         admin.execute('REVOKE CREATE ON SCHEMA public FROM PUBLIC')
         admin.execute('CREATE SCHEMA IF NOT EXISTS lv_meta AUTHORIZATION lv_owner')
@@ -89,7 +95,7 @@ def migrate(database=DEV_DB, target='head', *, downgrade=False, disposable=False
     if downgrade and (not disposable or database==DEV_DB):
         raise ValueError('Downgrades are supported only for explicitly disposable test databases')
     cfg=Config(str(ROOT/'alembic.ini'))
-    cfg.attributes['connection_url']=URL.create('postgresql+psycopg',username='lv_migrator',password=env_file('.env.roles')['MIGRATOR_PASSWORD'],host='127.0.0.1',port=55432,database=database)
+    cfg.attributes['connection_url']=URL.create('postgresql+psycopg',username='lv_migrator',password=env_file('.env.roles')['MIGRATOR_PASSWORD'],host='127.0.0.1',port=DEV_PORT,database=database)
     (command.downgrade if downgrade else command.upgrade)(cfg,target)
 
 if __name__=='__main__':

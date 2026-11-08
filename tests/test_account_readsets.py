@@ -202,6 +202,8 @@ def test_0012_upgrade_preserves_a_stored_old_profile_and_backfills_existing_acco
         with connection('lv_app',db,autocommit=True) as app, connection('lv_seed',db,autocommit=True) as seed_:
             w=setup_world.__wrapped__(db,app,seed_)
         fixture=setup_api.__wrapped__(db);application=next(fixture)
+        from legacy_issuer_support import use_historical_issuer
+        use_historical_issuer(application, db, '0011_simulation_runs')
         c=signed_in(application,w,'analyst')
         try:
             with monkeypatch.context() as patch:

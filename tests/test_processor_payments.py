@@ -702,7 +702,7 @@ def test_downgrade_is_refused_while_typed_payments_exist():
             migrate(name, '0004_statement_ingestion', downgrade=True, disposable=True)
         assert isinstance(refused.value.orig, psycopg.errors.ObjectNotInPrerequisiteState)
         with connection(database=name) as admin:
-            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0037_restore_interlock',)   # unchanged head
+            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0038_identity_issuer',)   # unchanged head
             assert admin.execute('SELECT count(*) FROM lv.payment_current').fetchone() == (1,)
 
 

@@ -94,7 +94,7 @@ def test_pg18_exact_associative_checks_normalize_without_hiding_policy_changes(c
 def test_source_migration_must_match_actual_snapshot_head(database):
  root=Path(__file__).parents[1]
  with connection(database=database) as c:
-  assert ar.migration_head(root,c)=='0037_restore_interlock'
+  assert ar.migration_head(root,c)=='0038_identity_issuer'
   c.execute("UPDATE lv_meta.alembic_version SET version_num='0001_configuration'")
   with pytest.raises(ValueError,match='SOURCE_MIGRATION_MISMATCH'):ar.migration_head(root,c)
   c.rollback()

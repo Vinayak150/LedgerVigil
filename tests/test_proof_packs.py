@@ -189,9 +189,13 @@ def test_empty_migration_roundtrip_and_existing_notification_backfill():
  db_generator=database_fixture.__wrapped__();fresh=next(db_generator);api_generator=api_fixture.__wrapped__(fresh);application=next(api_generator)
  try:
   migrate(fresh,'0025_export_jobs',downgrade=True,disposable=True)
+  from legacy_issuer_support import use_historical_issuer
+  issuer=application.state.issuer_pool
+  use_historical_issuer(application,fresh,'0025_export_jobs')
   with connection('lv_app',fresh,autocommit=True) as app,connection('lv_seed',fresh,autocommit=True) as seed_conn:w=world.__wrapped__(fresh,app,seed_conn)
   a,c,pid,_=prepare.__wrapped__(fresh,application,w);assert approve(c,pid).status_code==200;assert post(c,pid).status_code==200
   before=counters(fresh);migrate(fresh)
+  application.state.issuer_pool=issuer
   with connection('lv_worker',fresh) as db:first=[r[0] for r in db.execute('SELECT lv.pack_due(25)')]
   with connection('lv_worker',fresh) as db:second=[r[0] for r in db.execute('SELECT lv.pack_due(25)')]
   assert len(first)==len(second)==1 and first==second

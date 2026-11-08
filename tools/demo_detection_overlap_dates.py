@@ -49,7 +49,7 @@ def main(out_path):
         stl3002 = tp._statement(name, w['l1'], 'STL-3002', [('PMT-2001', '50000.00')], '50000.00', '500.00', '49500.00')
         transcript.append({'step': 'ingestion writer stages a second L1 statement, payout STL-3002, that also lists PMT-2001 (outside the detection API)',
                            'staged_document_id': str(stl3002['staged_document_id']), 'status': stl3002['status']})
-        app = create_app(AuthSettings(cookie_mode='local-http', environment='development'), connect=lambda: connection('lv_app', name), detection=True)
+        app = create_app(AuthSettings(cookie_mode='local-http', environment='development'), connect=lambda: connection('lv_app', name), issuer_connect=lambda: connection('lv_authn', name), detection=True)
         port = _free_port()
         server = uvicorn.Server(uvicorn.Config(app, host='127.0.0.1', port=port, log_level='warning', access_log=False))
         threading.Thread(target=server.run, daemon=True).start()

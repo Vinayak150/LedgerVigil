@@ -79,3 +79,35 @@ def test_api_reports_paused_writes_clearly(database, world, api):
         assert db.execute('SELECT version FROM lv.account WHERE id=%s', (account,)).fetchone()[0] == version   # nothing written
     bind(database)
     assert admin.patch(f'{BASE}/accounts/{account}', json={'name': 'SYNTHETIC renamed'}, headers={'If-Match': f'"v{version}"'}).status_code == 200
+
+
+def test_operator_bind_rejects_bare_pass_marker_before_connecting(tmp_path, monkeypatch):
+    from tools import deploy_entry
+    report = tmp_path / 'report.json'
+    report.write_text('{"status":"PASS"}')
+    monkeypatch.setattr(deploy_entry, '_secret', lambda _: pytest.fail('credential must not be read'))
+    with pytest.raises(RuntimeError, match='complete logical restore'):
+        deploy_entry.bind_restored(report)
+
+
+def test_cluster_identifier_mismatch_refuses_same_database_oid(database):
+    # Simulate a logical restore whose destination OID coincides with the source.
+    with connection(database=database) as c:
+        c.execute('UPDATE lv.database_binding SET cluster_system_id=NULL')
+    with connection('lv_app', database) as c:
+        assert c.execute('SELECT lv.recovery_state()').fetchone() == ('RESTORED_UNVERIFIED',)
+    assert bind(database) == 'BOUND'
+    with connection('lv_app', database) as c:
+        assert c.execute('SELECT lv.recovery_state()').fetchone() == ('BOUND',)
+
+
+def test_readiness_never_passes_with_only_anchors(tmp_path, monkeypatch):
+    from tools.deploy_entry import readiness
+    for key in ('LV_DATABASE_URL','LV_WORKER_DATABASE_URL','LV_AUTHN_DATABASE_URL'):
+        monkeypatch.delenv(key, raising=False)
+        monkeypatch.delenv(key+'_FILE', raising=False)
+    monkeypatch.delenv('LV_MIGRATOR_DATABASE_URL_FILE', raising=False)
+    monkeypatch.setenv('LV_ANCHOR_REPOSITORY', str(tmp_path))
+    verdict = readiness()
+    assert verdict['status'] == 'NOT_READY'
+    assert verdict['checks']['lv_authn_login'] == 'MISSING'

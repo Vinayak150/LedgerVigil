@@ -21,7 +21,7 @@ def admin_token(database, tenant, roles=('ADMINISTRATOR',)):
         user = create_user(owner, email, 'Synthetic period administrator', password)
         grant(owner, tenant, user, list(roles))
     token = new_session_token()
-    with connection('lv_app', database) as c:
+    with connection('lv_authn', database) as c:
         prepared = c.execute("SELECT lv_identity.login_prepare(%s, 'test-support', 'test-login')", (email,)).fetchone()[0]
         c.commit()
         ok = verify_password(prepared['password_hash'], password)

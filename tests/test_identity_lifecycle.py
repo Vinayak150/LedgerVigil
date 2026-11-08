@@ -28,7 +28,7 @@ def lapi(database, tmp_path, monkeypatch):
     monkeypatch.setenv('LV_MAIL_CAPTURE_DIR', str(box))
     monkeypatch.setenv('LV_ENVIRONMENT', 'development')
     monkeypatch.setenv('LV_PUBLIC_ORIGIN', 'http://127.0.0.1:3000')
-    application = create_app(AuthSettings(), connect=lambda: connection('lv_app', database))
+    application = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
     application.state.mailbox = box
     yield application
     application.state.pool.close()

@@ -434,7 +434,7 @@ def test_run_and_a_ledger_then_counter_writer_cannot_deadlock(database, dapi, wo
 
 # ======================================================================== 9. gate, contract and catalog
 def test_default_application_does_not_expose_detection(database, world):
-    app = create_app(AuthSettings(), connect=lambda: connection('lv_app', database))
+    app = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
     try:
         a = signed_in(app, world, 'analyst')
         assert run(a, world['l1']['ledger']).status_code == 404

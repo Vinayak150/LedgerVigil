@@ -38,7 +38,7 @@ SIM_TABLES = PROPOSAL_TABLES | {'lv.simulation_run'}
 @pytest.fixture
 def api(database):
     """The real application plus ONE test-only route that calls the simulation service behind the verified boundary."""
-    application = create_app(AuthSettings(), connect=lambda: connection('lv_app', database))
+    application = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
     router = APIRouter()
 
     @router.post('/test/proposals/{proposal_id}/simulate')

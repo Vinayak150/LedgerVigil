@@ -96,19 +96,19 @@ def login(body: LoginRequest, request: Request, response: Response):
         raise ProblemError(422, 'SCHEMA_INVALID', 'Content-Type must be application/json')
     source, request_id = _attribution(request)
     previous = session_token(request)
-    with request.app.state.pool.connection() as conn:
+    with request.app.state.issuer_pool.connection() as conn:
         with conn.transaction():
             prepared = conn.execute('SELECT lv_identity.login_prepare(%s, %s, %s)', (body.email, source, request_id)).fetchone()[0]
-        if prepared['throttled']:
-            log.info('login throttled request_id=%s', request_id)
-            raise ProblemError(429, 'RATE_LIMITED', 'too many sign-in attempts; try again later',
-                               headers={'Retry-After': str(prepared['retry_after_seconds'])})
-        password_ok = verify_password(prepared['password_hash'], body.password)
-        token = new_session_token()
-        with conn.transaction():
-            result = conn.execute('SELECT lv_identity.login_finish(%s, %s, %s, %s, %s, %s)',
-                                  (prepared['attempt_id'], password_ok, token_hash(token),
-                                   token_hash(previous) if previous else None, source, request_id)).fetchone()[0]
+            if not prepared['throttled']:
+                password_ok = verify_password(prepared['password_hash'], body.password)
+                token = new_session_token()
+                result = conn.execute('SELECT lv_identity.login_finish(%s, %s, %s, %s, %s, %s)',
+                                      (prepared['attempt_id'], password_ok, token_hash(token),
+                                       token_hash(previous) if previous else None, source, request_id)).fetchone()[0]
+    if prepared['throttled']:
+        log.info('login throttled request_id=%s', request_id)
+        raise ProblemError(429, 'RATE_LIMITED', 'too many sign-in attempts; try again later',
+                           headers={'Retry-After': str(prepared['retry_after_seconds'])})
     if not result['authenticated']:
         log.info('login refused request_id=%s', request_id)
         raise ProblemError(401, 'UNAUTHENTICATED', 'invalid email or password')
@@ -132,7 +132,7 @@ def logout(request: Request):
         raise ProblemError(403, 'PERMISSION_DENIED', 'missing or invalid CSRF token')
     check_origin(request)
     source, request_id = _attribution(request)
-    with request.app.state.pool.connection() as conn:
+    with request.app.state.issuer_pool.connection() as conn:
         with conn.transaction():
             revoked = conn.execute('SELECT lv_identity.logout(%s, %s, %s)', (token_hash(token), source, request_id)).fetchone()[0]
     response = Response(status_code=204)
@@ -155,7 +155,7 @@ def switch_tenant(body: SwitchTenantRequest, request: Request, response: Respons
     check_origin(request)
     source, request_id = _attribution(request)
     new_token = new_session_token()
-    with request.app.state.pool.connection() as conn:
+    with request.app.state.issuer_pool.connection() as conn:
         with conn.transaction():
             result = conn.execute('SELECT lv_identity.switch_tenant(%s, %s, %s, %s, %s)',
                                   (token_hash(token), body.tenant_id, token_hash(new_token), source, request_id)).fetchone()[0]

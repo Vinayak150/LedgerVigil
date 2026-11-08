@@ -39,7 +39,7 @@ def main(out_path):
         prepare_database(name); migrate(name)
         with connection('lv_app', name, autocommit=True) as app_conn, connection('lv_seed', name, autocommit=True) as seed:
             w = tp.world.__wrapped__(name, app_conn, seed)
-        app = create_app(AuthSettings(cookie_mode='local-http', environment='development'), connect=lambda: connection('lv_app', name), detection=True)
+        app = create_app(AuthSettings(cookie_mode='local-http', environment='development'), connect=lambda: connection('lv_app', name), issuer_connect=lambda: connection('lv_authn', name), detection=True)
         port = _free_port()
         server = uvicorn.Server(uvicorn.Config(app, host='127.0.0.1', port=port, log_level='warning', access_log=False))
         threading.Thread(target=server.run, daemon=True).start()

@@ -73,7 +73,7 @@ def check_origin(request: Request):
 
 def session_token(request: Request) -> str | None:
     token = request.cookies.get(request.app.state.auth_settings.cookie_name)
-    return token if token and len(token) <= 128 else None
+    return token if token and re.fullmatch(r'[A-Za-z0-9_-]{43}', token) else None
 
 
 def check_csrf(request: Request, token: str):
@@ -89,7 +89,7 @@ def _open_context(request: Request, conn, token: str, touch: bool) -> dict:
 
 
 @contextmanager
-def session_transaction(request: Request, *, permission: str | None = None, tenant: bool = True, touch: bool = True):
+def session_transaction(request: Request, *, permission: str | None = None, tenant: bool = True, touch: bool = True, pool=None):
     """The boundary itself: verified session -> verified tenant -> required permission, inside ONE transaction.
 
     Used directly (as a context manager) by state-changing routes that must COMMIT before they respond, so that a
@@ -104,7 +104,7 @@ def session_transaction(request: Request, *, permission: str | None = None, tena
     check_csrf(request, token)
     if request.method in UNSAFE_METHODS:
         check_origin(request)
-    with request.app.state.pool.connection() as conn:
+    with (request.app.state.pool if pool is None else pool).connection() as conn:
         with conn.transaction():
             session = _open_context(request, conn, token, touch)
             if (tenant or permission) and session['tenant_id'] is None:

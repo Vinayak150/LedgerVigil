@@ -33,7 +33,7 @@ def secrets_of(block):
 def test_every_application_process_has_its_own_non_root_identity():
     s = services()
     users = {n: field(b, 'user') for n, b in s.items() if 'deploy/Dockerfile' in b}
-    assert set(users) == {'migrate', 'api', 'web', 'maintenance', 'provider-worker', 'scheduler'}
+    assert set(users) == {'migrate', 'api', 'issuer', 'web', 'maintenance', 'provider-worker', 'scheduler'}
     assert all(u and not u.startswith('"0') for u in users.values())
     assert len(set(users.values())) == len(users)   # distinct uids: no two processes share an OS identity
 
@@ -68,7 +68,7 @@ def test_gates_are_off_by_default_and_database_is_internal():
 
 def test_proxy_access_log_drops_oauth_query_and_credentials():
     caddy = (ROOT / 'deploy' / 'proxy' / 'Caddyfile').read_text()
-    for item in ('delete code', 'delete state', 'delete realmId', 'request>headers>Cookie delete', 'request>headers>Authorization delete'):
+    for item in ('request>uri delete', 'request>headers>Cookie delete', 'request>headers>Authorization delete'):
         assert item in caddy
 
 
@@ -76,3 +76,11 @@ def test_application_containers_drop_privileges():
     s = services()
     for name in ('api', 'web', 'maintenance', 'provider-worker', 'scheduler', 'migrate'):
         assert field(s[name], 'read_only') == 'true' and 'no-new-privileges:true' in s[name] and field(s[name], 'cap_drop') == '[ALL]', name
+
+
+def test_issuer_mount_and_networks_are_not_shared_with_financial_api():
+    s = services()
+    assert 'LV_AUTHN_DATABASE_URL_FILE' in s['issuer'] and 'issuer_dsn' in s['issuer']
+    assert 'issuer_dsn' not in s['api'] and 'app_dsn' not in s['issuer']
+    assert 'networks: [issuer-db, issuer-edge]' in s['issuer']
+    assert 'issuer-db' not in s['api'] and 'issuer-edge' not in s['api']

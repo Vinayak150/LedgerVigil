@@ -29,7 +29,7 @@ def database():
 
 @pytest.fixture
 def dapi(database):
-    application = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), detection=True)
+    application = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database), detection=True)
     yield application
     application.state.pool.close()
 

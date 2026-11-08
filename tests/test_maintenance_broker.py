@@ -12,7 +12,7 @@ from uuid import uuid4,UUID
 import pytest
 import redis
 from psycopg.conninfo import make_conninfo
-from tools.dev_db import env_file,connection
+from tools.dev_db import DEV_PORT,env_file,connection
 from ledgervigil.maintenance import runtime
 from test_period_staleness import world,seed,api,setup_job,worker,age  # noqa:F401
 
@@ -74,7 +74,7 @@ def state(db,j):
 @contextlib.contextmanager
 def celery_worker(db,url,tmp_path,*,kill_after_claim=False):
     env=os.environ.copy();env['PYTHONPATH']=str(ROOT/'src')+os.pathsep+str(ROOT)
-    env['LV_WORKER_DATABASE_URL']=make_conninfo(host='127.0.0.1',port=55432,dbname=db,user='lv_worker',password=env_file('.env.roles')['WORKER_PASSWORD'])
+    env['LV_WORKER_DATABASE_URL']=make_conninfo(host='127.0.0.1',port=DEV_PORT,dbname=db,user='lv_worker',password=env_file('.env.roles')['WORKER_PASSWORD'])
     env['LV_MAINTENANCE_BROKER_URL']=url
     code="from ledgervigil.maintenance.celery_app import application; application.worker_main(['worker','-P','solo','-c','1','-Q','maintenance','--loglevel=WARNING','--without-gossip','--without-mingle','--without-heartbeat'])"
     if kill_after_claim:

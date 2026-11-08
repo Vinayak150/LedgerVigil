@@ -7,7 +7,7 @@ from pathlib import Path
 from uuid import uuid4
 import argparse,hashlib,json,os,subprocess,time,re
 from psycopg import sql
-from .dev_db import connection,require_dev_database,ROOT,env_file
+from .dev_db import DEV_PORT,connection,require_dev_database,ROOT,env_file
 from ledgervigil.ledger.replay import replay_events
 from tools import recovery_database as database_profile
 
@@ -38,7 +38,7 @@ def pg_client(command):
  if mode!='local':raise RuntimeError('LV_PG_CLIENT must be local or docker')
  binary=str(Path(os.environ['LV_PG_BIN'])/command) if os.environ.get('LV_PG_BIN') else shutil.which(command)
  if not binary:raise RuntimeError('PG_CLIENT_UNAVAILABLE')
- return [binary,'-h','127.0.0.1','-p','55432']
+ return [binary,'-h','127.0.0.1','-p',str(DEV_PORT)]
 
 
 def pg_env():

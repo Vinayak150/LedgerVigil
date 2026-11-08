@@ -99,7 +99,7 @@ def main(database=DEV_DB):
     tenants = provisioned['tenants']
     after_provision = lv_fingerprint(database)
 
-    app = create_app(AuthSettings(), connect=lambda: connection('lv_app', database))
+    app = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
 
     def client(source):
         return TestClient(app, base_url='https://testserver', raise_server_exceptions=False, client=(source, 40000))

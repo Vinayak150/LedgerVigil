@@ -74,7 +74,7 @@ def world(database, app):
 
 @pytest.fixture
 def api(database):
-    application = create_app(AuthSettings(), connect=lambda: connection('lv_app', database))
+    application = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
     yield application
     application.state.pool.close()
 
@@ -563,7 +563,7 @@ def test_cursors_do_not_cross_operations_ledgers_tenants_or_keys(database, confi
     b = signed_in(api, world, 'analystB')
     problem(b.get(f'{BASE}/ledgers', params={'cursor': led_cursor}), 400, 'CURSOR_MISMATCH')
     # A server with another cursor key (e.g. after a restart without LV_CURSOR_KEY) refuses old cursors.
-    other = create_app(AuthSettings(), connect=lambda: connection('lv_app', database))
+    other = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
     try:
         a2 = signed_in(other, world, 'analyst')
         problem(a2.get(f"{BASE}/ledgers/{cfg['ledger']}/accounts", params={'limit': '2', 'cursor': acc_cursor}), 400, 'CURSOR_MISMATCH')
@@ -574,8 +574,8 @@ def test_cursors_do_not_cross_operations_ledgers_tenants_or_keys(database, confi
 
 def test_a_configured_cursor_key_is_shared_between_processes(database, world):
     key = secrets.token_bytes(32)
-    one = create_app(AuthSettings(cursor_key=key), connect=lambda: connection('lv_app', database))
-    two = create_app(AuthSettings(cursor_key=key), connect=lambda: connection('lv_app', database))
+    one = create_app(AuthSettings(cursor_key=key), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
+    two = create_app(AuthSettings(cursor_key=key), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
     try:
         cursor = signed_in(one, world, 'analyst').get(f"{BASE}/ledgers/{world['inr']['ledger']}/accounts", params={'limit': '3'}).json()['next_cursor']
         r = signed_in(two, world, 'analyst').get(f"{BASE}/ledgers/{world['inr']['ledger']}/accounts", params={'limit': '3', 'cursor': cursor})

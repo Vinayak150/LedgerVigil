@@ -29,7 +29,7 @@ def test_role_and_schema_authority(app,database):
     with connection('lv_migrator',database) as owner:
         owner.execute('SET LOCAL ROLE lv_owner')
         assert owner.execute('SELECT current_user,rolsuper,rolbypassrls FROM pg_roles WHERE rolname=current_user').fetchone()==('lv_owner',False,False)
-        assert owner.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0037_restore_interlock',)
+        assert owner.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0038_identity_issuer',)
         rows=owner.execute("SELECT relname,relrowsecurity,relforcerowsecurity,pg_get_userbyid(relowner) FROM pg_class JOIN pg_namespace n ON n.oid=relnamespace WHERE n.nspname='lv' AND relkind='r'").fetchall()
         assert len(rows)==72   # 0037 adds database_binding and database_binding_history (restore interlock); 0035 adds six provider_* tables (connection, oauth_state, credential, job, page, object); 0010 adds proposal, proposal_revision, proposal_reference; 0011 adds simulation_run; 0032 adds five detection_* tables (owner-held, FORCE RLS)
         assert all(o=='lv_owner' for _,_,_,o in rows)

@@ -212,7 +212,7 @@ def test_migration_roundtrip_and_populated_history_refuses_downgrade():
   migrate(dbname);assert fingerprint(dbname,{'lv_meta.alembic_version','lv.configuration_change','lv.native_export_job','lv.proof_pack','lv.proof_pack_chain','lv.proof_pack_request','lv.semantic_recheck','lv.balance_dependency_step','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition','lv.provider_connection','lv.provider_oauth_state','lv.provider_credential','lv.provider_job','lv.provider_page','lv.provider_object','lv.database_binding','lv.database_binding_history','lv_identity.email_token','lv_identity.token_request','lv_identity.reauthentication'})==before and counters(dbname)==seq
   migrate(dbname,'0022_approved_withdrawal',downgrade=True,disposable=True)
   with connection('lv_app',dbname) as db:assert db.execute("SELECT has_table_privilege(current_user,'lv.account','INSERT,UPDATE')").fetchone()==(True,)
-  migrate(dbname);application=create_app(AuthSettings(),connect=lambda:connection('lv_app',dbname));application.state.test_database=dbname
+  migrate(dbname);application=create_app(AuthSettings(),connect=lambda:connection('lv_app',dbname), issuer_connect=lambda: connection('lv_authn', dbname));application.state.test_database=dbname
   try:
    admin=signed_in(application,w,'admin');assert patch(admin,w).status_code==200
    retained=fingerprint(dbname,set())

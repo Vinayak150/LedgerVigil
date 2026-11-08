@@ -35,7 +35,7 @@ def cfg(tmp_path, monkeypatch):
 
 @pytest.fixture
 def papi(database):
-    application = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), provider=True)
+    application = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database), provider=True)
     yield application
     application.state.pool.close()
 
@@ -163,14 +163,14 @@ def test_configuration_separates_api_and_worker_secrets(tmp_path):
 # ------------------------------------------------------------------------------------------------------- API + worker
 def test_gate_off_by_default_and_not_configured_state(database, world, monkeypatch):
     monkeypatch.delenv('LV_PROVIDER_SANDBOX_ENABLED', raising=False)
-    off = create_app(AuthSettings(), connect=lambda: connection('lv_app', database))
+    off = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database))
     try:
         assert not any(p.startswith('/api/v1/provider') for p in off.openapi()['paths'])
         assert signed_in(off, world, 'admin').get(f'{BASE}/provider-connections').status_code == 404
     finally:
         off.state.pool.close()
     monkeypatch.delenv('LV_PROVIDER_API_CONFIG', raising=False)
-    on = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), provider=True)
+    on = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database), provider=True)
     try:
         admin = signed_in(on, world, 'admin')
         listing = admin.get(f'{BASE}/provider-connections').json()
@@ -797,7 +797,7 @@ def test_downgrade_refused_while_a_connection_exists(database, world, papi, cfg,
         migrate(database, '0034_detection_review_filters', downgrade=True, disposable=True)
     assert 'no_provider_downgrade' in str(refused.value)
     with connection(database=database) as db:
-        assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0037_restore_interlock',)
+        assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0038_identity_issuer',)
 
 
 def test_committed_contracts_match_the_generated_ones(monkeypatch):

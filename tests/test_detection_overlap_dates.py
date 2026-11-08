@@ -258,7 +258,9 @@ def test_upgrade_keeps_1_0_0_findings_current_and_reruns_create_new_versions(dat
             inputs, fp = conn.execute('SELECT i, lv.detection_fingerprint(i) FROM lv.detection_inputs(%s, %s, %s) i', (tenant_id, ledger_id, sid)).fetchone()
             out.append({'staged_document_id': sid, 'input_fingerprint': fp, 'integrity': 'VERIFIED', **detector.detect(inputs)})
         return out
-    old = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), detection=True)
+    old = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database), detection=True)
+    from legacy_issuer_support import use_historical_issuer
+    use_historical_issuer(old,database,'0032_detection_findings')
     try:
         with monkeypatch.context() as m:
             m.setattr(detector, 'VERSION', '1.0.0'); m.setattr(detector, 'CONFIG', v1); m.setattr(detector, 'run', run_v1)
@@ -267,7 +269,7 @@ def test_upgrade_keeps_1_0_0_findings_current_and_reruns_create_new_versions(dat
     finally:
         old.state.pool.close()
     migrate(database)
-    new = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), detection=True)
+    new = create_app(AuthSettings(), connect=lambda: connection('lv_app', database), issuer_connect=lambda: connection('lv_authn', database), detection=True)
     try:
         a = signed_in(new, world, 'analyst'); f = finding(a, fid).json()
         assert f['detector_version'] == '1.0.0' and f['freshness']['status'] == 'CURRENT'     # the upgrade alone makes nothing stale

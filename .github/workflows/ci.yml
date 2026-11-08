@@ -41,6 +41,7 @@ jobs:
     env:
       POSTGRES_PASSWORD: ci-disposable-superuser   # secret-scan: allow
       LV_TEST_REDIS_URL: redis://127.0.0.1:56379/0
+      LV_DEV_DB_PORT: 55432
       LV_PG_CLIENT: local
       LV_PG_BIN: /usr/lib/postgresql/18/bin
     steps:
@@ -59,7 +60,7 @@ jobs:
           .venv/bin/python -m pip install --no-deps -r requirements.lock -r worker-requirements.lock
           .venv/bin/python -m pip install --no-deps -e .
           .venv/bin/python -m pip check
-      - name: Prepare disposable database roles
+      - name: Prepare disposable database roles, including the isolated identity issuer
         run: PATH=.venv/bin:$PATH sh scripts/ci_prepare.sh
       - name: Public index (optional artifact)
         if: ${{ vars.LV_PUBLIC_INDEX_URL != '' }}

@@ -4,7 +4,7 @@ import os
 import signal
 import threading
 from psycopg.conninfo import make_conninfo
-from tools.dev_db import DEV_DB,env_file,require_dev_database
+from tools.dev_db import DEV_PORT,DEV_DB,env_file,require_dev_database
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
@@ -15,7 +15,7 @@ def main():
     from ledgervigil import logredact
     logredact.install()
     require_dev_database(args.database)
-    os.environ['LV_WORKER_DATABASE_URL']=make_conninfo(host='127.0.0.1',port=55432,dbname=args.database,user='lv_worker',password=env_file('.env.roles')['WORKER_PASSWORD'])
+    os.environ['LV_WORKER_DATABASE_URL']=make_conninfo(host='127.0.0.1',port=DEV_PORT,dbname=args.database,user='lv_worker',password=env_file('.env.roles')['WORKER_PASSWORD'])
     os.environ.setdefault('LV_MAINTENANCE_BROKER_URL','redis://127.0.0.1:56379/0')
     from ledgervigil.maintenance.celery_app import application,publish,publish_export,publish_pack
     from ledgervigil.maintenance.runtime import connect,scheduler,scheduler_once

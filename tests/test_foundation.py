@@ -6,6 +6,7 @@ import psycopg
 import pytest
 from fastapi.testclient import TestClient
 from ledgervigil.app import app
+from tools.dev_db import DEV_PORT
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -15,7 +16,7 @@ def config():
 @pytest.fixture
 def conn():
     c=config()
-    connection=psycopg.connect(host="127.0.0.1",port=55432,dbname="ledgervigil_dev",user="postgres",password=c["POSTGRES_PASSWORD"])
+    connection=psycopg.connect(host="127.0.0.1",port=DEV_PORT,dbname="ledgervigil_dev",user="postgres",password=c["POSTGRES_PASSWORD"])
     try:
         with connection.transaction():
             yield connection
