@@ -61,7 +61,9 @@ jobs:
           .venv/bin/python -m pip install --no-deps -e .
           .venv/bin/python -m pip check
       - name: Prepare disposable database roles, including the isolated identity issuer
-        run: PATH=.venv/bin:$PATH sh scripts/ci_prepare.sh
+        run: |
+          sh -n scripts/ci_prepare.sh
+          PATH=.venv/bin:$PATH sh scripts/ci_prepare.sh
       - name: Public index (optional artifact)
         if: ${{ vars.LV_PUBLIC_INDEX_URL != '' }}
         run: |

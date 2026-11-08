@@ -4,7 +4,10 @@
 # Never run against a database you care about.
 set -eu
 cd "$(dirname "$0")/.."
-: "${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD to the disposable server's superuser password}"
+if [ -z "${POSTGRES_PASSWORD:-}" ]; then
+    printf '%s\n' 'Set POSTGRES_PASSWORD for the disposable PostgreSQL server.' >&2
+    exit 2
+fi
 umask 077
 [ -f .env ] || printf 'POSTGRES_PASSWORD=%s\n' "$POSTGRES_PASSWORD" > .env
 python -m tools.dev_db prepare
