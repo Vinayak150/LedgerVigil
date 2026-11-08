@@ -268,5 +268,13 @@ def test_runtime_role_cannot_bypass_the_functions(database, world, lapi):
         with pytest.raises(psycopg.errors.InsufficientPrivilege):
             app.execute("SELECT lv_identity.audit_page(%s,NULL,10,'test','req-2')", (b'\0' * 32,))
         app.rollback()
-        r = app.execute("SELECT lv_identity.token_consume('RESET_PASSWORD',%s,'$argon2id$v=19$m=65536,t=3,p=4$x$y','test','req-3')", (b'\1' * 32,)).fetchone()[0]
-        assert r == {'ok': False, 'throttled': False}
+        statement = (
+            "SELECT lv_identity.token_consume('RESET_PASSWORD',%s,"
+            "'$argon2id$v=19$m=65536,t=3,p=4$x$y','test','req-3')"
+        )
+        with pytest.raises(psycopg.errors.InsufficientPrivilege):
+            app.execute(statement, (b'\1' * 32,))
+        app.rollback()
+    with connection('lv_authn', database) as issuer:
+        result = issuer.execute(statement, (b'\1' * 32,)).fetchone()[0]
+        assert result == {'ok': False, 'throttled': False}

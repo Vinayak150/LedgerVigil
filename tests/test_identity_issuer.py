@@ -111,3 +111,26 @@ def test_four_reset_confirmations_accept_exactly_once(database, lapi, world):
     with ThreadPoolExecutor(max_workers=4) as executor:
         assert sorted(executor.map(submit, range(4))) == [200,400,400,400]
     assert old.get(PREFIX+'/me').status_code == 401
+
+
+def test_populated_0029_upgrade_preserves_all_original_tables():
+    """Exercise the installed schema revision using a new synthetic tenant world."""
+    from tools.verify_recovery import fingerprints
+
+    with disposable('0029_account_patch') as db:
+        with connection('lv_app', db, autocommit=True) as app, connection('lv_seed', db, autocommit=True) as seeder:
+            world.__wrapped__(db, app, seeder)
+        with connection(database=db) as c:
+            before = fingerprints(c)
+        before.pop('lv_meta.alembic_version')
+        assert len(before) == 65
+        assert before['lv_identity.app_user']['rows'] > 0
+        assert before['lv.journal_line']['rows'] > 0
+
+        migrate(db)
+        with connection(database=db) as c:
+            after = fingerprints(c)
+            assert c.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0038_identity_issuer',)
+        assert {name: after[name] for name in before} == before
+        with connection('lv_app', db) as app:
+            assert app.execute('SELECT lv.recovery_state()').fetchone() == ('BOUND',)

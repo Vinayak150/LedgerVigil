@@ -89,7 +89,11 @@ def _env_issuer_connect():
     url = os.environ.get('LV_AUTHN_DATABASE_URL')
     if not url:
         raise RuntimeRoleError('identity issuer connection is not configured')
-    return psycopg.connect(url, autocommit=False)
+    try:
+        return psycopg.connect(url, autocommit=False)
+    except psycopg.OperationalError as exc:
+        # No request transaction has started on this connection.
+        raise RuntimeRoleError('identity issuer connection is unavailable') from exc
 
 
 def _issuer_path(path: str) -> bool:
@@ -158,7 +162,7 @@ def create_app(settings: AuthSettings | None = None, connect=None, *, detection:
                 return problem_response(request, 503, 'RECOVERY_VERIFICATION_REQUIRED',
                                         'this database was restored and has not passed recovery verification; financial writes are paused')
             cause = cause.__cause__ or cause.__context__
-        if isinstance(exc, (RuntimeRoleError, psycopg.OperationalError)):
+        if isinstance(exc, RuntimeRoleError):
             return problem_response(request, 503, 'DEPENDENCY_UNAVAILABLE', 'database service unavailable')
         log.error('unhandled error request_id=%s type=%s', getattr(request.state, 'request_id', None), type(exc).__name__)
         return problem_response(request, 500, 'INTERNAL', 'unexpected error')
