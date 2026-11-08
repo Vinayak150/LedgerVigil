@@ -51,7 +51,7 @@ def statement(cfg, envelope=None, **fields):
 def ingest(database, cfg, raw, *, tenant=None, declared=(fmt.FORMAT, fmt.VERSION)):
     with connection(database=database) as db:head=db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()[0]
     writer=ingest_statement
-    if head not in ('0021_native_execution','0022_approved_withdrawal','0023_configuration_boundary','0024_proof_export_authority','0025_export_jobs','0026_proof_packs','0027_account_lock_order','0028_workflow_lock_order','0029_account_patch'):
+    if head not in ('0021_native_execution','0022_approved_withdrawal','0023_configuration_boundary','0024_proof_export_authority','0025_export_jobs','0026_proof_packs','0027_account_lock_order','0028_workflow_lock_order','0029_account_patch','0030_override_independence','0031_semantic_revalidation','0032_detection_findings','0033_detection_overlap_dates'):
         from legacy_ingestion_0020 import ingest_statement as writer
     with connection('lv_ingest', database, autocommit=True) as c:
         return writer(c, tenant or cfg['tenant'], cfg['ledger'], raw, declared_format=declared[0], declared_version=declared[1])

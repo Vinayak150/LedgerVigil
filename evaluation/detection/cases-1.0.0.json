@@ -1,0 +1,6095 @@
+{
+ "cases": [
+  {
+   "class": "C01_CLEAN_SETTLED",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "DC0100",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "506.79",
+     "item": "DC0100-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "926.33",
+     "item": "DC0100-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1400.73",
+     "item": "DC0100-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2465.00",
+     "item": "DC0100-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement and recorded settlement agree exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "0.62",
+     "gross": "5298.85",
+     "items": [
+      "DC0100-P0",
+      "DC0100-P1",
+      "DC0100-P2",
+      "DC0100-P3"
+     ],
+     "net": "5298.23",
+     "payout": "DC0100-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "0.62",
+    "gross": "5298.85",
+    "items": [
+     [
+      "DC0100-P0",
+      "PAYMENT",
+      "506.79"
+     ],
+     [
+      "DC0100-P1",
+      "PAYMENT",
+      "926.33"
+     ],
+     [
+      "DC0100-P2",
+      "PAYMENT",
+      "1400.73"
+     ],
+     [
+      "DC0100-P3",
+      "PAYMENT",
+      "2465.00"
+     ]
+    ],
+    "net": "5298.23",
+    "payout": "DC0100-PO"
+   }
+  },
+  {
+   "class": "C01_CLEAN_SETTLED",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "DC0101",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "8909.67",
+     "item": "DC0101-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3408.61",
+     "item": "DC0101-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4255.58",
+     "item": "DC0101-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2920.74",
+     "item": "DC0101-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement and recorded settlement agree exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "0.95",
+     "gross": "19494.60",
+     "items": [
+      "DC0101-P0",
+      "DC0101-P1",
+      "DC0101-P2",
+      "DC0101-P3"
+     ],
+     "net": "19493.65",
+     "payout": "DC0101-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "0.95",
+    "gross": "19494.60",
+    "items": [
+     [
+      "DC0101-P0",
+      "PAYMENT",
+      "8909.67"
+     ],
+     [
+      "DC0101-P1",
+      "PAYMENT",
+      "3408.61"
+     ],
+     [
+      "DC0101-P2",
+      "PAYMENT",
+      "4255.58"
+     ],
+     [
+      "DC0101-P3",
+      "PAYMENT",
+      "2920.74"
+     ]
+    ],
+    "net": "19493.65",
+    "payout": "DC0101-PO"
+   }
+  },
+  {
+   "class": "C02_SETTLEMENT_MISSING",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED"
+    ]
+   },
+   "id": "DC0200",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "261.20",
+     "item": "DC0200-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1186.78",
+     "item": "DC0200-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2255.18",
+     "item": "DC0200-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2858.81",
+     "item": "DC0200-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Payout on the statement; its payments RECEIVED; no settlement recorded.",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "11.24",
+    "gross": "6561.97",
+    "items": [
+     [
+      "DC0200-P0",
+      "PAYMENT",
+      "261.20"
+     ],
+     [
+      "DC0200-P1",
+      "PAYMENT",
+      "1186.78"
+     ],
+     [
+      "DC0200-P2",
+      "PAYMENT",
+      "2255.18"
+     ],
+     [
+      "DC0200-P3",
+      "PAYMENT",
+      "2858.81"
+     ]
+    ],
+    "net": "6550.73",
+    "payout": "DC0200-PO"
+   }
+  },
+  {
+   "class": "C02_SETTLEMENT_MISSING",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED"
+    ]
+   },
+   "id": "DC0201",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "3241.91",
+     "item": "DC0201-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6067.15",
+     "item": "DC0201-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Payout on the statement; its payments RECEIVED; no settlement recorded.",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "10.92",
+    "gross": "9309.06",
+    "items": [
+     [
+      "DC0201-P0",
+      "PAYMENT",
+      "3241.91"
+     ],
+     [
+      "DC0201-P1",
+      "PAYMENT",
+      "6067.15"
+     ]
+    ],
+    "net": "9298.14",
+    "payout": "DC0201-PO"
+   }
+  },
+  {
+   "class": "C03_FEE_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER"
+    ]
+   },
+   "id": "DC0300",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "7127.29",
+     "item": "DC0300-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "26.69",
+     "item": "DC0300-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2539.50",
+     "item": "DC0300-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded with the same items and gross but a different fee/net.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "41.47",
+     "gross": "9693.48",
+     "items": [
+      "DC0300-P0",
+      "DC0300-P1",
+      "DC0300-P2"
+     ],
+     "net": "9652.01",
+     "payout": "DC0300-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "41.46",
+    "gross": "9693.48",
+    "items": [
+     [
+      "DC0300-P0",
+      "PAYMENT",
+      "7127.29"
+     ],
+     [
+      "DC0300-P1",
+      "PAYMENT",
+      "26.69"
+     ],
+     [
+      "DC0300-P2",
+      "PAYMENT",
+      "2539.50"
+     ]
+    ],
+    "net": "9652.02",
+    "payout": "DC0300-PO"
+   }
+  },
+  {
+   "class": "C03_FEE_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER"
+    ]
+   },
+   "id": "DC0301",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6017.08",
+     "item": "DC0301-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5270.03",
+     "item": "DC0301-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded with the same items and gross but a different fee/net.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "40.07",
+     "gross": "11287.11",
+     "items": [
+      "DC0301-P0",
+      "DC0301-P1"
+     ],
+     "net": "11247.04",
+     "payout": "DC0301-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "39.40",
+    "gross": "11287.11",
+    "items": [
+     [
+      "DC0301-P0",
+      "PAYMENT",
+      "6017.08"
+     ],
+     [
+      "DC0301-P1",
+      "PAYMENT",
+      "5270.03"
+     ]
+    ],
+    "net": "11247.71",
+    "payout": "DC0301-PO"
+   }
+  },
+  {
+   "class": "C04_ITEM_OMITTED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER",
+     "SETTLEMENT_ITEMS_DIFFER"
+    ]
+   },
+   "id": "DC0400",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "7267.27",
+     "item": "DC0400-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2108.30",
+     "item": "DC0400-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded without one statement item (gross reduced accordingly).",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "5.84",
+     "gross": "7267.27",
+     "items": [
+      "DC0400-P0"
+     ],
+     "net": "7261.43",
+     "payout": "DC0400-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "5.84",
+    "gross": "9375.57",
+    "items": [
+     [
+      "DC0400-P0",
+      "PAYMENT",
+      "7267.27"
+     ],
+     [
+      "DC0400-P1",
+      "PAYMENT",
+      "2108.30"
+     ]
+    ],
+    "net": "9369.73",
+    "payout": "DC0400-PO"
+   }
+  },
+  {
+   "class": "C04_ITEM_OMITTED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER",
+     "SETTLEMENT_ITEMS_DIFFER"
+    ]
+   },
+   "id": "DC0401",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "7525.08",
+     "item": "DC0401-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4377.42",
+     "item": "DC0401-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5717.12",
+     "item": "DC0401-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded without one statement item (gross reduced accordingly).",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "35.30",
+     "gross": "11902.50",
+     "items": [
+      "DC0401-P0",
+      "DC0401-P1"
+     ],
+     "net": "11867.20",
+     "payout": "DC0401-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "35.30",
+    "gross": "17619.62",
+    "items": [
+     [
+      "DC0401-P0",
+      "PAYMENT",
+      "7525.08"
+     ],
+     [
+      "DC0401-P1",
+      "PAYMENT",
+      "4377.42"
+     ],
+     [
+      "DC0401-P2",
+      "PAYMENT",
+      "5717.12"
+     ]
+    ],
+    "net": "17584.32",
+    "payout": "DC0401-PO"
+   }
+  },
+  {
+   "class": "C05_PAYMENT_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "DC0500",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "814.50",
+     "item": "DC0500-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1664.10",
+     "item": "DC0500-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8213.10",
+     "item": "DC0500-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8172.18",
+     "item": "DC0500-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One payment recorded at a different amount than the statement line; no settlement.",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "7.33",
+    "gross": "18861.75",
+    "items": [
+     [
+      "DC0500-P0",
+      "PAYMENT",
+      "812.37"
+     ],
+     [
+      "DC0500-P1",
+      "PAYMENT",
+      "1664.10"
+     ],
+     [
+      "DC0500-P2",
+      "PAYMENT",
+      "8213.10"
+     ],
+     [
+      "DC0500-P3",
+      "PAYMENT",
+      "8172.18"
+     ]
+    ],
+    "net": "18854.42",
+    "payout": "DC0500-PO"
+   }
+  },
+  {
+   "class": "C05_PAYMENT_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "DC0501",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "2956.17",
+     "item": "DC0501-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8002.74",
+     "item": "DC0501-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1835.29",
+     "item": "DC0501-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7332.45",
+     "item": "DC0501-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One payment recorded at a different amount than the statement line; no settlement.",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "35.65",
+    "gross": "20124.64",
+    "items": [
+     [
+      "DC0501-P0",
+      "PAYMENT",
+      "2954.16"
+     ],
+     [
+      "DC0501-P1",
+      "PAYMENT",
+      "8002.74"
+     ],
+     [
+      "DC0501-P2",
+      "PAYMENT",
+      "1835.29"
+     ],
+     [
+      "DC0501-P3",
+      "PAYMENT",
+      "7332.45"
+     ]
+    ],
+    "net": "20088.99",
+    "payout": "DC0501-PO"
+   }
+  },
+  {
+   "class": "C06_UNKNOWN_ITEM",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "DC0600",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "4738.98",
+     "item": "DC0600-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2428.58",
+     "item": "DC0600-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement lists an item with no payment of that identity; no settlement.",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "4.72",
+    "gross": "10491.37",
+    "items": [
+     [
+      "DC0600-P0",
+      "PAYMENT",
+      "4738.98"
+     ],
+     [
+      "DC0600-P1",
+      "PAYMENT",
+      "2428.58"
+     ],
+     [
+      "DC0600-UNKNOWN",
+      "PAYMENT",
+      "3323.81"
+     ]
+    ],
+    "net": "10486.65",
+    "payout": "DC0600-PO"
+   }
+  },
+  {
+   "class": "C06_UNKNOWN_ITEM",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "DC0601",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "335.23",
+     "item": "DC0601-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4728.43",
+     "item": "DC0601-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement lists an item with no payment of that identity; no settlement.",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "45.41",
+    "gross": "12475.00",
+    "items": [
+     [
+      "DC0601-P0",
+      "PAYMENT",
+      "335.23"
+     ],
+     [
+      "DC0601-P1",
+      "PAYMENT",
+      "4728.43"
+     ],
+     [
+      "DC0601-UNKNOWN",
+      "PAYMENT",
+      "7411.34"
+     ]
+    ],
+    "net": "12429.59",
+    "payout": "DC0601-PO"
+   }
+  },
+  {
+   "class": "C07_OTHER_NAMESPACE_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "DC0700",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "577.23",
+     "item": "DC0700-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6947.07",
+     "item": "DC0700-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1470.04",
+     "item": "DC0700-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2034.42",
+     "item": "DC0700-P3",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3780.64",
+     "item": "DC0700-NS",
+     "processor": "processor-2"
+    }
+   ],
+   "rationale": "Item id exists only under another processor with the SAME amount; must not link.",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "35.03",
+    "gross": "14809.40",
+    "items": [
+     [
+      "DC0700-P0",
+      "PAYMENT",
+      "577.23"
+     ],
+     [
+      "DC0700-P1",
+      "PAYMENT",
+      "6947.07"
+     ],
+     [
+      "DC0700-P2",
+      "PAYMENT",
+      "1470.04"
+     ],
+     [
+      "DC0700-P3",
+      "PAYMENT",
+      "2034.42"
+     ],
+     [
+      "DC0700-NS",
+      "PAYMENT",
+      "3780.64"
+     ]
+    ],
+    "net": "14774.37",
+    "payout": "DC0700-PO"
+   }
+  },
+  {
+   "class": "C07_OTHER_NAMESPACE_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "DC0701",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "4947.48",
+     "item": "DC0701-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3028.23",
+     "item": "DC0701-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2411.69",
+     "item": "DC0701-NS",
+     "processor": "processor-2"
+    }
+   ],
+   "rationale": "Item id exists only under another processor with the SAME amount; must not link.",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "43.78",
+    "gross": "10387.40",
+    "items": [
+     [
+      "DC0701-P0",
+      "PAYMENT",
+      "4947.48"
+     ],
+     [
+      "DC0701-P1",
+      "PAYMENT",
+      "3028.23"
+     ],
+     [
+      "DC0701-NS",
+      "PAYMENT",
+      "2411.69"
+     ]
+    ],
+    "net": "10343.62",
+    "payout": "DC0701-PO"
+   }
+  },
+  {
+   "class": "C08_SETTLED_ELSEWHERE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_SETTLED_ELSEWHERE"
+    ]
+   },
+   "id": "DC0800",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "4202.15",
+     "item": "DC0800-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "458.45",
+     "item": "DC0800-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One statement payment is already in another payout's settlement; this payout unsettled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "0.00",
+     "gross": "458.45",
+     "items": [
+      "DC0800-P1"
+     ],
+     "net": "458.45",
+     "payout": "DC0800-OTHER"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "6.76",
+    "gross": "4660.60",
+    "items": [
+     [
+      "DC0800-P0",
+      "PAYMENT",
+      "4202.15"
+     ],
+     [
+      "DC0800-P1",
+      "PAYMENT",
+      "458.45"
+     ]
+    ],
+    "net": "4653.84",
+    "payout": "DC0800-PO"
+   }
+  },
+  {
+   "class": "C08_SETTLED_ELSEWHERE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_SETTLED_ELSEWHERE"
+    ]
+   },
+   "id": "DC0801",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "4776.39",
+     "item": "DC0801-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6269.93",
+     "item": "DC0801-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "254.66",
+     "item": "DC0801-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One statement payment is already in another payout's settlement; this payout unsettled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "0.00",
+     "gross": "254.66",
+     "items": [
+      "DC0801-P2"
+     ],
+     "net": "254.66",
+     "payout": "DC0801-OTHER"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "17.14",
+    "gross": "11300.98",
+    "items": [
+     [
+      "DC0801-P0",
+      "PAYMENT",
+      "4776.39"
+     ],
+     [
+      "DC0801-P1",
+      "PAYMENT",
+      "6269.93"
+     ],
+     [
+      "DC0801-P2",
+      "PAYMENT",
+      "254.66"
+     ]
+    ],
+    "net": "11283.84",
+    "payout": "DC0801-PO"
+   }
+  },
+  {
+   "class": "C09_FORMAT_VARIANT_TRAP",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "DC0900",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6285.30",
+     "item": "DC0900-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4973.20",
+     "item": "DC0900-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement writes amounts with fewer decimals (300.0); settlement agrees exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "16.76",
+     "gross": "11258.50",
+     "items": [
+      "DC0900-P0",
+      "DC0900-P1"
+     ],
+     "net": "11241.74",
+     "payout": "DC0900-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "16.76",
+    "gross": "11258.5",
+    "items": [
+     [
+      "DC0900-P0",
+      "PAYMENT",
+      "6285.3"
+     ],
+     [
+      "DC0900-P1",
+      "PAYMENT",
+      "4973.2"
+     ]
+    ],
+    "net": "11241.74",
+    "payout": "DC0900-PO"
+   }
+  },
+  {
+   "class": "C09_FORMAT_VARIANT_TRAP",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "DC0901",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "142.50",
+     "item": "DC0901-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5011.10",
+     "item": "DC0901-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5315.80",
+     "item": "DC0901-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement writes amounts with fewer decimals (300.0); settlement agrees exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "22.93",
+     "gross": "10469.40",
+     "items": [
+      "DC0901-P0",
+      "DC0901-P1",
+      "DC0901-P2"
+     ],
+     "net": "10446.47",
+     "payout": "DC0901-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "22.93",
+    "gross": "10469.4",
+    "items": [
+     [
+      "DC0901-P0",
+      "PAYMENT",
+      "142.5"
+     ],
+     [
+      "DC0901-P1",
+      "PAYMENT",
+      "5011.1"
+     ],
+     [
+      "DC0901-P2",
+      "PAYMENT",
+      "5315.8"
+     ]
+    ],
+    "net": "10446.47",
+    "payout": "DC0901-PO"
+   }
+  },
+  {
+   "class": "C10_REFUND_LINE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "REFUND_ITEMS_NOT_SUPPORTED",
+    "kinds": []
+   },
+   "id": "DC1000",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "3611.65",
+     "item": "DC1000-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6029.04",
+     "item": "DC1000-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3750.77",
+     "item": "DC1000-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3614.73",
+     "item": "DC1000-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement contains a refund line (unsupported).",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "23.64",
+    "gross": "17006.18",
+    "items": [
+     [
+      "DC1000-P0",
+      "PAYMENT",
+      "3611.65"
+     ],
+     [
+      "DC1000-P1",
+      "PAYMENT",
+      "6029.04"
+     ],
+     [
+      "DC1000-P2",
+      "PAYMENT",
+      "3750.77"
+     ],
+     [
+      "DC1000-P3",
+      "PAYMENT",
+      "3614.73"
+     ],
+     [
+      "DC1000-RF",
+      "REFUND",
+      "0.01"
+     ]
+    ],
+    "net": "16982.54",
+    "payout": "DC1000-PO"
+   }
+  },
+  {
+   "class": "C10_REFUND_LINE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "REFUND_ITEMS_NOT_SUPPORTED",
+    "kinds": []
+   },
+   "id": "DC1001",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "256.31",
+     "item": "DC1001-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8537.95",
+     "item": "DC1001-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4259.16",
+     "item": "DC1001-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4664.36",
+     "item": "DC1001-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement contains a refund line (unsupported).",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "15.67",
+    "gross": "17717.77",
+    "items": [
+     [
+      "DC1001-P0",
+      "PAYMENT",
+      "256.31"
+     ],
+     [
+      "DC1001-P1",
+      "PAYMENT",
+      "8537.95"
+     ],
+     [
+      "DC1001-P2",
+      "PAYMENT",
+      "4259.16"
+     ],
+     [
+      "DC1001-P3",
+      "PAYMENT",
+      "4664.36"
+     ],
+     [
+      "DC1001-RF",
+      "REFUND",
+      "0.01"
+     ]
+    ],
+    "net": "17702.10",
+    "payout": "DC1001-PO"
+   }
+  },
+  {
+   "class": "C11_CONFLICTING_FILE",
+   "conflict": {
+    "fee": "21.08",
+    "gross": "11671.66",
+    "items": [
+     [
+      "DC1100-P0",
+      "PAYMENT",
+      "5270.30"
+     ],
+     [
+      "DC1100-P1",
+      "PAYMENT",
+      "6401.36"
+     ]
+    ],
+    "net": "11650.58",
+    "payout": "DC1100-PO"
+   },
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "AMBIGUOUS_STATEMENT",
+    "kinds": []
+   },
+   "id": "DC1100",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "5270.30",
+     "item": "DC1100-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6401.36",
+     "item": "DC1100-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "A second file claims the same payout with different content (ambiguous evidence).",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "21.07",
+    "gross": "11671.66",
+    "items": [
+     [
+      "DC1100-P0",
+      "PAYMENT",
+      "5270.30"
+     ],
+     [
+      "DC1100-P1",
+      "PAYMENT",
+      "6401.36"
+     ]
+    ],
+    "net": "11650.59",
+    "payout": "DC1100-PO"
+   }
+  },
+  {
+   "class": "C11_CONFLICTING_FILE",
+   "conflict": {
+    "fee": "29.21",
+    "gross": "20571.15",
+    "items": [
+     [
+      "DC1101-P0",
+      "PAYMENT",
+      "7541.27"
+     ],
+     [
+      "DC1101-P1",
+      "PAYMENT",
+      "8040.72"
+     ],
+     [
+      "DC1101-P2",
+      "PAYMENT",
+      "4989.16"
+     ]
+    ],
+    "net": "20541.94",
+    "payout": "DC1101-PO"
+   },
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "AMBIGUOUS_STATEMENT",
+    "kinds": []
+   },
+   "id": "DC1101",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "7541.27",
+     "item": "DC1101-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8040.72",
+     "item": "DC1101-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4989.16",
+     "item": "DC1101-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "A second file claims the same payout with different content (ambiguous evidence).",
+   "settlements": [],
+   "split": "dev",
+   "statement": {
+    "fee": "29.20",
+    "gross": "20571.15",
+    "items": [
+     [
+      "DC1101-P0",
+      "PAYMENT",
+      "7541.27"
+     ],
+     [
+      "DC1101-P1",
+      "PAYMENT",
+      "8040.72"
+     ],
+     [
+      "DC1101-P2",
+      "PAYMENT",
+      "4989.16"
+     ]
+    ],
+    "net": "20541.95",
+    "payout": "DC1101-PO"
+   }
+  },
+  {
+   "class": "C12_SWAPPED_AMOUNTS_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "DC1200",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "4949.13",
+     "item": "DC1200-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8532.88",
+     "item": "DC1200-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3785.18",
+     "item": "DC1200-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "297.74",
+     "item": "DC1200-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Two item amounts swapped between payments; totals and item set equal; settled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "43.21",
+     "gross": "17564.93",
+     "items": [
+      "DC1200-P0",
+      "DC1200-P1",
+      "DC1200-P2",
+      "DC1200-P3"
+     ],
+     "net": "17521.72",
+     "payout": "DC1200-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "43.21",
+    "gross": "17564.93",
+    "items": [
+     [
+      "DC1200-P0",
+      "PAYMENT",
+      "8532.88"
+     ],
+     [
+      "DC1200-P1",
+      "PAYMENT",
+      "4949.13"
+     ],
+     [
+      "DC1200-P2",
+      "PAYMENT",
+      "3785.18"
+     ],
+     [
+      "DC1200-P3",
+      "PAYMENT",
+      "297.74"
+     ]
+    ],
+    "net": "17521.72",
+    "payout": "DC1200-PO"
+   }
+  },
+  {
+   "class": "C12_SWAPPED_AMOUNTS_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "DC1201",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "4061.62",
+     "item": "DC1201-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5479.19",
+     "item": "DC1201-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3898.67",
+     "item": "DC1201-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Two item amounts swapped between payments; totals and item set equal; settled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "8.39",
+     "gross": "13439.48",
+     "items": [
+      "DC1201-P0",
+      "DC1201-P1",
+      "DC1201-P2"
+     ],
+     "net": "13431.09",
+     "payout": "DC1201-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "8.39",
+    "gross": "13439.48",
+    "items": [
+     [
+      "DC1201-P0",
+      "PAYMENT",
+      "5479.19"
+     ],
+     [
+      "DC1201-P1",
+      "PAYMENT",
+      "4061.62"
+     ],
+     [
+      "DC1201-P2",
+      "PAYMENT",
+      "3898.67"
+     ]
+    ],
+    "net": "13431.09",
+    "payout": "DC1201-PO"
+   }
+  },
+  {
+   "class": "C13_PAYOUT_DATE_BLIND_SPOT",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "DC1300",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6852.89",
+     "item": "DC1300-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3862.95",
+     "item": "DC1300-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2499.91",
+     "item": "DC1300-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3769.26",
+     "item": "DC1300-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded on a different payout date; amounts and items agree. v1 does not compare dates.",
+   "settlements": [
+    {
+     "date": "2026-10-15",
+     "fee": "6.15",
+     "gross": "16985.01",
+     "items": [
+      "DC1300-P0",
+      "DC1300-P1",
+      "DC1300-P2",
+      "DC1300-P3"
+     ],
+     "net": "16978.86",
+     "payout": "DC1300-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "6.15",
+    "gross": "16985.01",
+    "items": [
+     [
+      "DC1300-P0",
+      "PAYMENT",
+      "6852.89"
+     ],
+     [
+      "DC1300-P1",
+      "PAYMENT",
+      "3862.95"
+     ],
+     [
+      "DC1300-P2",
+      "PAYMENT",
+      "2499.91"
+     ],
+     [
+      "DC1300-P3",
+      "PAYMENT",
+      "3769.26"
+     ]
+    ],
+    "net": "16978.86",
+    "payout": "DC1300-PO"
+   }
+  },
+  {
+   "class": "C13_PAYOUT_DATE_BLIND_SPOT",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "DC1301",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6758.24",
+     "item": "DC1301-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3814.11",
+     "item": "DC1301-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded on a different payout date; amounts and items agree. v1 does not compare dates.",
+   "settlements": [
+    {
+     "date": "2026-10-15",
+     "fee": "23.62",
+     "gross": "10572.35",
+     "items": [
+      "DC1301-P0",
+      "DC1301-P1"
+     ],
+     "net": "10548.73",
+     "payout": "DC1301-PO"
+    }
+   ],
+   "split": "dev",
+   "statement": {
+    "fee": "23.62",
+    "gross": "10572.35",
+    "items": [
+     [
+      "DC1301-P0",
+      "PAYMENT",
+      "6758.24"
+     ],
+     [
+      "DC1301-P1",
+      "PAYMENT",
+      "3814.11"
+     ]
+    ],
+    "net": "10548.73",
+    "payout": "DC1301-PO"
+   }
+  },
+  {
+   "class": "C01_CLEAN_SETTLED",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC0100",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "407.42",
+     "item": "HC0100-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4743.53",
+     "item": "HC0100-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8010.09",
+     "item": "HC0100-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2173.90",
+     "item": "HC0100-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement and recorded settlement agree exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "11.23",
+     "gross": "15334.94",
+     "items": [
+      "HC0100-P0",
+      "HC0100-P1",
+      "HC0100-P2",
+      "HC0100-P3"
+     ],
+     "net": "15323.71",
+     "payout": "HC0100-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "11.23",
+    "gross": "15334.94",
+    "items": [
+     [
+      "HC0100-P0",
+      "PAYMENT",
+      "407.42"
+     ],
+     [
+      "HC0100-P1",
+      "PAYMENT",
+      "4743.53"
+     ],
+     [
+      "HC0100-P2",
+      "PAYMENT",
+      "8010.09"
+     ],
+     [
+      "HC0100-P3",
+      "PAYMENT",
+      "2173.90"
+     ]
+    ],
+    "net": "15323.71",
+    "payout": "HC0100-PO"
+   }
+  },
+  {
+   "class": "C01_CLEAN_SETTLED",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC0101",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "8701.31",
+     "item": "HC0101-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1576.27",
+     "item": "HC0101-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement and recorded settlement agree exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "49.12",
+     "gross": "10277.58",
+     "items": [
+      "HC0101-P0",
+      "HC0101-P1"
+     ],
+     "net": "10228.46",
+     "payout": "HC0101-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "49.12",
+    "gross": "10277.58",
+    "items": [
+     [
+      "HC0101-P0",
+      "PAYMENT",
+      "8701.31"
+     ],
+     [
+      "HC0101-P1",
+      "PAYMENT",
+      "1576.27"
+     ]
+    ],
+    "net": "10228.46",
+    "payout": "HC0101-PO"
+   }
+  },
+  {
+   "class": "C01_CLEAN_SETTLED",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC0102",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6940.35",
+     "item": "HC0102-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3133.41",
+     "item": "HC0102-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7020.83",
+     "item": "HC0102-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement and recorded settlement agree exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "46.47",
+     "gross": "17094.59",
+     "items": [
+      "HC0102-P0",
+      "HC0102-P1",
+      "HC0102-P2"
+     ],
+     "net": "17048.12",
+     "payout": "HC0102-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "46.47",
+    "gross": "17094.59",
+    "items": [
+     [
+      "HC0102-P0",
+      "PAYMENT",
+      "6940.35"
+     ],
+     [
+      "HC0102-P1",
+      "PAYMENT",
+      "3133.41"
+     ],
+     [
+      "HC0102-P2",
+      "PAYMENT",
+      "7020.83"
+     ]
+    ],
+    "net": "17048.12",
+    "payout": "HC0102-PO"
+   }
+  },
+  {
+   "class": "C01_CLEAN_SETTLED",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC0103",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "1299.42",
+     "item": "HC0103-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5326.06",
+     "item": "HC0103-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6821.92",
+     "item": "HC0103-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement and recorded settlement agree exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "25.60",
+     "gross": "13447.40",
+     "items": [
+      "HC0103-P0",
+      "HC0103-P1",
+      "HC0103-P2"
+     ],
+     "net": "13421.80",
+     "payout": "HC0103-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "25.60",
+    "gross": "13447.40",
+    "items": [
+     [
+      "HC0103-P0",
+      "PAYMENT",
+      "1299.42"
+     ],
+     [
+      "HC0103-P1",
+      "PAYMENT",
+      "5326.06"
+     ],
+     [
+      "HC0103-P2",
+      "PAYMENT",
+      "6821.92"
+     ]
+    ],
+    "net": "13421.80",
+    "payout": "HC0103-PO"
+   }
+  },
+  {
+   "class": "C01_CLEAN_SETTLED",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC0104",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6054.64",
+     "item": "HC0104-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3486.77",
+     "item": "HC0104-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6278.47",
+     "item": "HC0104-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement and recorded settlement agree exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "39.67",
+     "gross": "15819.88",
+     "items": [
+      "HC0104-P0",
+      "HC0104-P1",
+      "HC0104-P2"
+     ],
+     "net": "15780.21",
+     "payout": "HC0104-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "39.67",
+    "gross": "15819.88",
+    "items": [
+     [
+      "HC0104-P0",
+      "PAYMENT",
+      "6054.64"
+     ],
+     [
+      "HC0104-P1",
+      "PAYMENT",
+      "3486.77"
+     ],
+     [
+      "HC0104-P2",
+      "PAYMENT",
+      "6278.47"
+     ]
+    ],
+    "net": "15780.21",
+    "payout": "HC0104-PO"
+   }
+  },
+  {
+   "class": "C02_SETTLEMENT_MISSING",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED"
+    ]
+   },
+   "id": "HC0200",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "3769.87",
+     "item": "HC0200-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3555.05",
+     "item": "HC0200-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8087.53",
+     "item": "HC0200-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8270.25",
+     "item": "HC0200-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Payout on the statement; its payments RECEIVED; no settlement recorded.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "14.18",
+    "gross": "23682.70",
+    "items": [
+     [
+      "HC0200-P0",
+      "PAYMENT",
+      "3769.87"
+     ],
+     [
+      "HC0200-P1",
+      "PAYMENT",
+      "3555.05"
+     ],
+     [
+      "HC0200-P2",
+      "PAYMENT",
+      "8087.53"
+     ],
+     [
+      "HC0200-P3",
+      "PAYMENT",
+      "8270.25"
+     ]
+    ],
+    "net": "23668.52",
+    "payout": "HC0200-PO"
+   }
+  },
+  {
+   "class": "C02_SETTLEMENT_MISSING",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED"
+    ]
+   },
+   "id": "HC0201",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6974.55",
+     "item": "HC0201-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "76.94",
+     "item": "HC0201-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7247.80",
+     "item": "HC0201-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5473.45",
+     "item": "HC0201-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Payout on the statement; its payments RECEIVED; no settlement recorded.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "7.61",
+    "gross": "19772.74",
+    "items": [
+     [
+      "HC0201-P0",
+      "PAYMENT",
+      "6974.55"
+     ],
+     [
+      "HC0201-P1",
+      "PAYMENT",
+      "76.94"
+     ],
+     [
+      "HC0201-P2",
+      "PAYMENT",
+      "7247.80"
+     ],
+     [
+      "HC0201-P3",
+      "PAYMENT",
+      "5473.45"
+     ]
+    ],
+    "net": "19765.13",
+    "payout": "HC0201-PO"
+   }
+  },
+  {
+   "class": "C02_SETTLEMENT_MISSING",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED"
+    ]
+   },
+   "id": "HC0202",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "1340.56",
+     "item": "HC0202-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2326.16",
+     "item": "HC0202-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4637.58",
+     "item": "HC0202-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4135.34",
+     "item": "HC0202-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Payout on the statement; its payments RECEIVED; no settlement recorded.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "1.72",
+    "gross": "12439.64",
+    "items": [
+     [
+      "HC0202-P0",
+      "PAYMENT",
+      "1340.56"
+     ],
+     [
+      "HC0202-P1",
+      "PAYMENT",
+      "2326.16"
+     ],
+     [
+      "HC0202-P2",
+      "PAYMENT",
+      "4637.58"
+     ],
+     [
+      "HC0202-P3",
+      "PAYMENT",
+      "4135.34"
+     ]
+    ],
+    "net": "12437.92",
+    "payout": "HC0202-PO"
+   }
+  },
+  {
+   "class": "C02_SETTLEMENT_MISSING",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED"
+    ]
+   },
+   "id": "HC0203",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "5803.47",
+     "item": "HC0203-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "918.45",
+     "item": "HC0203-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "719.97",
+     "item": "HC0203-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Payout on the statement; its payments RECEIVED; no settlement recorded.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "6.80",
+    "gross": "7441.89",
+    "items": [
+     [
+      "HC0203-P0",
+      "PAYMENT",
+      "5803.47"
+     ],
+     [
+      "HC0203-P1",
+      "PAYMENT",
+      "918.45"
+     ],
+     [
+      "HC0203-P2",
+      "PAYMENT",
+      "719.97"
+     ]
+    ],
+    "net": "7435.09",
+    "payout": "HC0203-PO"
+   }
+  },
+  {
+   "class": "C02_SETTLEMENT_MISSING",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED"
+    ]
+   },
+   "id": "HC0204",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6784.25",
+     "item": "HC0204-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7368.52",
+     "item": "HC0204-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Payout on the statement; its payments RECEIVED; no settlement recorded.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "11.96",
+    "gross": "14152.77",
+    "items": [
+     [
+      "HC0204-P0",
+      "PAYMENT",
+      "6784.25"
+     ],
+     [
+      "HC0204-P1",
+      "PAYMENT",
+      "7368.52"
+     ]
+    ],
+    "net": "14140.81",
+    "payout": "HC0204-PO"
+   }
+  },
+  {
+   "class": "C03_FEE_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER"
+    ]
+   },
+   "id": "HC0300",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "432.03",
+     "item": "HC0300-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5186.50",
+     "item": "HC0300-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3981.29",
+     "item": "HC0300-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1729.67",
+     "item": "HC0300-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded with the same items and gross but a different fee/net.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "34.14",
+     "gross": "11329.49",
+     "items": [
+      "HC0300-P0",
+      "HC0300-P1",
+      "HC0300-P2",
+      "HC0300-P3"
+     ],
+     "net": "11295.35",
+     "payout": "HC0300-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "33.86",
+    "gross": "11329.49",
+    "items": [
+     [
+      "HC0300-P0",
+      "PAYMENT",
+      "432.03"
+     ],
+     [
+      "HC0300-P1",
+      "PAYMENT",
+      "5186.50"
+     ],
+     [
+      "HC0300-P2",
+      "PAYMENT",
+      "3981.29"
+     ],
+     [
+      "HC0300-P3",
+      "PAYMENT",
+      "1729.67"
+     ]
+    ],
+    "net": "11295.63",
+    "payout": "HC0300-PO"
+   }
+  },
+  {
+   "class": "C03_FEE_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER"
+    ]
+   },
+   "id": "HC0301",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "5589.78",
+     "item": "HC0301-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2387.27",
+     "item": "HC0301-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6685.98",
+     "item": "HC0301-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded with the same items and gross but a different fee/net.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "41.98",
+     "gross": "14663.03",
+     "items": [
+      "HC0301-P0",
+      "HC0301-P1",
+      "HC0301-P2"
+     ],
+     "net": "14621.05",
+     "payout": "HC0301-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "41.51",
+    "gross": "14663.03",
+    "items": [
+     [
+      "HC0301-P0",
+      "PAYMENT",
+      "5589.78"
+     ],
+     [
+      "HC0301-P1",
+      "PAYMENT",
+      "2387.27"
+     ],
+     [
+      "HC0301-P2",
+      "PAYMENT",
+      "6685.98"
+     ]
+    ],
+    "net": "14621.52",
+    "payout": "HC0301-PO"
+   }
+  },
+  {
+   "class": "C03_FEE_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER"
+    ]
+   },
+   "id": "HC0302",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6946.85",
+     "item": "HC0302-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3065.18",
+     "item": "HC0302-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7984.67",
+     "item": "HC0302-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4696.95",
+     "item": "HC0302-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded with the same items and gross but a different fee/net.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "18.86",
+     "gross": "22693.65",
+     "items": [
+      "HC0302-P0",
+      "HC0302-P1",
+      "HC0302-P2",
+      "HC0302-P3"
+     ],
+     "net": "22674.79",
+     "payout": "HC0302-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "17.96",
+    "gross": "22693.65",
+    "items": [
+     [
+      "HC0302-P0",
+      "PAYMENT",
+      "6946.85"
+     ],
+     [
+      "HC0302-P1",
+      "PAYMENT",
+      "3065.18"
+     ],
+     [
+      "HC0302-P2",
+      "PAYMENT",
+      "7984.67"
+     ],
+     [
+      "HC0302-P3",
+      "PAYMENT",
+      "4696.95"
+     ]
+    ],
+    "net": "22675.69",
+    "payout": "HC0302-PO"
+   }
+  },
+  {
+   "class": "C03_FEE_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER"
+    ]
+   },
+   "id": "HC0303",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "1758.29",
+     "item": "HC0303-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3040.52",
+     "item": "HC0303-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1514.11",
+     "item": "HC0303-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded with the same items and gross but a different fee/net.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "29.68",
+     "gross": "6312.92",
+     "items": [
+      "HC0303-P0",
+      "HC0303-P1",
+      "HC0303-P2"
+     ],
+     "net": "6283.24",
+     "payout": "HC0303-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "29.37",
+    "gross": "6312.92",
+    "items": [
+     [
+      "HC0303-P0",
+      "PAYMENT",
+      "1758.29"
+     ],
+     [
+      "HC0303-P1",
+      "PAYMENT",
+      "3040.52"
+     ],
+     [
+      "HC0303-P2",
+      "PAYMENT",
+      "1514.11"
+     ]
+    ],
+    "net": "6283.55",
+    "payout": "HC0303-PO"
+   }
+  },
+  {
+   "class": "C03_FEE_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER"
+    ]
+   },
+   "id": "HC0304",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6253.08",
+     "item": "HC0304-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4483.89",
+     "item": "HC0304-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3053.84",
+     "item": "HC0304-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded with the same items and gross but a different fee/net.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "17.31",
+     "gross": "13790.81",
+     "items": [
+      "HC0304-P0",
+      "HC0304-P1",
+      "HC0304-P2"
+     ],
+     "net": "13773.50",
+     "payout": "HC0304-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "17.06",
+    "gross": "13790.81",
+    "items": [
+     [
+      "HC0304-P0",
+      "PAYMENT",
+      "6253.08"
+     ],
+     [
+      "HC0304-P1",
+      "PAYMENT",
+      "4483.89"
+     ],
+     [
+      "HC0304-P2",
+      "PAYMENT",
+      "3053.84"
+     ]
+    ],
+    "net": "13773.75",
+    "payout": "HC0304-PO"
+   }
+  },
+  {
+   "class": "C04_ITEM_OMITTED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER",
+     "SETTLEMENT_ITEMS_DIFFER"
+    ]
+   },
+   "id": "HC0400",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6588.43",
+     "item": "HC0400-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "736.43",
+     "item": "HC0400-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2674.43",
+     "item": "HC0400-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6494.22",
+     "item": "HC0400-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded without one statement item (gross reduced accordingly).",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "22.39",
+     "gross": "9999.29",
+     "items": [
+      "HC0400-P0",
+      "HC0400-P1",
+      "HC0400-P2"
+     ],
+     "net": "9976.90",
+     "payout": "HC0400-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "22.39",
+    "gross": "16493.51",
+    "items": [
+     [
+      "HC0400-P0",
+      "PAYMENT",
+      "6588.43"
+     ],
+     [
+      "HC0400-P1",
+      "PAYMENT",
+      "736.43"
+     ],
+     [
+      "HC0400-P2",
+      "PAYMENT",
+      "2674.43"
+     ],
+     [
+      "HC0400-P3",
+      "PAYMENT",
+      "6494.22"
+     ]
+    ],
+    "net": "16471.12",
+    "payout": "HC0400-PO"
+   }
+  },
+  {
+   "class": "C04_ITEM_OMITTED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER",
+     "SETTLEMENT_ITEMS_DIFFER"
+    ]
+   },
+   "id": "HC0401",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "7276.47",
+     "item": "HC0401-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "393.02",
+     "item": "HC0401-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "262.41",
+     "item": "HC0401-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded without one statement item (gross reduced accordingly).",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "38.39",
+     "gross": "7669.49",
+     "items": [
+      "HC0401-P0",
+      "HC0401-P1"
+     ],
+     "net": "7631.10",
+     "payout": "HC0401-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "38.39",
+    "gross": "7931.90",
+    "items": [
+     [
+      "HC0401-P0",
+      "PAYMENT",
+      "7276.47"
+     ],
+     [
+      "HC0401-P1",
+      "PAYMENT",
+      "393.02"
+     ],
+     [
+      "HC0401-P2",
+      "PAYMENT",
+      "262.41"
+     ]
+    ],
+    "net": "7893.51",
+    "payout": "HC0401-PO"
+   }
+  },
+  {
+   "class": "C04_ITEM_OMITTED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER",
+     "SETTLEMENT_ITEMS_DIFFER"
+    ]
+   },
+   "id": "HC0402",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6479.75",
+     "item": "HC0402-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6864.61",
+     "item": "HC0402-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6264.17",
+     "item": "HC0402-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded without one statement item (gross reduced accordingly).",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "30.05",
+     "gross": "13344.36",
+     "items": [
+      "HC0402-P0",
+      "HC0402-P1"
+     ],
+     "net": "13314.31",
+     "payout": "HC0402-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "30.05",
+    "gross": "19608.53",
+    "items": [
+     [
+      "HC0402-P0",
+      "PAYMENT",
+      "6479.75"
+     ],
+     [
+      "HC0402-P1",
+      "PAYMENT",
+      "6864.61"
+     ],
+     [
+      "HC0402-P2",
+      "PAYMENT",
+      "6264.17"
+     ]
+    ],
+    "net": "19578.48",
+    "payout": "HC0402-PO"
+   }
+  },
+  {
+   "class": "C04_ITEM_OMITTED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER",
+     "SETTLEMENT_ITEMS_DIFFER"
+    ]
+   },
+   "id": "HC0403",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "113.26",
+     "item": "HC0403-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2288.09",
+     "item": "HC0403-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded without one statement item (gross reduced accordingly).",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "13.32",
+     "gross": "113.26",
+     "items": [
+      "HC0403-P0"
+     ],
+     "net": "99.94",
+     "payout": "HC0403-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "13.32",
+    "gross": "2401.35",
+    "items": [
+     [
+      "HC0403-P0",
+      "PAYMENT",
+      "113.26"
+     ],
+     [
+      "HC0403-P1",
+      "PAYMENT",
+      "2288.09"
+     ]
+    ],
+    "net": "2388.03",
+    "payout": "HC0403-PO"
+   }
+  },
+  {
+   "class": "C04_ITEM_OMITTED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_AMOUNTS_DIFFER",
+     "SETTLEMENT_ITEMS_DIFFER"
+    ]
+   },
+   "id": "HC0404",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "4255.08",
+     "item": "HC0404-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7110.05",
+     "item": "HC0404-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded without one statement item (gross reduced accordingly).",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "37.81",
+     "gross": "4255.08",
+     "items": [
+      "HC0404-P0"
+     ],
+     "net": "4217.27",
+     "payout": "HC0404-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "37.81",
+    "gross": "11365.13",
+    "items": [
+     [
+      "HC0404-P0",
+      "PAYMENT",
+      "4255.08"
+     ],
+     [
+      "HC0404-P1",
+      "PAYMENT",
+      "7110.05"
+     ]
+    ],
+    "net": "11327.32",
+    "payout": "HC0404-PO"
+   }
+  },
+  {
+   "class": "C05_PAYMENT_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "HC0500",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "4118.35",
+     "item": "HC0500-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2890.89",
+     "item": "HC0500-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "51.48",
+     "item": "HC0500-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One payment recorded at a different amount than the statement line; no settlement.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "0.05",
+    "gross": "7057.14",
+    "items": [
+     [
+      "HC0500-P0",
+      "PAYMENT",
+      "4114.77"
+     ],
+     [
+      "HC0500-P1",
+      "PAYMENT",
+      "2890.89"
+     ],
+     [
+      "HC0500-P2",
+      "PAYMENT",
+      "51.48"
+     ]
+    ],
+    "net": "7057.09",
+    "payout": "HC0500-PO"
+   }
+  },
+  {
+   "class": "C05_PAYMENT_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "HC0501",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6004.06",
+     "item": "HC0501-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4007.09",
+     "item": "HC0501-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3040.64",
+     "item": "HC0501-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5913.56",
+     "item": "HC0501-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One payment recorded at a different amount than the statement line; no settlement.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "22.51",
+    "gross": "18962.02",
+    "items": [
+     [
+      "HC0501-P0",
+      "PAYMENT",
+      "6000.73"
+     ],
+     [
+      "HC0501-P1",
+      "PAYMENT",
+      "4007.09"
+     ],
+     [
+      "HC0501-P2",
+      "PAYMENT",
+      "3040.64"
+     ],
+     [
+      "HC0501-P3",
+      "PAYMENT",
+      "5913.56"
+     ]
+    ],
+    "net": "18939.51",
+    "payout": "HC0501-PO"
+   }
+  },
+  {
+   "class": "C05_PAYMENT_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "HC0502",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "5363.63",
+     "item": "HC0502-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6408.20",
+     "item": "HC0502-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4742.31",
+     "item": "HC0502-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3806.02",
+     "item": "HC0502-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One payment recorded at a different amount than the statement line; no settlement.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "42.12",
+    "gross": "20317.52",
+    "items": [
+     [
+      "HC0502-P0",
+      "PAYMENT",
+      "5360.99"
+     ],
+     [
+      "HC0502-P1",
+      "PAYMENT",
+      "6408.20"
+     ],
+     [
+      "HC0502-P2",
+      "PAYMENT",
+      "4742.31"
+     ],
+     [
+      "HC0502-P3",
+      "PAYMENT",
+      "3806.02"
+     ]
+    ],
+    "net": "20275.40",
+    "payout": "HC0502-PO"
+   }
+  },
+  {
+   "class": "C05_PAYMENT_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "HC0503",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "3201.46",
+     "item": "HC0503-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3170.12",
+     "item": "HC0503-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One payment recorded at a different amount than the statement line; no settlement.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "9.41",
+    "gross": "6369.20",
+    "items": [
+     [
+      "HC0503-P0",
+      "PAYMENT",
+      "3199.08"
+     ],
+     [
+      "HC0503-P1",
+      "PAYMENT",
+      "3170.12"
+     ]
+    ],
+    "net": "6359.79",
+    "payout": "HC0503-PO"
+   }
+  },
+  {
+   "class": "C05_PAYMENT_MISKEYED",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "HC0504",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6779.73",
+     "item": "HC0504-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3149.37",
+     "item": "HC0504-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5665.14",
+     "item": "HC0504-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1590.40",
+     "item": "HC0504-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One payment recorded at a different amount than the statement line; no settlement.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "28.30",
+    "gross": "17180.20",
+    "items": [
+     [
+      "HC0504-P0",
+      "PAYMENT",
+      "6775.29"
+     ],
+     [
+      "HC0504-P1",
+      "PAYMENT",
+      "3149.37"
+     ],
+     [
+      "HC0504-P2",
+      "PAYMENT",
+      "5665.14"
+     ],
+     [
+      "HC0504-P3",
+      "PAYMENT",
+      "1590.40"
+     ]
+    ],
+    "net": "17151.90",
+    "payout": "HC0504-PO"
+   }
+  },
+  {
+   "class": "C06_UNKNOWN_ITEM",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "HC0600",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "1097.27",
+     "item": "HC0600-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1105.94",
+     "item": "HC0600-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "320.79",
+     "item": "HC0600-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3779.42",
+     "item": "HC0600-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement lists an item with no payment of that identity; no settlement.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "45.84",
+    "gross": "9096.44",
+    "items": [
+     [
+      "HC0600-P0",
+      "PAYMENT",
+      "1097.27"
+     ],
+     [
+      "HC0600-P1",
+      "PAYMENT",
+      "1105.94"
+     ],
+     [
+      "HC0600-P2",
+      "PAYMENT",
+      "320.79"
+     ],
+     [
+      "HC0600-P3",
+      "PAYMENT",
+      "3779.42"
+     ],
+     [
+      "HC0600-UNKNOWN",
+      "PAYMENT",
+      "2793.02"
+     ]
+    ],
+    "net": "9050.60",
+    "payout": "HC0600-PO"
+   }
+  },
+  {
+   "class": "C06_UNKNOWN_ITEM",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "HC0601",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "2334.85",
+     "item": "HC0601-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6671.68",
+     "item": "HC0601-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1722.20",
+     "item": "HC0601-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8750.21",
+     "item": "HC0601-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement lists an item with no payment of that identity; no settlement.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "44.12",
+    "gross": "26953.53",
+    "items": [
+     [
+      "HC0601-P0",
+      "PAYMENT",
+      "2334.85"
+     ],
+     [
+      "HC0601-P1",
+      "PAYMENT",
+      "6671.68"
+     ],
+     [
+      "HC0601-P2",
+      "PAYMENT",
+      "1722.20"
+     ],
+     [
+      "HC0601-P3",
+      "PAYMENT",
+      "8750.21"
+     ],
+     [
+      "HC0601-UNKNOWN",
+      "PAYMENT",
+      "7474.59"
+     ]
+    ],
+    "net": "26909.41",
+    "payout": "HC0601-PO"
+   }
+  },
+  {
+   "class": "C06_UNKNOWN_ITEM",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "HC0602",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "8205.11",
+     "item": "HC0602-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8781.97",
+     "item": "HC0602-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6559.18",
+     "item": "HC0602-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1762.83",
+     "item": "HC0602-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement lists an item with no payment of that identity; no settlement.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "47.89",
+    "gross": "33206.74",
+    "items": [
+     [
+      "HC0602-P0",
+      "PAYMENT",
+      "8205.11"
+     ],
+     [
+      "HC0602-P1",
+      "PAYMENT",
+      "8781.97"
+     ],
+     [
+      "HC0602-P2",
+      "PAYMENT",
+      "6559.18"
+     ],
+     [
+      "HC0602-P3",
+      "PAYMENT",
+      "1762.83"
+     ],
+     [
+      "HC0602-UNKNOWN",
+      "PAYMENT",
+      "7897.65"
+     ]
+    ],
+    "net": "33158.85",
+    "payout": "HC0602-PO"
+   }
+  },
+  {
+   "class": "C06_UNKNOWN_ITEM",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "HC0603",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "1601.04",
+     "item": "HC0603-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6964.49",
+     "item": "HC0603-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7513.66",
+     "item": "HC0603-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6064.46",
+     "item": "HC0603-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement lists an item with no payment of that identity; no settlement.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "19.71",
+    "gross": "29506.62",
+    "items": [
+     [
+      "HC0603-P0",
+      "PAYMENT",
+      "1601.04"
+     ],
+     [
+      "HC0603-P1",
+      "PAYMENT",
+      "6964.49"
+     ],
+     [
+      "HC0603-P2",
+      "PAYMENT",
+      "7513.66"
+     ],
+     [
+      "HC0603-P3",
+      "PAYMENT",
+      "6064.46"
+     ],
+     [
+      "HC0603-UNKNOWN",
+      "PAYMENT",
+      "7362.97"
+     ]
+    ],
+    "net": "29486.91",
+    "payout": "HC0603-PO"
+   }
+  },
+  {
+   "class": "C06_UNKNOWN_ITEM",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "HC0604",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "1996.44",
+     "item": "HC0604-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3884.61",
+     "item": "HC0604-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5849.44",
+     "item": "HC0604-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement lists an item with no payment of that identity; no settlement.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "13.34",
+    "gross": "11825.15",
+    "items": [
+     [
+      "HC0604-P0",
+      "PAYMENT",
+      "1996.44"
+     ],
+     [
+      "HC0604-P1",
+      "PAYMENT",
+      "3884.61"
+     ],
+     [
+      "HC0604-P2",
+      "PAYMENT",
+      "5849.44"
+     ],
+     [
+      "HC0604-UNKNOWN",
+      "PAYMENT",
+      "94.66"
+     ]
+    ],
+    "net": "11811.81",
+    "payout": "HC0604-PO"
+   }
+  },
+  {
+   "class": "C07_OTHER_NAMESPACE_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "HC0700",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6406.86",
+     "item": "HC0700-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8675.16",
+     "item": "HC0700-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7177.03",
+     "item": "HC0700-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8986.52",
+     "item": "HC0700-NS",
+     "processor": "processor-2"
+    }
+   ],
+   "rationale": "Item id exists only under another processor with the SAME amount; must not link.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "49.81",
+    "gross": "31245.57",
+    "items": [
+     [
+      "HC0700-P0",
+      "PAYMENT",
+      "6406.86"
+     ],
+     [
+      "HC0700-P1",
+      "PAYMENT",
+      "8675.16"
+     ],
+     [
+      "HC0700-P2",
+      "PAYMENT",
+      "7177.03"
+     ],
+     [
+      "HC0700-NS",
+      "PAYMENT",
+      "8986.52"
+     ]
+    ],
+    "net": "31195.76",
+    "payout": "HC0700-PO"
+   }
+  },
+  {
+   "class": "C07_OTHER_NAMESPACE_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "HC0701",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "6944.01",
+     "item": "HC0701-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2859.63",
+     "item": "HC0701-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8481.99",
+     "item": "HC0701-NS",
+     "processor": "processor-2"
+    }
+   ],
+   "rationale": "Item id exists only under another processor with the SAME amount; must not link.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "3.96",
+    "gross": "18285.63",
+    "items": [
+     [
+      "HC0701-P0",
+      "PAYMENT",
+      "6944.01"
+     ],
+     [
+      "HC0701-P1",
+      "PAYMENT",
+      "2859.63"
+     ],
+     [
+      "HC0701-NS",
+      "PAYMENT",
+      "8481.99"
+     ]
+    ],
+    "net": "18281.67",
+    "payout": "HC0701-PO"
+   }
+  },
+  {
+   "class": "C07_OTHER_NAMESPACE_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "HC0702",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "629.70",
+     "item": "HC0702-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2213.40",
+     "item": "HC0702-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5194.07",
+     "item": "HC0702-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8827.21",
+     "item": "HC0702-P3",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5591.71",
+     "item": "HC0702-NS",
+     "processor": "processor-2"
+    }
+   ],
+   "rationale": "Item id exists only under another processor with the SAME amount; must not link.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "32.79",
+    "gross": "22456.09",
+    "items": [
+     [
+      "HC0702-P0",
+      "PAYMENT",
+      "629.70"
+     ],
+     [
+      "HC0702-P1",
+      "PAYMENT",
+      "2213.40"
+     ],
+     [
+      "HC0702-P2",
+      "PAYMENT",
+      "5194.07"
+     ],
+     [
+      "HC0702-P3",
+      "PAYMENT",
+      "8827.21"
+     ],
+     [
+      "HC0702-NS",
+      "PAYMENT",
+      "5591.71"
+     ]
+    ],
+    "net": "22423.30",
+    "payout": "HC0702-PO"
+   }
+  },
+  {
+   "class": "C07_OTHER_NAMESPACE_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "HC0703",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "8614.39",
+     "item": "HC0703-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "783.33",
+     "item": "HC0703-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8116.46",
+     "item": "HC0703-NS",
+     "processor": "processor-2"
+    }
+   ],
+   "rationale": "Item id exists only under another processor with the SAME amount; must not link.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "2.79",
+    "gross": "17514.18",
+    "items": [
+     [
+      "HC0703-P0",
+      "PAYMENT",
+      "8614.39"
+     ],
+     [
+      "HC0703-P1",
+      "PAYMENT",
+      "783.33"
+     ],
+     [
+      "HC0703-NS",
+      "PAYMENT",
+      "8116.46"
+     ]
+    ],
+    "net": "17511.39",
+    "payout": "HC0703-PO"
+   }
+  },
+  {
+   "class": "C07_OTHER_NAMESPACE_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_UNRESOLVED"
+    ]
+   },
+   "id": "HC0704",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "2685.31",
+     "item": "HC0704-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2588.59",
+     "item": "HC0704-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8436.64",
+     "item": "HC0704-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7162.93",
+     "item": "HC0704-P3",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "734.56",
+     "item": "HC0704-NS",
+     "processor": "processor-2"
+    }
+   ],
+   "rationale": "Item id exists only under another processor with the SAME amount; must not link.",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "0.92",
+    "gross": "21608.03",
+    "items": [
+     [
+      "HC0704-P0",
+      "PAYMENT",
+      "2685.31"
+     ],
+     [
+      "HC0704-P1",
+      "PAYMENT",
+      "2588.59"
+     ],
+     [
+      "HC0704-P2",
+      "PAYMENT",
+      "8436.64"
+     ],
+     [
+      "HC0704-P3",
+      "PAYMENT",
+      "7162.93"
+     ],
+     [
+      "HC0704-NS",
+      "PAYMENT",
+      "734.56"
+     ]
+    ],
+    "net": "21607.11",
+    "payout": "HC0704-PO"
+   }
+  },
+  {
+   "class": "C08_SETTLED_ELSEWHERE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_SETTLED_ELSEWHERE"
+    ]
+   },
+   "id": "HC0800",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "7452.21",
+     "item": "HC0800-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1602.05",
+     "item": "HC0800-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6581.40",
+     "item": "HC0800-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1178.30",
+     "item": "HC0800-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One statement payment is already in another payout's settlement; this payout unsettled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "0.00",
+     "gross": "1178.30",
+     "items": [
+      "HC0800-P3"
+     ],
+     "net": "1178.30",
+     "payout": "HC0800-OTHER"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "3.93",
+    "gross": "16813.96",
+    "items": [
+     [
+      "HC0800-P0",
+      "PAYMENT",
+      "7452.21"
+     ],
+     [
+      "HC0800-P1",
+      "PAYMENT",
+      "1602.05"
+     ],
+     [
+      "HC0800-P2",
+      "PAYMENT",
+      "6581.40"
+     ],
+     [
+      "HC0800-P3",
+      "PAYMENT",
+      "1178.30"
+     ]
+    ],
+    "net": "16810.03",
+    "payout": "HC0800-PO"
+   }
+  },
+  {
+   "class": "C08_SETTLED_ELSEWHERE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_SETTLED_ELSEWHERE"
+    ]
+   },
+   "id": "HC0801",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "820.42",
+     "item": "HC0801-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3001.52",
+     "item": "HC0801-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One statement payment is already in another payout's settlement; this payout unsettled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "0.00",
+     "gross": "3001.52",
+     "items": [
+      "HC0801-P1"
+     ],
+     "net": "3001.52",
+     "payout": "HC0801-OTHER"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "12.14",
+    "gross": "3821.94",
+    "items": [
+     [
+      "HC0801-P0",
+      "PAYMENT",
+      "820.42"
+     ],
+     [
+      "HC0801-P1",
+      "PAYMENT",
+      "3001.52"
+     ]
+    ],
+    "net": "3809.80",
+    "payout": "HC0801-PO"
+   }
+  },
+  {
+   "class": "C08_SETTLED_ELSEWHERE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_SETTLED_ELSEWHERE"
+    ]
+   },
+   "id": "HC0802",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "2324.12",
+     "item": "HC0802-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4911.72",
+     "item": "HC0802-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "413.69",
+     "item": "HC0802-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7099.78",
+     "item": "HC0802-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One statement payment is already in another payout's settlement; this payout unsettled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "0.00",
+     "gross": "7099.78",
+     "items": [
+      "HC0802-P3"
+     ],
+     "net": "7099.78",
+     "payout": "HC0802-OTHER"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "42.19",
+    "gross": "14749.31",
+    "items": [
+     [
+      "HC0802-P0",
+      "PAYMENT",
+      "2324.12"
+     ],
+     [
+      "HC0802-P1",
+      "PAYMENT",
+      "4911.72"
+     ],
+     [
+      "HC0802-P2",
+      "PAYMENT",
+      "413.69"
+     ],
+     [
+      "HC0802-P3",
+      "PAYMENT",
+      "7099.78"
+     ]
+    ],
+    "net": "14707.12",
+    "payout": "HC0802-PO"
+   }
+  },
+  {
+   "class": "C08_SETTLED_ELSEWHERE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_SETTLED_ELSEWHERE"
+    ]
+   },
+   "id": "HC0803",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "1394.38",
+     "item": "HC0803-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1283.05",
+     "item": "HC0803-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5617.98",
+     "item": "HC0803-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4220.47",
+     "item": "HC0803-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One statement payment is already in another payout's settlement; this payout unsettled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "0.00",
+     "gross": "4220.47",
+     "items": [
+      "HC0803-P3"
+     ],
+     "net": "4220.47",
+     "payout": "HC0803-OTHER"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "33.76",
+    "gross": "12515.88",
+    "items": [
+     [
+      "HC0803-P0",
+      "PAYMENT",
+      "1394.38"
+     ],
+     [
+      "HC0803-P1",
+      "PAYMENT",
+      "1283.05"
+     ],
+     [
+      "HC0803-P2",
+      "PAYMENT",
+      "5617.98"
+     ],
+     [
+      "HC0803-P3",
+      "PAYMENT",
+      "4220.47"
+     ]
+    ],
+    "net": "12482.12",
+    "payout": "HC0803-PO"
+   }
+  },
+  {
+   "class": "C08_SETTLED_ELSEWHERE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "SETTLEMENT_NOT_RECORDED",
+     "STATEMENT_ITEM_SETTLED_ELSEWHERE"
+    ]
+   },
+   "id": "HC0804",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "3965.97",
+     "item": "HC0804-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2828.80",
+     "item": "HC0804-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "One statement payment is already in another payout's settlement; this payout unsettled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "0.00",
+     "gross": "2828.80",
+     "items": [
+      "HC0804-P1"
+     ],
+     "net": "2828.80",
+     "payout": "HC0804-OTHER"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "11.95",
+    "gross": "6794.77",
+    "items": [
+     [
+      "HC0804-P0",
+      "PAYMENT",
+      "3965.97"
+     ],
+     [
+      "HC0804-P1",
+      "PAYMENT",
+      "2828.80"
+     ]
+    ],
+    "net": "6782.82",
+    "payout": "HC0804-PO"
+   }
+  },
+  {
+   "class": "C09_FORMAT_VARIANT_TRAP",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC0900",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "527.70",
+     "item": "HC0900-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8498.80",
+     "item": "HC0900-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7464.90",
+     "item": "HC0900-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3928.50",
+     "item": "HC0900-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement writes amounts with fewer decimals (300.0); settlement agrees exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "39.52",
+     "gross": "20419.90",
+     "items": [
+      "HC0900-P0",
+      "HC0900-P1",
+      "HC0900-P2",
+      "HC0900-P3"
+     ],
+     "net": "20380.38",
+     "payout": "HC0900-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "39.52",
+    "gross": "20419.9",
+    "items": [
+     [
+      "HC0900-P0",
+      "PAYMENT",
+      "527.7"
+     ],
+     [
+      "HC0900-P1",
+      "PAYMENT",
+      "8498.8"
+     ],
+     [
+      "HC0900-P2",
+      "PAYMENT",
+      "7464.9"
+     ],
+     [
+      "HC0900-P3",
+      "PAYMENT",
+      "3928.5"
+     ]
+    ],
+    "net": "20380.38",
+    "payout": "HC0900-PO"
+   }
+  },
+  {
+   "class": "C09_FORMAT_VARIANT_TRAP",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC0901",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "1978.00",
+     "item": "HC0901-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5351.30",
+     "item": "HC0901-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4061.00",
+     "item": "HC0901-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4734.60",
+     "item": "HC0901-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement writes amounts with fewer decimals (300.0); settlement agrees exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "18.39",
+     "gross": "16124.90",
+     "items": [
+      "HC0901-P0",
+      "HC0901-P1",
+      "HC0901-P2",
+      "HC0901-P3"
+     ],
+     "net": "16106.51",
+     "payout": "HC0901-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "18.39",
+    "gross": "16124.9",
+    "items": [
+     [
+      "HC0901-P0",
+      "PAYMENT",
+      "1978.0"
+     ],
+     [
+      "HC0901-P1",
+      "PAYMENT",
+      "5351.3"
+     ],
+     [
+      "HC0901-P2",
+      "PAYMENT",
+      "4061.0"
+     ],
+     [
+      "HC0901-P3",
+      "PAYMENT",
+      "4734.6"
+     ]
+    ],
+    "net": "16106.51",
+    "payout": "HC0901-PO"
+   }
+  },
+  {
+   "class": "C09_FORMAT_VARIANT_TRAP",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC0902",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "2597.90",
+     "item": "HC0902-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3206.70",
+     "item": "HC0902-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement writes amounts with fewer decimals (300.0); settlement agrees exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "0.65",
+     "gross": "5804.60",
+     "items": [
+      "HC0902-P0",
+      "HC0902-P1"
+     ],
+     "net": "5803.95",
+     "payout": "HC0902-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "0.65",
+    "gross": "5804.6",
+    "items": [
+     [
+      "HC0902-P0",
+      "PAYMENT",
+      "2597.9"
+     ],
+     [
+      "HC0902-P1",
+      "PAYMENT",
+      "3206.7"
+     ]
+    ],
+    "net": "5803.95",
+    "payout": "HC0902-PO"
+   }
+  },
+  {
+   "class": "C09_FORMAT_VARIANT_TRAP",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC0903",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "481.20",
+     "item": "HC0903-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8007.70",
+     "item": "HC0903-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2179.20",
+     "item": "HC0903-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "324.80",
+     "item": "HC0903-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement writes amounts with fewer decimals (300.0); settlement agrees exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "15.27",
+     "gross": "10992.90",
+     "items": [
+      "HC0903-P0",
+      "HC0903-P1",
+      "HC0903-P2",
+      "HC0903-P3"
+     ],
+     "net": "10977.63",
+     "payout": "HC0903-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "15.27",
+    "gross": "10992.9",
+    "items": [
+     [
+      "HC0903-P0",
+      "PAYMENT",
+      "481.2"
+     ],
+     [
+      "HC0903-P1",
+      "PAYMENT",
+      "8007.7"
+     ],
+     [
+      "HC0903-P2",
+      "PAYMENT",
+      "2179.2"
+     ],
+     [
+      "HC0903-P3",
+      "PAYMENT",
+      "324.8"
+     ]
+    ],
+    "net": "10977.63",
+    "payout": "HC0903-PO"
+   }
+  },
+  {
+   "class": "C09_FORMAT_VARIANT_TRAP",
+   "conflict": null,
+   "discrepancy_present": false,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC0904",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "4793.50",
+     "item": "HC0904-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5646.80",
+     "item": "HC0904-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement writes amounts with fewer decimals (300.0); settlement agrees exactly.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "19.90",
+     "gross": "10440.30",
+     "items": [
+      "HC0904-P0",
+      "HC0904-P1"
+     ],
+     "net": "10420.40",
+     "payout": "HC0904-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "19.90",
+    "gross": "10440.3",
+    "items": [
+     [
+      "HC0904-P0",
+      "PAYMENT",
+      "4793.5"
+     ],
+     [
+      "HC0904-P1",
+      "PAYMENT",
+      "5646.8"
+     ]
+    ],
+    "net": "10420.40",
+    "payout": "HC0904-PO"
+   }
+  },
+  {
+   "class": "C10_REFUND_LINE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "REFUND_ITEMS_NOT_SUPPORTED",
+    "kinds": []
+   },
+   "id": "HC1000",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "153.95",
+     "item": "HC1000-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5528.29",
+     "item": "HC1000-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "99.01",
+     "item": "HC1000-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1136.37",
+     "item": "HC1000-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement contains a refund line (unsupported).",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "46.48",
+    "gross": "6917.61",
+    "items": [
+     [
+      "HC1000-P0",
+      "PAYMENT",
+      "153.95"
+     ],
+     [
+      "HC1000-P1",
+      "PAYMENT",
+      "5528.29"
+     ],
+     [
+      "HC1000-P2",
+      "PAYMENT",
+      "99.01"
+     ],
+     [
+      "HC1000-P3",
+      "PAYMENT",
+      "1136.37"
+     ],
+     [
+      "HC1000-RF",
+      "REFUND",
+      "0.01"
+     ]
+    ],
+    "net": "6871.13",
+    "payout": "HC1000-PO"
+   }
+  },
+  {
+   "class": "C10_REFUND_LINE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "REFUND_ITEMS_NOT_SUPPORTED",
+    "kinds": []
+   },
+   "id": "HC1001",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "5827.83",
+     "item": "HC1001-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3859.70",
+     "item": "HC1001-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement contains a refund line (unsupported).",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "48.60",
+    "gross": "9687.52",
+    "items": [
+     [
+      "HC1001-P0",
+      "PAYMENT",
+      "5827.83"
+     ],
+     [
+      "HC1001-P1",
+      "PAYMENT",
+      "3859.70"
+     ],
+     [
+      "HC1001-RF",
+      "REFUND",
+      "0.01"
+     ]
+    ],
+    "net": "9638.92",
+    "payout": "HC1001-PO"
+   }
+  },
+  {
+   "class": "C10_REFUND_LINE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "REFUND_ITEMS_NOT_SUPPORTED",
+    "kinds": []
+   },
+   "id": "HC1002",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "2257.22",
+     "item": "HC1002-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8818.35",
+     "item": "HC1002-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "27.51",
+     "item": "HC1002-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7548.18",
+     "item": "HC1002-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement contains a refund line (unsupported).",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "40.05",
+    "gross": "18651.25",
+    "items": [
+     [
+      "HC1002-P0",
+      "PAYMENT",
+      "2257.22"
+     ],
+     [
+      "HC1002-P1",
+      "PAYMENT",
+      "8818.35"
+     ],
+     [
+      "HC1002-P2",
+      "PAYMENT",
+      "27.51"
+     ],
+     [
+      "HC1002-P3",
+      "PAYMENT",
+      "7548.18"
+     ],
+     [
+      "HC1002-RF",
+      "REFUND",
+      "0.01"
+     ]
+    ],
+    "net": "18611.20",
+    "payout": "HC1002-PO"
+   }
+  },
+  {
+   "class": "C10_REFUND_LINE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "REFUND_ITEMS_NOT_SUPPORTED",
+    "kinds": []
+   },
+   "id": "HC1003",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "8512.25",
+     "item": "HC1003-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7148.23",
+     "item": "HC1003-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement contains a refund line (unsupported).",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "26.27",
+    "gross": "15660.47",
+    "items": [
+     [
+      "HC1003-P0",
+      "PAYMENT",
+      "8512.25"
+     ],
+     [
+      "HC1003-P1",
+      "PAYMENT",
+      "7148.23"
+     ],
+     [
+      "HC1003-RF",
+      "REFUND",
+      "0.01"
+     ]
+    ],
+    "net": "15634.20",
+    "payout": "HC1003-PO"
+   }
+  },
+  {
+   "class": "C10_REFUND_LINE",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "REFUND_ITEMS_NOT_SUPPORTED",
+    "kinds": []
+   },
+   "id": "HC1004",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "7530.38",
+     "item": "HC1004-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8012.26",
+     "item": "HC1004-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2671.91",
+     "item": "HC1004-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Statement contains a refund line (unsupported).",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "36.63",
+    "gross": "18214.54",
+    "items": [
+     [
+      "HC1004-P0",
+      "PAYMENT",
+      "7530.38"
+     ],
+     [
+      "HC1004-P1",
+      "PAYMENT",
+      "8012.26"
+     ],
+     [
+      "HC1004-P2",
+      "PAYMENT",
+      "2671.91"
+     ],
+     [
+      "HC1004-RF",
+      "REFUND",
+      "0.01"
+     ]
+    ],
+    "net": "18177.91",
+    "payout": "HC1004-PO"
+   }
+  },
+  {
+   "class": "C11_CONFLICTING_FILE",
+   "conflict": {
+    "fee": "3.71",
+    "gross": "14010.61",
+    "items": [
+     [
+      "HC1100-P0",
+      "PAYMENT",
+      "5408.57"
+     ],
+     [
+      "HC1100-P1",
+      "PAYMENT",
+      "2865.32"
+     ],
+     [
+      "HC1100-P2",
+      "PAYMENT",
+      "4053.89"
+     ],
+     [
+      "HC1100-P3",
+      "PAYMENT",
+      "1682.83"
+     ]
+    ],
+    "net": "14006.90",
+    "payout": "HC1100-PO"
+   },
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "AMBIGUOUS_STATEMENT",
+    "kinds": []
+   },
+   "id": "HC1100",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "5408.57",
+     "item": "HC1100-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2865.32",
+     "item": "HC1100-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4053.89",
+     "item": "HC1100-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1682.83",
+     "item": "HC1100-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "A second file claims the same payout with different content (ambiguous evidence).",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "3.70",
+    "gross": "14010.61",
+    "items": [
+     [
+      "HC1100-P0",
+      "PAYMENT",
+      "5408.57"
+     ],
+     [
+      "HC1100-P1",
+      "PAYMENT",
+      "2865.32"
+     ],
+     [
+      "HC1100-P2",
+      "PAYMENT",
+      "4053.89"
+     ],
+     [
+      "HC1100-P3",
+      "PAYMENT",
+      "1682.83"
+     ]
+    ],
+    "net": "14006.91",
+    "payout": "HC1100-PO"
+   }
+  },
+  {
+   "class": "C11_CONFLICTING_FILE",
+   "conflict": {
+    "fee": "1.34",
+    "gross": "679.19",
+    "items": [
+     [
+      "HC1101-P0",
+      "PAYMENT",
+      "676.82"
+     ],
+     [
+      "HC1101-P1",
+      "PAYMENT",
+      "2.37"
+     ]
+    ],
+    "net": "677.85",
+    "payout": "HC1101-PO"
+   },
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "AMBIGUOUS_STATEMENT",
+    "kinds": []
+   },
+   "id": "HC1101",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "676.82",
+     "item": "HC1101-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2.37",
+     "item": "HC1101-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "A second file claims the same payout with different content (ambiguous evidence).",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "1.33",
+    "gross": "679.19",
+    "items": [
+     [
+      "HC1101-P0",
+      "PAYMENT",
+      "676.82"
+     ],
+     [
+      "HC1101-P1",
+      "PAYMENT",
+      "2.37"
+     ]
+    ],
+    "net": "677.86",
+    "payout": "HC1101-PO"
+   }
+  },
+  {
+   "class": "C11_CONFLICTING_FILE",
+   "conflict": {
+    "fee": "14.34",
+    "gross": "9203.79",
+    "items": [
+     [
+      "HC1102-P0",
+      "PAYMENT",
+      "8674.88"
+     ],
+     [
+      "HC1102-P1",
+      "PAYMENT",
+      "528.91"
+     ]
+    ],
+    "net": "9189.45",
+    "payout": "HC1102-PO"
+   },
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "AMBIGUOUS_STATEMENT",
+    "kinds": []
+   },
+   "id": "HC1102",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "8674.88",
+     "item": "HC1102-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "528.91",
+     "item": "HC1102-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "A second file claims the same payout with different content (ambiguous evidence).",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "14.33",
+    "gross": "9203.79",
+    "items": [
+     [
+      "HC1102-P0",
+      "PAYMENT",
+      "8674.88"
+     ],
+     [
+      "HC1102-P1",
+      "PAYMENT",
+      "528.91"
+     ]
+    ],
+    "net": "9189.46",
+    "payout": "HC1102-PO"
+   }
+  },
+  {
+   "class": "C11_CONFLICTING_FILE",
+   "conflict": {
+    "fee": "44.37",
+    "gross": "17155.67",
+    "items": [
+     [
+      "HC1103-P0",
+      "PAYMENT",
+      "8913.61"
+     ],
+     [
+      "HC1103-P1",
+      "PAYMENT",
+      "8242.06"
+     ]
+    ],
+    "net": "17111.30",
+    "payout": "HC1103-PO"
+   },
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "AMBIGUOUS_STATEMENT",
+    "kinds": []
+   },
+   "id": "HC1103",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "8913.61",
+     "item": "HC1103-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8242.06",
+     "item": "HC1103-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "A second file claims the same payout with different content (ambiguous evidence).",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "44.36",
+    "gross": "17155.67",
+    "items": [
+     [
+      "HC1103-P0",
+      "PAYMENT",
+      "8913.61"
+     ],
+     [
+      "HC1103-P1",
+      "PAYMENT",
+      "8242.06"
+     ]
+    ],
+    "net": "17111.31",
+    "payout": "HC1103-PO"
+   }
+  },
+  {
+   "class": "C11_CONFLICTING_FILE",
+   "conflict": {
+    "fee": "6.40",
+    "gross": "22199.11",
+    "items": [
+     [
+      "HC1104-P0",
+      "PAYMENT",
+      "7439.20"
+     ],
+     [
+      "HC1104-P1",
+      "PAYMENT",
+      "7513.44"
+     ],
+     [
+      "HC1104-P2",
+      "PAYMENT",
+      "7246.47"
+     ]
+    ],
+    "net": "22192.71",
+    "payout": "HC1104-PO"
+   },
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": "AMBIGUOUS_STATEMENT",
+    "kinds": []
+   },
+   "id": "HC1104",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "7439.20",
+     "item": "HC1104-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7513.44",
+     "item": "HC1104-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7246.47",
+     "item": "HC1104-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "A second file claims the same payout with different content (ambiguous evidence).",
+   "settlements": [],
+   "split": "held_out",
+   "statement": {
+    "fee": "6.39",
+    "gross": "22199.11",
+    "items": [
+     [
+      "HC1104-P0",
+      "PAYMENT",
+      "7439.20"
+     ],
+     [
+      "HC1104-P1",
+      "PAYMENT",
+      "7513.44"
+     ],
+     [
+      "HC1104-P2",
+      "PAYMENT",
+      "7246.47"
+     ]
+    ],
+    "net": "22192.72",
+    "payout": "HC1104-PO"
+   }
+  },
+  {
+   "class": "C12_SWAPPED_AMOUNTS_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "HC1200",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "3293.77",
+     "item": "HC1200-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4381.44",
+     "item": "HC1200-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1006.44",
+     "item": "HC1200-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "729.01",
+     "item": "HC1200-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Two item amounts swapped between payments; totals and item set equal; settled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "34.18",
+     "gross": "9410.66",
+     "items": [
+      "HC1200-P0",
+      "HC1200-P1",
+      "HC1200-P2",
+      "HC1200-P3"
+     ],
+     "net": "9376.48",
+     "payout": "HC1200-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "34.18",
+    "gross": "9410.66",
+    "items": [
+     [
+      "HC1200-P0",
+      "PAYMENT",
+      "4381.44"
+     ],
+     [
+      "HC1200-P1",
+      "PAYMENT",
+      "3293.77"
+     ],
+     [
+      "HC1200-P2",
+      "PAYMENT",
+      "1006.44"
+     ],
+     [
+      "HC1200-P3",
+      "PAYMENT",
+      "729.01"
+     ]
+    ],
+    "net": "9376.48",
+    "payout": "HC1200-PO"
+   }
+  },
+  {
+   "class": "C12_SWAPPED_AMOUNTS_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "HC1201",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "8074.84",
+     "item": "HC1201-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4846.72",
+     "item": "HC1201-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7514.29",
+     "item": "HC1201-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8780.47",
+     "item": "HC1201-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Two item amounts swapped between payments; totals and item set equal; settled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "7.77",
+     "gross": "29216.32",
+     "items": [
+      "HC1201-P0",
+      "HC1201-P1",
+      "HC1201-P2",
+      "HC1201-P3"
+     ],
+     "net": "29208.55",
+     "payout": "HC1201-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "7.77",
+    "gross": "29216.32",
+    "items": [
+     [
+      "HC1201-P0",
+      "PAYMENT",
+      "4846.72"
+     ],
+     [
+      "HC1201-P1",
+      "PAYMENT",
+      "8074.84"
+     ],
+     [
+      "HC1201-P2",
+      "PAYMENT",
+      "7514.29"
+     ],
+     [
+      "HC1201-P3",
+      "PAYMENT",
+      "8780.47"
+     ]
+    ],
+    "net": "29208.55",
+    "payout": "HC1201-PO"
+   }
+  },
+  {
+   "class": "C12_SWAPPED_AMOUNTS_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "HC1202",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "7215.98",
+     "item": "HC1202-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4964.49",
+     "item": "HC1202-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6112.47",
+     "item": "HC1202-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1662.36",
+     "item": "HC1202-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Two item amounts swapped between payments; totals and item set equal; settled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "45.17",
+     "gross": "19955.30",
+     "items": [
+      "HC1202-P0",
+      "HC1202-P1",
+      "HC1202-P2",
+      "HC1202-P3"
+     ],
+     "net": "19910.13",
+     "payout": "HC1202-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "45.17",
+    "gross": "19955.30",
+    "items": [
+     [
+      "HC1202-P0",
+      "PAYMENT",
+      "4964.49"
+     ],
+     [
+      "HC1202-P1",
+      "PAYMENT",
+      "7215.98"
+     ],
+     [
+      "HC1202-P2",
+      "PAYMENT",
+      "6112.47"
+     ],
+     [
+      "HC1202-P3",
+      "PAYMENT",
+      "1662.36"
+     ]
+    ],
+    "net": "19910.13",
+    "payout": "HC1202-PO"
+   }
+  },
+  {
+   "class": "C12_SWAPPED_AMOUNTS_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "HC1203",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "3012.72",
+     "item": "HC1203-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "8650.22",
+     "item": "HC1203-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7617.22",
+     "item": "HC1203-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Two item amounts swapped between payments; totals and item set equal; settled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "43.66",
+     "gross": "19280.16",
+     "items": [
+      "HC1203-P0",
+      "HC1203-P1",
+      "HC1203-P2"
+     ],
+     "net": "19236.50",
+     "payout": "HC1203-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "43.66",
+    "gross": "19280.16",
+    "items": [
+     [
+      "HC1203-P0",
+      "PAYMENT",
+      "8650.22"
+     ],
+     [
+      "HC1203-P1",
+      "PAYMENT",
+      "3012.72"
+     ],
+     [
+      "HC1203-P2",
+      "PAYMENT",
+      "7617.22"
+     ]
+    ],
+    "net": "19236.50",
+    "payout": "HC1203-PO"
+   }
+  },
+  {
+   "class": "C12_SWAPPED_AMOUNTS_TRAP",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": [
+     "STATEMENT_ITEM_AMOUNT_DIFFERS"
+    ]
+   },
+   "id": "HC1204",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "957.71",
+     "item": "HC1204-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "2917.30",
+     "item": "HC1204-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Two item amounts swapped between payments; totals and item set equal; settled.",
+   "settlements": [
+    {
+     "date": "2026-10-14",
+     "fee": "23.48",
+     "gross": "3875.01",
+     "items": [
+      "HC1204-P0",
+      "HC1204-P1"
+     ],
+     "net": "3851.53",
+     "payout": "HC1204-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "23.48",
+    "gross": "3875.01",
+    "items": [
+     [
+      "HC1204-P0",
+      "PAYMENT",
+      "2917.30"
+     ],
+     [
+      "HC1204-P1",
+      "PAYMENT",
+      "957.71"
+     ]
+    ],
+    "net": "3851.53",
+    "payout": "HC1204-PO"
+   }
+  },
+  {
+   "class": "C13_PAYOUT_DATE_BLIND_SPOT",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC1300",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "5709.21",
+     "item": "HC1300-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "482.93",
+     "item": "HC1300-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7164.82",
+     "item": "HC1300-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "5668.69",
+     "item": "HC1300-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded on a different payout date; amounts and items agree. v1 does not compare dates.",
+   "settlements": [
+    {
+     "date": "2026-10-15",
+     "fee": "42.69",
+     "gross": "19025.65",
+     "items": [
+      "HC1300-P0",
+      "HC1300-P1",
+      "HC1300-P2",
+      "HC1300-P3"
+     ],
+     "net": "18982.96",
+     "payout": "HC1300-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "42.69",
+    "gross": "19025.65",
+    "items": [
+     [
+      "HC1300-P0",
+      "PAYMENT",
+      "5709.21"
+     ],
+     [
+      "HC1300-P1",
+      "PAYMENT",
+      "482.93"
+     ],
+     [
+      "HC1300-P2",
+      "PAYMENT",
+      "7164.82"
+     ],
+     [
+      "HC1300-P3",
+      "PAYMENT",
+      "5668.69"
+     ]
+    ],
+    "net": "18982.96",
+    "payout": "HC1300-PO"
+   }
+  },
+  {
+   "class": "C13_PAYOUT_DATE_BLIND_SPOT",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC1301",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "7198.62",
+     "item": "HC1301-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7118.15",
+     "item": "HC1301-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "6298.58",
+     "item": "HC1301-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded on a different payout date; amounts and items agree. v1 does not compare dates.",
+   "settlements": [
+    {
+     "date": "2026-10-15",
+     "fee": "41.90",
+     "gross": "20615.35",
+     "items": [
+      "HC1301-P0",
+      "HC1301-P1",
+      "HC1301-P2"
+     ],
+     "net": "20573.45",
+     "payout": "HC1301-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "41.90",
+    "gross": "20615.35",
+    "items": [
+     [
+      "HC1301-P0",
+      "PAYMENT",
+      "7198.62"
+     ],
+     [
+      "HC1301-P1",
+      "PAYMENT",
+      "7118.15"
+     ],
+     [
+      "HC1301-P2",
+      "PAYMENT",
+      "6298.58"
+     ]
+    ],
+    "net": "20573.45",
+    "payout": "HC1301-PO"
+   }
+  },
+  {
+   "class": "C13_PAYOUT_DATE_BLIND_SPOT",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC1302",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "1290.15",
+     "item": "HC1302-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "62.33",
+     "item": "HC1302-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "1194.44",
+     "item": "HC1302-P2",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "4977.90",
+     "item": "HC1302-P3",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded on a different payout date; amounts and items agree. v1 does not compare dates.",
+   "settlements": [
+    {
+     "date": "2026-10-15",
+     "fee": "13.86",
+     "gross": "7524.82",
+     "items": [
+      "HC1302-P0",
+      "HC1302-P1",
+      "HC1302-P2",
+      "HC1302-P3"
+     ],
+     "net": "7510.96",
+     "payout": "HC1302-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "13.86",
+    "gross": "7524.82",
+    "items": [
+     [
+      "HC1302-P0",
+      "PAYMENT",
+      "1290.15"
+     ],
+     [
+      "HC1302-P1",
+      "PAYMENT",
+      "62.33"
+     ],
+     [
+      "HC1302-P2",
+      "PAYMENT",
+      "1194.44"
+     ],
+     [
+      "HC1302-P3",
+      "PAYMENT",
+      "4977.90"
+     ]
+    ],
+    "net": "7510.96",
+    "payout": "HC1302-PO"
+   }
+  },
+  {
+   "class": "C13_PAYOUT_DATE_BLIND_SPOT",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC1303",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "2814.23",
+     "item": "HC1303-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "889.87",
+     "item": "HC1303-P1",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "3914.20",
+     "item": "HC1303-P2",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded on a different payout date; amounts and items agree. v1 does not compare dates.",
+   "settlements": [
+    {
+     "date": "2026-10-15",
+     "fee": "19.13",
+     "gross": "7618.30",
+     "items": [
+      "HC1303-P0",
+      "HC1303-P1",
+      "HC1303-P2"
+     ],
+     "net": "7599.17",
+     "payout": "HC1303-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "19.13",
+    "gross": "7618.30",
+    "items": [
+     [
+      "HC1303-P0",
+      "PAYMENT",
+      "2814.23"
+     ],
+     [
+      "HC1303-P1",
+      "PAYMENT",
+      "889.87"
+     ],
+     [
+      "HC1303-P2",
+      "PAYMENT",
+      "3914.20"
+     ]
+    ],
+    "net": "7599.17",
+    "payout": "HC1303-PO"
+   }
+  },
+  {
+   "class": "C13_PAYOUT_DATE_BLIND_SPOT",
+   "conflict": null,
+   "discrepancy_present": true,
+   "expected": {
+    "abstention": null,
+    "kinds": []
+   },
+   "id": "HC1304",
+   "label_source": "lv-detection-synthetic-cases/1.0.0 (injected perturbation; SYNTHETIC; not an accounting review)",
+   "payments": [
+    {
+     "amount": "2821.68",
+     "item": "HC1304-P0",
+     "processor": "processor-1"
+    },
+    {
+     "amount": "7475.54",
+     "item": "HC1304-P1",
+     "processor": "processor-1"
+    }
+   ],
+   "rationale": "Settlement recorded on a different payout date; amounts and items agree. v1 does not compare dates.",
+   "settlements": [
+    {
+     "date": "2026-10-15",
+     "fee": "34.83",
+     "gross": "10297.22",
+     "items": [
+      "HC1304-P0",
+      "HC1304-P1"
+     ],
+     "net": "10262.39",
+     "payout": "HC1304-PO"
+    }
+   ],
+   "split": "held_out",
+   "statement": {
+    "fee": "34.83",
+    "gross": "10297.22",
+    "items": [
+     [
+      "HC1304-P0",
+      "PAYMENT",
+      "2821.68"
+     ],
+     [
+      "HC1304-P1",
+      "PAYMENT",
+      "7475.54"
+     ]
+    ],
+    "net": "10262.39",
+    "payout": "HC1304-PO"
+   }
+  }
+ ],
+ "classification": "SYNTHETIC",
+ "generator": "lv-detection-synthetic-cases/1.0.0",
+ "per_class": {
+  "dev": 2,
+  "held_out": 5
+ },
+ "seeds": {
+  "dev": 20261106,
+  "held_out": 61102026
+ }
+}

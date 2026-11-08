@@ -97,11 +97,11 @@ def parse(raw):
     except (v.Invalid,ValueError,UnicodeError):return None,v.request_hash(raw),{'status':422,'code':'SCHEMA_INVALID','detail':'policy_ids and a non-whitespace UTF-8 reason of 1–4000 characters are required; no other fields are accepted'}
 
 ERRORS={**NOT_FOUND,400:{'description':'IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER',**PROBLEM},401:{'description':'UNAUTHENTICATED',**PROBLEM},
-    403:{'description':'PERMISSION_DENIED; SEGREGATION_OF_DUTIES (maker)',**PROBLEM},409:{'description':'REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION; PROPOSAL_STALE (no state change)',**PROBLEM},
+    403:{'description':'PERMISSION_DENIED; SEGREGATION_OF_DUTIES (maker, submitter, editors, self-grant, 24-hour review cooling-off)',**PROBLEM},409:{'description':'REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION; PROPOSAL_STALE (no state change)',**PROBLEM},
     412:{'description':'VERSION_MISMATCH',**PROBLEM},422:{'description':'SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED; PRECONDITION_FAILED (FAIL_CANNOT_BE_OVERRIDDEN)',**PROBLEM},428:{'description':'VERSION_REQUIRED',**PROBLEM}}
 
 @router.post('/{proposal_id}/overrides',response_model=Proposal,operation_id='overrideProposalEvidence',responses=ERRORS,
-    openapi_extra={'x-lv-permission':'review','x-lv-role':'CONTROLLER','x-lv-idempotency':'required','requestBody':BODY,
+    openapi_extra={'x-lv-semantic-revalidation':'when needed, locked full native recalculation must preserve economic effects and policy outcomes; original review is immutable','x-lv-permission':'review','x-lv-role':'CONTROLLER','x-lv-idempotency':'required','requestBody':BODY,
         'x-lv-scope':'native SANDBOX RecordSettlement; sole P-EVD-01 insufficiency; no approval/execution; OV-1/OV-2 bounded choices PROPOSED'})
 def override(proposal_id:UUID,request:Request,raw:Annotated[bytes|None,Depends(raw_body)],
     idempotency_key:Annotated[str|None,Header(alias='Idempotency-Key',max_length=256)]=None,
@@ -114,6 +114,9 @@ def override(proposal_id:UUID,request:Request,raw:Annotated[bytes|None,Depends(r
             if request.query_params:problem={'status':400,'code':'UNKNOWN_QUERY_PARAMETER','detail':'overrides accept no query parameters'}
             h=digest(canonical({'proposal_id':str(proposal_id),'if_match':if_match,'body_hash':body_hash,'query':[[k,val] for k,val in request.query_params.multi_items()]}))
             if _before_write:_before_write()
+            if problem is None and not request.query_params:
+             from ledgervigil.proposals.semantic import refresh
+             refresh(ctx,request,proposal_id,'override',if_match,idempotency_key)
             result=ctx.conn.execute('SELECT lv.override_evidence(%s,%s,%s,%s,%s,%s,%s,%s,%s)',
                 (token_hash(ctx.session_token),proposal_id,if_match,idempotency_key,h,Jsonb(body) if body else None,Jsonb(problem) if problem else None,source_key(request),request.state.request_id)).fetchone()[0]
             if _after_write:_after_write(ctx)

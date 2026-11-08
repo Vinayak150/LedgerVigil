@@ -46,7 +46,7 @@ def parse(raw):
   if type(b) is not dict or set(b)!={'revision'} or type(b['revision']) is not int or not 1<=b['revision']<=2147483647:raise ValueError()
   return b,v.request_hash(raw,b,True),None
  except (v.Invalid,ValueError,UnicodeError):return None,v.request_hash(raw),{'status':422,'code':'SCHEMA_INVALID','detail':'only an exact positive integer revision is accepted'}
-@router.post('/proposals/{proposal_id}/execute',response_model=NativeExecution,operation_id='executeNativeProposal',responses={**NOT_FOUND,400:{'description':'Idempotency key/query invalid',**PROBLEM},401:{'description':'Session required',**PROBLEM},403:{'description':'Execute permission, maker, self-grant and 24-hour cooling checks',**PROBLEM},409:{'description':'PROPOSAL_STALE; INVALID_STATE_TRANSITION; REQUEST_IN_PROGRESS',**PROBLEM},412:{'description':'VERSION_MISMATCH',**PROBLEM},422:{'description':'SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED',**PROBLEM},428:{'description':'VERSION_REQUIRED',**PROBLEM},500:{'description':'Non-retryable defect or unconfirmed commit; read back and retain original request identity',**PROBLEM}},openapi_extra={'requestBody':BODY,'x-lv-permission':'execute','x-lv-idempotency':'required','x-lv-scope':'synchronous single native SANDBOX RecordSettlement transaction; no provider or BOOKS writes'})
+@router.post('/proposals/{proposal_id}/execute',response_model=NativeExecution,operation_id='executeNativeProposal',responses={**NOT_FOUND,400:{'description':'Idempotency key/query invalid',**PROBLEM},401:{'description':'Session required',**PROBLEM},403:{'description':'Execute permission, maker, self-grant and 24-hour cooling checks',**PROBLEM},409:{'description':'PROPOSAL_STALE; INVALID_STATE_TRANSITION; REQUEST_IN_PROGRESS',**PROBLEM},412:{'description':'VERSION_MISMATCH',**PROBLEM},422:{'description':'SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED',**PROBLEM},428:{'description':'VERSION_REQUIRED',**PROBLEM},500:{'description':'Non-retryable defect or unconfirmed commit; read back and retain original request identity',**PROBLEM}},openapi_extra={'requestBody':BODY,'x-lv-semantic-revalidation':'when needed, locked full native recalculation must preserve economic effects and policy outcomes; original review is immutable','x-lv-permission':'execute','x-lv-idempotency':'required','x-lv-scope':'synchronous single native SANDBOX RecordSettlement transaction; no provider or BOOKS writes'})
 def execute(proposal_id:UUID,request:Request,raw:Annotated[bytes|None,Depends(raw_body)],idempotency_key:Annotated[str|None,Header(alias='Idempotency-Key',max_length=256)]=None,if_match:Annotated[str|None,Header(alias='If-Match',max_length=64)]=None):
  commit_phase=False
  try:
@@ -56,6 +56,9 @@ def execute(proposal_id:UUID,request:Request,raw:Annotated[bytes|None,Depends(ra
    if request.query_params:problem={'status':400,'code':'UNKNOWN_QUERY_PARAMETER'}
    rhash=digest(canonical({'proposal_id':str(proposal_id),'if_match':if_match,'body_hash':bhash,'query':list(request.query_params.multi_items())}))
    if _before_write:_before_write()
+   if problem is None and not request.query_params:
+    from ledgervigil.proposals.semantic import refresh
+    refresh(ctx,request,proposal_id,'execute',if_match,idempotency_key,requested_revision=body['revision'])
    result=ctx.conn.execute('SELECT lv.execute_native(%s,%s,%s,%s,%s,%s,%s,%s,%s)',(token_hash(ctx.session_token),proposal_id,if_match,idempotency_key,rhash,Jsonb(body) if body else None,Jsonb(problem) if problem else None,source_key(request),request.state.request_id)).fetchone()[0]
    if result['status']==200:
     NativeExecution.model_validate(result['body'])

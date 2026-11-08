@@ -55,43 +55,71 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; expired or mismatched download link",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND; missing or inaccessible resource",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION; export not ready",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "INTERNAL; no artifact response on failed audit commit",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -151,43 +179,71 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; expired or mismatched download link",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND; missing or inaccessible resource",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION; export not ready",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "INTERNAL; no artifact response on failed audit commit",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -227,43 +283,71 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; expired or mismatched download link",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND; missing or inaccessible resource",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION; export not ready",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "INTERNAL; no artifact response on failed audit commit",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -301,43 +385,71 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; expired or mismatched download link",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND; missing or inaccessible resource",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION; export not ready",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "INTERNAL; no artifact response on failed audit commit",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -395,43 +507,71 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; expired or mismatched download link",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND; missing or inaccessible resource",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION; export not ready",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "INTERNAL; no artifact response on failed audit commit",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -491,43 +631,71 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; expired or mismatched download link",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND; missing or inaccessible resource",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION; export not ready",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "INTERNAL; no artifact response on failed audit commit",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -565,43 +733,71 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; expired or mismatched download link",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND; missing or inaccessible resource",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION; export not ready",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "INTERNAL; no artifact response on failed audit commit",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -640,43 +836,71 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; expired or mismatched download link",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND; missing or inaccessible resource",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION; export not ready",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "INTERNAL; no artifact response on failed audit commit",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -733,43 +957,71 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; expired or mismatched download link",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND; missing or inaccessible resource",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION; export not ready",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "INTERNAL; no artifact response on failed audit commit",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -1044,37 +1296,61 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE; UNVERIFIED_SOURCE_PLAN",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -1115,37 +1391,61 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE; UNVERIFIED_SOURCE_PLAN",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -1242,37 +1542,61 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE; UNVERIFIED_SOURCE_PLAN",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "503": {
@@ -1326,37 +1650,61 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE; UNVERIFIED_SOURCE_PLAN",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "503": {
@@ -1447,37 +1795,61 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE; UNVERIFIED_SOURCE_PLAN",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "503": {
@@ -1551,25 +1923,41 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -1613,31 +2001,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -1717,31 +2125,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -1823,37 +2251,61 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (as_of_seq malformed or beyond the committed sequence; as_of_date malformed); CAPABILITY_UNAVAILABLE (as_of_date semantics undecided; ledger is not native SANDBOX; more than 2000 lines; an amount outside the Money range)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "INTERNAL (postings and current-state projection disagree; nothing is reported)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -1935,31 +2387,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -2038,49 +2510,81 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (permission, CSRF or origin)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION (already closed, or an earlier period is still open); REQUEST_IN_PROGRESS (same Idempotency-Key still running)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH (body has current_version)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE (not a native SANDBOX ledger); SCHEMA_INVALID",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED (If-Match missing)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -2141,49 +2645,81 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION; reason ACCOUNT_IN_USE",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; CAPABILITY_UNAVAILABLE",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -2273,37 +2809,61 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no propose; CSRF; Origin)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND: the ledger or a referenced record is absent, another tenant's or another ledger's (indistinguishable; errors[] gives the pointer)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS (same Idempotency-Key still running; Retry-After)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID, MONEY_MUST_BE_STRING, MONEY_SCALE_EXCEEDED, CURRENCY_MISMATCH, CAPABILITY_UNAVAILABLE, UNSUPPORTED_BY_PROFILE (PARTIAL_ITEM_SETTLEMENT), IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -2514,25 +3074,41 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (filter, limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -2592,43 +3168,71 @@
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (proposal, or a referenced record outside its ledger)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "INVALID_STATE_TRANSITION (not DRAFT; body has state)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH (body has current_version)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID and the money codes; CAPABILITY_UNAVAILABLE; UNSUPPORTED_BY_PROFILE",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED (If-Match missing)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -2726,31 +3330,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (filter, limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -2830,31 +3454,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (filter, limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -3068,31 +3712,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id/type/status/party_id/date/as_of_seq); CAPABILITY_UNAVAILABLE (type INVOICE/CREDIT_NOTE/REFUND has no native records; date_from, date_to, q and as_of_seq semantics undecided)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -3136,31 +3800,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -3250,31 +3934,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (ledger_id filter names an absent or other-tenant ledger)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -3318,31 +4022,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -3441,31 +4165,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -3547,31 +4291,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -3616,31 +4380,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -3684,37 +4468,61 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "SIMULATION_VERSION_UNAVAILABLE (a pinned version is not installed; code not named by the contract, gap SM-G3)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -3795,31 +4603,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (no read permission, or no tenant selected)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -3893,49 +4721,81 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (maker/propose/CSRF/Origin)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent/other tenant)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; PRECONDITION_FAILED (STAGED_DOCUMENT_RESERVED, STATEMENT_IDENTITY_MISMATCH); CAPABILITY_UNAVAILABLE; UNSUPPORTED_BY_PROFILE; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -4012,49 +4872,81 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (maker/propose/CSRF/Origin)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent/other tenant)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; PRECONDITION_FAILED (STAGED_DOCUMENT_RESERVED, STATEMENT_IDENTITY_MISMATCH); CAPABILITY_UNAVAILABLE; UNSUPPORTED_BY_PROFILE; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -4138,49 +5030,81 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (maker/propose/CSRF/Origin)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent/other tenant)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; PRECONDITION_FAILED (STAGED_DOCUMENT_RESERVED, STATEMENT_IDENTITY_MISMATCH); CAPABILITY_UNAVAILABLE; UNSUPPORTED_BY_PROFILE; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -4257,49 +5181,81 @@
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (maker/propose/CSRF/Origin)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent/other tenant)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; PRECONDITION_FAILED (STAGED_DOCUMENT_RESERVED, STATEMENT_IDENTITY_MISMATCH); CAPABILITY_UNAVAILABLE; UNSUPPORTED_BY_PROFILE; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -4378,43 +5334,71 @@
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED (propose or review; CSRF/Origin)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH (optional If-Match)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -4516,31 +5500,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (filter, limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -4615,52 +5619,85 @@
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
-            "description": "PERMISSION_DENIED; SEGREGATION_OF_DUTIES (maker)",
+            "description": "PERMISSION_DENIED; SEGREGATION_OF_DUTIES (maker, submitter, editors, self-grant, 24-hour review cooling-off)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION; PROPOSAL_STALE (no state change)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED; PRECONDITION_FAILED (FAIL_CANNOT_BE_OVERRIDDEN)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
+        "x-lv-semantic-revalidation": "when needed, locked full native recalculation must preserve economic effects and policy outcomes; original review is immutable",
         "x-lv-permission": "review",
         "x-lv-role": "CONTROLLER",
         "x-lv-idempotency": "required",
@@ -4773,31 +5810,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (filter, limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -4873,52 +5930,85 @@
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; SEGREGATION_OF_DUTIES (maker/editor/self-grant/24-hour cooling-off)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "ALREADY_DECIDED; INVALID_STATE_TRANSITION; REQUEST_IN_PROGRESS; PROPOSAL_STALE (changed dependencies atomically mark STALE)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
+        "x-lv-semantic-revalidation": "when needed, locked full native recalculation must preserve economic effects and policy outcomes; original review is immutable",
         "x-lv-permission": "review",
         "x-lv-idempotency": "required",
         "requestBody": {
@@ -5018,49 +6108,81 @@
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "400": {
             "description": "IDEMPOTENCY_KEY_REQUIRED; UNKNOWN_QUERY_PARAMETER",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED; SEGREGATION_OF_DUTIES (maker/editor/self-grant/24-hour cooling-off)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "ALREADY_DECIDED; INVALID_STATE_TRANSITION; REQUEST_IN_PROGRESS; PROPOSAL_STALE (changed dependencies atomically mark STALE)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -5162,55 +6284,91 @@
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "400": {
             "description": "Idempotency key/query invalid",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "Session required",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "Execute permission, maker, self-grant and 24-hour cooling checks",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "409": {
             "description": "PROPOSAL_STALE; INVALID_STATE_TRANSITION; REQUEST_IN_PROGRESS",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "412": {
             "description": "VERSION_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "428": {
             "description": "VERSION_REQUIRED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "500": {
             "description": "Non-retryable defect or unconfirmed commit; read back and retain original request identity",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -5234,6 +6392,7 @@
             }
           }
         },
+        "x-lv-semantic-revalidation": "when needed, locked full native recalculation must preserve economic effects and policy outcomes; original review is immutable",
         "x-lv-permission": "execute",
         "x-lv-idempotency": "required",
         "x-lv-scope": "synchronous single native SANDBOX RecordSettlement transaction; no provider or BOOKS writes"
@@ -5275,31 +6434,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (filter, limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -5342,31 +6521,51 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (filter, limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "404": {
             "description": "NOT_FOUND (absent or another tenant; indistinguishable)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -5401,7 +6600,11 @@
               "application/json": {
                 "schema": {}
               },
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "304": {
@@ -5410,25 +6613,41 @@
           "400": {
             "description": "UNKNOWN_QUERY_PARAMETER; CURSOR_MISMATCH",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "401": {
             "description": "UNAUTHENTICATED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "403": {
             "description": "PERMISSION_DENIED",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           },
           "422": {
             "description": "SCHEMA_INVALID (filter, limit, repeated parameter, malformed id)",
             "content": {
-              "application/problem+json": {}
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
             }
           }
         },
@@ -9442,6 +10661,86 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "Problem": {
+        "type": "object",
+        "title": "Problem",
+        "description": "RFC 9457 problem details with the Stage 2B extensions code, class, retryable and request_id (Stage 2B Part 3/Part 4).",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code",
+          "class",
+          "retryable",
+          "request_id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "code": {
+            "type": "string"
+          },
+          "class": {
+            "enum": [
+              "VALIDATION",
+              "AUTHENTICATION",
+              "AUTHORIZATION",
+              "NOT_FOUND",
+              "CONFLICT",
+              "STALE",
+              "PRECONDITION",
+              "UNSUPPORTED",
+              "RATE_LIMITED",
+              "INFRASTRUCTURE"
+            ]
+          },
+          "retryable": {
+            "type": "boolean"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "current_version": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "pointer": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "state": {
+            "type": "string",
+            "description": "LedgerVigil extension: current state where a conflict names it"
+          },
+          "reason": {
+            "type": "string",
+            "description": "LedgerVigil extension: refusal reason qualifier (for example ACCOUNT_IN_USE)"
+          }
+        }
       }
     }
   }

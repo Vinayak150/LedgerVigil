@@ -2506,6 +2506,31 @@ export interface components {
             /** Context */
             ctx?: Record<string, never>;
         };
+        /**
+         * Problem
+         * @description RFC 9457 problem details with the Stage 2B extensions code, class, retryable and request_id (Stage 2B Part 3/Part 4).
+         */
+        Problem: {
+            /** Format: uri */
+            type: string;
+            title: string;
+            status: number;
+            code: string;
+            /** @enum {unknown} */
+            class: "VALIDATION" | "AUTHENTICATION" | "AUTHORIZATION" | "NOT_FOUND" | "CONFLICT" | "STALE" | "PRECONDITION" | "UNSUPPORTED" | "RATE_LIMITED" | "INFRASTRUCTURE";
+            retryable: boolean;
+            detail?: string;
+            request_id: string;
+            current_version?: number | null;
+            errors?: {
+                pointer?: string;
+                code?: string;
+            }[];
+            /** @description LedgerVigil extension: current state where a conflict names it */
+            state?: string;
+            /** @description LedgerVigil extension: refusal reason qualifier (for example ACCOUNT_IN_USE) */
+            reason?: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -2550,7 +2575,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -2559,7 +2584,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; expired or mismatched download link */
@@ -2568,7 +2593,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND; missing or inaccessible resource */
@@ -2577,7 +2602,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION; export not ready */
@@ -2586,7 +2611,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED */
@@ -2595,7 +2620,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INTERNAL; no artifact response on failed audit commit */
@@ -2604,7 +2629,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -2635,7 +2660,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -2644,7 +2669,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; expired or mismatched download link */
@@ -2653,7 +2678,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND; missing or inaccessible resource */
@@ -2662,7 +2687,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION; export not ready */
@@ -2671,7 +2696,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED */
@@ -2680,7 +2705,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INTERNAL; no artifact response on failed audit commit */
@@ -2689,7 +2714,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -2720,7 +2745,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -2729,7 +2754,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; expired or mismatched download link */
@@ -2738,7 +2763,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND; missing or inaccessible resource */
@@ -2747,7 +2772,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION; export not ready */
@@ -2756,7 +2781,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED */
@@ -2765,7 +2790,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INTERNAL; no artifact response on failed audit commit */
@@ -2774,7 +2799,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -2805,7 +2830,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -2814,7 +2839,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; expired or mismatched download link */
@@ -2823,7 +2848,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND; missing or inaccessible resource */
@@ -2832,7 +2857,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION; export not ready */
@@ -2841,7 +2866,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED */
@@ -2850,7 +2875,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INTERNAL; no artifact response on failed audit commit */
@@ -2859,7 +2884,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -2898,7 +2923,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -2907,7 +2932,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; expired or mismatched download link */
@@ -2916,7 +2941,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND; missing or inaccessible resource */
@@ -2925,7 +2950,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION; export not ready */
@@ -2934,7 +2959,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED */
@@ -2943,7 +2968,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INTERNAL; no artifact response on failed audit commit */
@@ -2952,7 +2977,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -2983,7 +3008,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -2992,7 +3017,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; expired or mismatched download link */
@@ -3001,7 +3026,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND; missing or inaccessible resource */
@@ -3010,7 +3035,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION; export not ready */
@@ -3019,7 +3044,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED */
@@ -3028,7 +3053,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INTERNAL; no artifact response on failed audit commit */
@@ -3037,7 +3062,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -3068,7 +3093,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -3077,7 +3102,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; expired or mismatched download link */
@@ -3086,7 +3111,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND; missing or inaccessible resource */
@@ -3095,7 +3120,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION; export not ready */
@@ -3104,7 +3129,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED */
@@ -3113,7 +3138,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INTERNAL; no artifact response on failed audit commit */
@@ -3122,7 +3147,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -3153,7 +3178,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -3162,7 +3187,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; expired or mismatched download link */
@@ -3171,7 +3196,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND; missing or inaccessible resource */
@@ -3180,7 +3205,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION; export not ready */
@@ -3189,7 +3214,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED */
@@ -3198,7 +3223,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INTERNAL; no artifact response on failed audit commit */
@@ -3207,7 +3232,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -3247,7 +3272,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -3256,7 +3281,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; expired or mismatched download link */
@@ -3265,7 +3290,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND; missing or inaccessible resource */
@@ -3274,7 +3299,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION; export not ready */
@@ -3283,7 +3308,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED */
@@ -3292,7 +3317,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INTERNAL; no artifact response on failed audit commit */
@@ -3301,7 +3326,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -3557,7 +3582,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -3566,7 +3591,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -3575,7 +3600,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND */
@@ -3584,7 +3609,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS */
@@ -3593,7 +3618,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE; UNVERIFIED_SOURCE_PLAN */
@@ -3602,7 +3627,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -3633,7 +3658,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -3642,7 +3667,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -3651,7 +3676,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND */
@@ -3660,7 +3685,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS */
@@ -3669,7 +3694,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE; UNVERIFIED_SOURCE_PLAN */
@@ -3678,7 +3703,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -3715,7 +3740,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -3724,7 +3749,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -3733,7 +3758,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND */
@@ -3742,7 +3767,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS */
@@ -3751,7 +3776,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE; UNVERIFIED_SOURCE_PLAN */
@@ -3760,7 +3785,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SOURCE_INDEX_UNAVAILABLE */
@@ -3799,7 +3824,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -3808,7 +3833,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -3817,7 +3842,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND */
@@ -3826,7 +3851,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS */
@@ -3835,7 +3860,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE; UNVERIFIED_SOURCE_PLAN */
@@ -3844,7 +3869,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SOURCE_INDEX_UNAVAILABLE */
@@ -3888,7 +3913,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -3897,7 +3922,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -3906,7 +3931,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND */
@@ -3915,7 +3940,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS */
@@ -3924,7 +3949,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE; UNVERIFIED_SOURCE_PLAN */
@@ -3933,7 +3958,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SOURCE_INDEX_UNAVAILABLE */
@@ -3981,7 +4006,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -3990,7 +4015,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -3999,7 +4024,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -4008,7 +4033,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4046,7 +4071,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -4055,7 +4080,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -4064,7 +4089,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -4073,7 +4098,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -4082,7 +4107,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4125,7 +4150,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -4134,7 +4159,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -4143,7 +4168,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -4152,7 +4177,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -4161,7 +4186,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4204,7 +4229,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -4213,7 +4238,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -4222,7 +4247,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -4231,7 +4256,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (as_of_seq malformed or beyond the committed sequence; as_of_date malformed); CAPABILITY_UNAVAILABLE (as_of_date semantics undecided; ledger is not native SANDBOX; more than 2000 lines; an amount outside the Money range) */
@@ -4240,7 +4265,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INTERNAL (postings and current-state projection disagree; nothing is reported) */
@@ -4249,7 +4274,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4292,7 +4317,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -4301,7 +4326,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -4310,7 +4335,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -4319,7 +4344,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -4328,7 +4353,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4364,7 +4389,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -4373,7 +4398,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (permission, CSRF or origin) */
@@ -4382,7 +4407,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant) */
@@ -4391,7 +4416,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION (already closed, or an earlier period is still open); REQUEST_IN_PROGRESS (same Idempotency-Key still running) */
@@ -4400,7 +4425,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH (body has current_version) */
@@ -4409,7 +4434,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description IDEMPOTENCY_KEY_REUSED; CAPABILITY_UNAVAILABLE (not a native SANDBOX ledger); SCHEMA_INVALID */
@@ -4418,7 +4443,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED (If-Match missing) */
@@ -4427,7 +4452,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4470,7 +4495,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -4479,7 +4504,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -4488,7 +4513,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND */
@@ -4497,7 +4522,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION; reason ACCOUNT_IN_USE */
@@ -4506,7 +4531,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH */
@@ -4515,7 +4540,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; CAPABILITY_UNAVAILABLE */
@@ -4524,7 +4549,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED */
@@ -4533,7 +4558,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4582,7 +4607,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -4591,7 +4616,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -4600,7 +4625,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (filter, limit, repeated parameter, malformed id) */
@@ -4609,7 +4634,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4658,7 +4683,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -4667,7 +4692,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no propose; CSRF; Origin) */
@@ -4676,7 +4701,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND: the ledger or a referenced record is absent, another tenant's or another ledger's (indistinguishable; errors[] gives the pointer) */
@@ -4685,7 +4710,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS (same Idempotency-Key still running; Retry-After) */
@@ -4694,7 +4719,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID, MONEY_MUST_BE_STRING, MONEY_SCALE_EXCEEDED, CURRENCY_MISMATCH, CAPABILITY_UNAVAILABLE, UNSUPPORTED_BY_PROFILE (PARTIAL_ITEM_SETTLEMENT), IDEMPOTENCY_KEY_REUSED */
@@ -4703,7 +4728,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4741,7 +4766,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -4750,7 +4775,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -4759,7 +4784,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -4768,7 +4793,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (filter, limit, repeated parameter, malformed id) */
@@ -4777,7 +4802,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4824,7 +4849,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -4833,7 +4858,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (proposal, or a referenced record outside its ledger) */
@@ -4842,7 +4867,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description INVALID_STATE_TRANSITION (not DRAFT; body has state) */
@@ -4851,7 +4876,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH (body has current_version) */
@@ -4860,7 +4885,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID and the money codes; CAPABILITY_UNAVAILABLE; UNSUPPORTED_BY_PROFILE */
@@ -4869,7 +4894,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED (If-Match missing) */
@@ -4878,7 +4903,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -4921,7 +4946,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -4930,7 +4955,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -4939,7 +4964,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -4948,7 +4973,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (filter, limit, repeated parameter, malformed id) */
@@ -4957,7 +4982,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5014,7 +5039,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5023,7 +5048,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -5032,7 +5057,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -5041,7 +5066,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id/type/status/party_id/date/as_of_seq); CAPABILITY_UNAVAILABLE (type INVOICE/CREDIT_NOTE/REFUND has no native records; date_from, date_to, q and as_of_seq semantics undecided) */
@@ -5050,7 +5075,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5088,7 +5113,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5097,7 +5122,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -5106,7 +5131,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -5115,7 +5140,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -5124,7 +5149,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5167,7 +5192,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5176,7 +5201,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -5185,7 +5210,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (ledger_id filter names an absent or other-tenant ledger) */
@@ -5194,7 +5219,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -5203,7 +5228,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5241,7 +5266,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5250,7 +5275,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -5259,7 +5284,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -5268,7 +5293,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -5277,7 +5302,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5322,7 +5347,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5331,7 +5356,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -5340,7 +5365,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -5349,7 +5374,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -5358,7 +5383,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5401,7 +5426,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5410,7 +5435,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -5419,7 +5444,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -5428,7 +5453,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -5437,7 +5462,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5475,7 +5500,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5484,7 +5509,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -5493,7 +5518,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -5502,7 +5527,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -5511,7 +5536,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5549,7 +5574,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5558,7 +5583,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -5567,7 +5592,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -5576,7 +5601,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SIMULATION_VERSION_UNAVAILABLE (a pinned version is not installed; code not named by the contract, gap SM-G3) */
@@ -5585,7 +5610,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -5594,7 +5619,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5637,7 +5662,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5646,7 +5671,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (no read permission, or no tenant selected) */
@@ -5655,7 +5680,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -5664,7 +5689,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (limit, repeated parameter, malformed id) */
@@ -5673,7 +5698,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5707,7 +5732,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5716,7 +5741,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (maker/propose/CSRF/Origin) */
@@ -5725,7 +5750,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent/other tenant) */
@@ -5734,7 +5759,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION */
@@ -5743,7 +5768,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH */
@@ -5752,7 +5777,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; PRECONDITION_FAILED (STAGED_DOCUMENT_RESERVED, STATEMENT_IDENTITY_MISMATCH); CAPABILITY_UNAVAILABLE; UNSUPPORTED_BY_PROFILE; IDEMPOTENCY_KEY_REUSED */
@@ -5761,7 +5786,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED */
@@ -5770,7 +5795,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5804,7 +5829,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5813,7 +5838,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (maker/propose/CSRF/Origin) */
@@ -5822,7 +5847,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent/other tenant) */
@@ -5831,7 +5856,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION */
@@ -5840,7 +5865,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH */
@@ -5849,7 +5874,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; PRECONDITION_FAILED (STAGED_DOCUMENT_RESERVED, STATEMENT_IDENTITY_MISMATCH); CAPABILITY_UNAVAILABLE; UNSUPPORTED_BY_PROFILE; IDEMPOTENCY_KEY_REUSED */
@@ -5858,7 +5883,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED */
@@ -5867,7 +5892,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5901,7 +5926,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -5910,7 +5935,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (maker/propose/CSRF/Origin) */
@@ -5919,7 +5944,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent/other tenant) */
@@ -5928,7 +5953,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION */
@@ -5937,7 +5962,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH */
@@ -5946,7 +5971,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; PRECONDITION_FAILED (STAGED_DOCUMENT_RESERVED, STATEMENT_IDENTITY_MISMATCH); CAPABILITY_UNAVAILABLE; UNSUPPORTED_BY_PROFILE; IDEMPOTENCY_KEY_REUSED */
@@ -5955,7 +5980,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED */
@@ -5964,7 +5989,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -5998,7 +6023,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -6007,7 +6032,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (maker/propose/CSRF/Origin) */
@@ -6016,7 +6041,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent/other tenant) */
@@ -6025,7 +6050,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION */
@@ -6034,7 +6059,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH */
@@ -6043,7 +6068,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; PRECONDITION_FAILED (STAGED_DOCUMENT_RESERVED, STATEMENT_IDENTITY_MISMATCH); CAPABILITY_UNAVAILABLE; UNSUPPORTED_BY_PROFILE; IDEMPOTENCY_KEY_REUSED */
@@ -6052,7 +6077,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED */
@@ -6061,7 +6086,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -6104,7 +6129,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -6113,7 +6138,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -6122,7 +6147,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -6131,7 +6156,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (filter, limit, repeated parameter, malformed id) */
@@ -6140,7 +6165,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -6182,7 +6207,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -6191,7 +6216,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED (propose or review; CSRF/Origin) */
@@ -6200,7 +6225,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -6209,7 +6234,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS */
@@ -6218,7 +6243,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH (optional If-Match) */
@@ -6227,7 +6252,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; IDEMPOTENCY_KEY_REUSED */
@@ -6236,7 +6261,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -6277,7 +6302,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -6286,16 +6311,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
-            /** @description PERMISSION_DENIED; SEGREGATION_OF_DUTIES (maker) */
+            /** @description PERMISSION_DENIED; SEGREGATION_OF_DUTIES (maker, submitter, editors, self-grant, 24-hour review cooling-off) */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -6304,7 +6329,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description REQUEST_IN_PROGRESS; INVALID_STATE_TRANSITION; PROPOSAL_STALE (no state change) */
@@ -6313,7 +6338,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH */
@@ -6322,7 +6347,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED; PRECONDITION_FAILED (FAIL_CANNOT_BE_OVERRIDDEN) */
@@ -6331,7 +6356,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED */
@@ -6340,7 +6365,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -6383,7 +6408,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -6392,7 +6417,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -6401,7 +6426,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -6410,7 +6435,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (filter, limit, repeated parameter, malformed id) */
@@ -6419,7 +6444,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -6460,7 +6485,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -6469,7 +6494,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; SEGREGATION_OF_DUTIES (maker/editor/self-grant/24-hour cooling-off) */
@@ -6478,7 +6503,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -6487,7 +6512,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description ALREADY_DECIDED; INVALID_STATE_TRANSITION; REQUEST_IN_PROGRESS; PROPOSAL_STALE (changed dependencies atomically mark STALE) */
@@ -6496,7 +6521,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH */
@@ -6505,7 +6530,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED */
@@ -6514,7 +6539,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED */
@@ -6523,7 +6548,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -6564,7 +6589,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -6573,7 +6598,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED; SEGREGATION_OF_DUTIES (maker/editor/self-grant/24-hour cooling-off) */
@@ -6582,7 +6607,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -6591,7 +6616,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description ALREADY_DECIDED; INVALID_STATE_TRANSITION; REQUEST_IN_PROGRESS; PROPOSAL_STALE (changed dependencies atomically mark STALE) */
@@ -6600,7 +6625,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH */
@@ -6609,7 +6634,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED */
@@ -6618,7 +6643,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED */
@@ -6627,7 +6652,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -6667,7 +6692,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description Session required */
@@ -6676,7 +6701,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description Execute permission, maker, self-grant and 24-hour cooling checks */
@@ -6685,7 +6710,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -6694,7 +6719,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PROPOSAL_STALE; INVALID_STATE_TRANSITION; REQUEST_IN_PROGRESS */
@@ -6703,7 +6728,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_MISMATCH */
@@ -6712,7 +6737,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID; CAPABILITY_UNAVAILABLE; IDEMPOTENCY_KEY_REUSED */
@@ -6721,7 +6746,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description VERSION_REQUIRED */
@@ -6730,7 +6755,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description Non-retryable defect or unconfirmed commit; read back and retain original request identity */
@@ -6739,7 +6764,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -6777,7 +6802,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -6786,7 +6811,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -6795,7 +6820,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -6804,7 +6829,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (filter, limit, repeated parameter, malformed id) */
@@ -6813,7 +6838,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -6851,7 +6876,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -6860,7 +6885,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -6869,7 +6894,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description NOT_FOUND (absent or another tenant; indistinguishable) */
@@ -6878,7 +6903,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (filter, limit, repeated parameter, malformed id) */
@@ -6887,7 +6912,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };
@@ -6916,7 +6941,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description UNAUTHENTICATED */
@@ -6925,7 +6950,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description PERMISSION_DENIED */
@@ -6934,7 +6959,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description Synchronous proof export retired; request an authorized durable export job */
@@ -6944,7 +6969,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description SCHEMA_INVALID (filter, limit, repeated parameter, malformed id) */
@@ -6953,7 +6978,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/problem+json": unknown;
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
         };

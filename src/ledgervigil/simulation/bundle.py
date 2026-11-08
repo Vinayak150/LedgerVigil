@@ -112,8 +112,8 @@ def _one(c, sql, params):
     return rows[0] if len(rows) == 1 else None
 
 
-def _capture(c, tenant_id: str, proposal_id: UUID, revision: int, *, submitted=False) -> dict:
-    expected = ('read committed', 'off') if submitted else ('repeatable read', 'on')
+def _capture(c, tenant_id: str, proposal_id: UUID, revision: int, *, submitted=False, recheck_state=None) -> dict:
+    expected = ('read committed', 'off') if submitted or recheck_state else ('repeatable read', 'on')
     if (c.execute('SHOW transaction_isolation').fetchone()[0], c.execute('SHOW transaction_read_only').fetchone()[0]) != expected:
         raise CaptureRefused(500, 'INTERNAL', 'capture is not isolated')
     head = _one(c, 'SELECT p.ledger_id, p.state::text, p.revision, l.purpose::text, l.source_kind::text, l.currency, l.currency_exponent, '
@@ -126,7 +126,7 @@ def _capture(c, tenant_id: str, proposal_id: UUID, revision: int, *, submitted=F
                   'AND revision = %s', (proposal_id, revision))
     if rev is None:
         raise CaptureRefused(404, 'NOT_FOUND', 'proposal revision not found')
-    if state != ('SUBMITTED' if submitted else 'DRAFT'):
+    if state != (recheck_state or ('SUBMITTED' if submitted else 'DRAFT')):
         raise CaptureRefused(409, 'INVALID_STATE_TRANSITION', 'only DRAFT revisions are simulated here')
     operations, evidence_refs, content_hash, target_adapter = rev
     counter = c.execute('SELECT coalesce(max(last_seq), 0), coalesce(max(batch_head), %s), coalesce(max(event_head), %s) '
@@ -156,7 +156,7 @@ def _capture(c, tenant_id: str, proposal_id: UUID, revision: int, *, submitted=F
             raise CaptureRefused(422, 'CAPABILITY_UNAVAILABLE', f'ledgers with more than {MAX_ENTRIES} entries need asynchronous simulation, '
                                  'which is not built (Stage 2B: SIMULATION job)')
         payment_ids = sorted({i['document_id'] for i in op['items']})
-        snap = loader._read(c, UUID(tenant_id), ledger_id, (), (op['processor_ref'], op['payout_id']), payment_ids, locked_submission=True) if submitted else loader._read(c, UUID(tenant_id), ledger_id, (), (op['processor_ref'], op['payout_id']), payment_ids)
+        snap = loader._read(c, UUID(tenant_id), ledger_id, (), (op['processor_ref'], op['payout_id']), payment_ids, locked_submission=True) if submitted or recheck_state else loader._read(c, UUID(tenant_id), ledger_id, (), (op['processor_ref'], op['payout_id']), payment_ids)
         if str(snap.seq) != bundle['snapshot']['seq'] or snap.batch_head != counter[1]:
             raise CaptureRefused(500, 'INTERNAL', 'snapshot sequence changed inside one REPEATABLE READ transaction')
         # The transaction timestamp is not an input to any calculation (Stage 2A §10.2: no clock reads); it is excluded so that
@@ -164,7 +164,7 @@ def _capture(c, tenant_id: str, proposal_id: UUID, revision: int, *, submitted=F
         bundle['facts'] = {**_encode(snap), 'transaction_timestamp': TIMESTAMP_EXCLUDED}
         bundle['pinned_sources'] = _pinned_sources(c, ledger_id, op, evidence_refs)
         bundle['read_set'] = _read_set(c, ledger_id, snap, payment_ids, op.get('payout_date'))
-    if not submitted and c.execute('SELECT pg_current_xact_id_if_assigned() IS NOT NULL').fetchone()[0]:
+    if not submitted and not recheck_state and c.execute('SELECT pg_current_xact_id_if_assigned() IS NOT NULL').fetchone()[0]:
         raise CaptureRefused(500, 'INTERNAL', 'capture wrote')
     return bundle
 

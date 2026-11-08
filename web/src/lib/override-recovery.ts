@@ -111,6 +111,7 @@ export function overrideCandidate(
   if (
     p.state !== "BLOCKED" ||
     p.created_by === userId ||
+    p.editors.includes(userId) ||
     p.ledger_purpose !== "SANDBOX" ||
     p.target_adapter !== "NATIVE" ||
     p.operations.length !== 1 ||

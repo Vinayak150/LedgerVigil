@@ -91,13 +91,13 @@ def test_stale_dependencies_require_maker_revalidation_without_mutation(database
     assert a.get('/api/v1/proposals/'+pid).json()==p and fingerprint(database,{'lv.api_idempotency','lv_identity.audit_event','lv_identity.audit_chain_head'})==before
     assert act(a,pid,'revalidate',match='"v2"').json()['proposal']['state']=='STALE'
 
-def test_unchanged_dependency_versions_do_not_allow_changed_full_capture(database,api,world):
+def test_unrelated_sequence_change_requires_fresh_equivalence_before_override(database,api,world):
     with configuration_connection(database) as db:
         with tenant_transaction(db,world['A']):period=db.execute("INSERT INTO lv.fiscal_period(tenant_id,ledger_id,start_date,end_date) VALUES(%s,%s,'2026-09-01','2026-10-01') RETURNING id",(world['A'],world['l1']['ledger'])).fetchone()[0]
     a,pid,_=submit(api,world);admin=signed_in(api,world,'admin');r=admin.post(f'/api/v1/periods/{period}/close',headers={'If-Match':'"v1"','Idempotency-Key':uuid4().hex});assert r.status_code==200,r.text
     assert act(a,pid,'revalidate',match='"v2"').json()['freshness']['status']=='FRESH'
-    r=post(signed_in(api,world,'controller'),pid);assert r.status_code==422 and r.json()['reason']=='FULL_CAPTURE_CHANGED'
-    assert a.get('/api/v1/proposals/'+pid).json()['state']=='BLOCKED'
+    r=post(signed_in(api,world,'controller'),pid);assert r.status_code==200,r.text
+    assert a.get('/api/v1/proposals/'+pid).json()['state']=='READY_FOR_REVIEW'
 
 def test_withdrawal_after_override_releases_claims_and_keeps_history(database,blocked):
     a,c,pid,_=blocked;assert post(c,pid).status_code==200
@@ -210,4 +210,4 @@ def test_deferred_guards_refuse_missing_atomic_artifacts(database,blocked,missin
 def test_override_history_blocks_destructive_downgrade(database,blocked):
     _,c,pid,_=blocked;assert post(c,pid).status_code==200
     with pytest.raises(Exception):migrate(database,'0017_proposal_comments',downgrade=True,disposable=True)
-    with connection(database=database) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0029_account_patch',)
+    with connection(database=database) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0033_detection_overlap_dates',)

@@ -11,6 +11,7 @@ from uuid import UUID
 from datetime import datetime,timedelta
 
 FORMAT='ledgervigil.native-execution-proof/1'
+SEMANTIC_FORMAT='ledgervigil.native-execution-proof/2'
 MAX_BYTES=16*1024*1024
 MAX_HISTORY=2000
 NAMES=('approval.json','documents.json','execution.json','history.json','inclusions.json','journal.json','revision.json','simulation.json')
@@ -63,7 +64,7 @@ def parse(text):
 def exact(v,keys):require(type(v) is dict and set(v)==set(keys),'UNEXPECTED_FIELDS')
 def seal(scope,artifacts):
  manifest=[{'name':n,'bytes':len(canon(artifacts[n]).encode()),'sha256':sha(canon(artifacts[n]).encode())} for n in NAMES]
- core={'format':FORMAT,'scope':scope,'claims':dict(CLAIMS),'manifest':manifest}
+ core={'format':SEMANTIC_FORMAT if 'semantic_rechecks' in artifacts.get('simulation.json',{}) else FORMAT,'scope':scope,'claims':dict(CLAIMS),'manifest':manifest}
  return {**core,'manifest_sha256':sha(canon(core).encode()),'artifacts':artifacts}
 def _integer(v):return type(v) is int and v>0
 def _seq(v):return type(v) is str and re.fullmatch(r'[1-9][0-9]{0,18}',v) and int(v)<2**63
@@ -79,7 +80,7 @@ def _uuid(v):
  except (ValueError,AttributeError):return False
 
 def _scoped(v,s,kind):
- exact(v,FIELDS[kind])
+ exact(v,(*FIELDS[kind],'semantic_rechecks') if kind=='simulation' and 'semantic_rechecks' in v else FIELDS[kind])
  for k in ('revision','previous_revision','version','previous_version','observed_version','resulting_version','line_no','ordinal','source_document_version','settlement_version','payment_version_before','payment_version_after'):
   if k in v:require(v[k] is None and k in ('previous_version','previous_revision') or _integer(v[k]),'INVALID_VERSION_OR_ORDINAL')
  for k in ('phase','currency_exponent'):
@@ -97,7 +98,7 @@ def verify(data,expected_sha256=None):
 def _verify(data,expected_sha256):
  require(type(data) is bytes and 0<len(data)<=MAX_BYTES,'PROOF_SIZE_LIMIT');file_hash=sha(data)
  if expected_sha256 is not None:require(type(expected_sha256) is str and re.fullmatch('[0-9a-f]{64}',expected_sha256) and expected_sha256==file_hash,'EXPECTED_DIGEST_MISMATCH')
- b=parse(data);exact(b,('format','scope','claims','manifest','manifest_sha256','artifacts'));require(b['format']==FORMAT and b['claims']==CLAIMS,'UNSUPPORTED_FORMAT_OR_CLAIMS')
+ b=parse(data);exact(b,('format','scope','claims','manifest','manifest_sha256','artifacts'));require(b['format'] in (FORMAT,SEMANTIC_FORMAT) and b['claims']==CLAIMS,'UNSUPPORTED_FORMAT_OR_CLAIMS')
  s=b['scope'];exact(s,('tenant_id','ledger_id','proposal_id','revision','execution_id','simulation_id','commit_seq','currency','exponent'))
  require(all(type(s[k]) is str and s[k] for k in ('tenant_id','ledger_id','proposal_id','execution_id','simulation_id','currency')) and _integer(s['revision']) and _seq(s['commit_seq']) and type(s['exponent']) is int and 0<=s['exponent']<=4,'INVALID_SCOPE')
  require(all(_uuid(s[k]) for k in ('tenant_id','ledger_id','proposal_id','execution_id','simulation_id')),'INVALID_SCOPE_ID')
@@ -113,9 +114,9 @@ def _verify(data,expected_sha256):
  facts=inp['facts'];require(facts['tenant_id']==s['tenant_id'] and facts['ledger_id']==s['ledger_id'] and facts['currency']==s['currency'] and facts['exponent']==s['exponent'] and facts['purpose']=='SANDBOX' and facts['source_kind']=='NATIVE' and inp['snapshot']['ledger_id']==s['ledger_id'],'CAPTURE_FACT_SCOPE_MISMATCH')
  require(inp['proposal']['id']==s['proposal_id'] and inp['proposal']['revision']==str(s['revision']) and inp['proposal']['content_hash']==r['content_hash'] and inp['proposal']['operations']==r['operations'] and inp['proposal']['evidence_refs']==r['evidence_refs'],'CAPTURE_REVISION_MISMATCH')
  require(out['input_hash']==sim['input_hash'] and out['status']=='COMPLETED' and out['accounting_status']=='UNREVIEWED' and out['simulator_version']==sim['simulator_version'] and out['aggregate'] in ('CLEAR','BLOCKED_INSUFFICIENT'),'OUTCOME_MISMATCH')
- seq=int(s['commit_seq']);require(1<seq<=MAX_HISTORY and sim['snapshot_seq']==str(seq-1) and inp['snapshot']['seq']==str(seq-1) and out['snapshot_seq']==str(seq-1),'CAPTURE_SEQUENCE_MISMATCH')
+ seq=int(s['commit_seq']);original_seq=int(sim['snapshot_seq']);require(1<seq<=MAX_HISTORY and 0<original_seq<=seq-1 and inp['snapshot']['seq']==str(original_seq) and out['snapshot_seq']==str(original_seq),'CAPTURE_SEQUENCE_MISMATCH');rechecks=_semantic_certificates(sim,s,inp,out,seq);require(original_seq==seq-1 or any(q['seq']==str(seq-1) for q in rechecks.values()),'MISSING_SEMANTIC_RECHECK')
  approval=a['approval.json'];exact(approval,('decision','check','overrides'));d,ac=approval['decision'],approval['check'];_scoped(d,s,'decision');_scoped(ac,s,'approval_check')
- require(d['kind']=='APPROVED' and d['simulation_id']==s['simulation_id'] and d['check_id']==ac['id'] and d['approved_by']==ac['checked_by'] and d['approved_by']!=d['submitted_by'] and d['observed_version']+1==d['resulting_version'] and ac['observed_version']==d['observed_version'] and ac['resulting_version']==d['resulting_version'] and ac['simulation_id']==s['simulation_id'] and ac['decision_action']=='approve','APPROVAL_MISMATCH');_fresh(ac,seq-1)
+ require(d['kind']=='APPROVED' and d['simulation_id']==s['simulation_id'] and d['check_id']==ac['id'] and d['approved_by']==ac['checked_by'] and d['approved_by']!=d['submitted_by'] and d['observed_version']+1==d['resulting_version'] and ac['observed_version']==d['observed_version'] and ac['resulting_version']==d['resulting_version'] and ac['simulation_id']==s['simulation_id'] and ac['decision_action']=='approve','APPROVAL_MISMATCH');_fresh_semantic(ac,original_seq,rechecks)
  try:
   granted=datetime.fromisoformat(ac['review_granted_at'].replace('Z','+00:00'));checked=datetime.fromisoformat(ac['checked_at'].replace('Z','+00:00'));require(granted.tzinfo is not None and checked.tzinfo is not None and checked-granted>=timedelta(hours=24),'REVIEW_GRANT_INTERVAL_MISMATCH')
  except ValueError as e:
@@ -127,7 +128,8 @@ def _verify(data,expected_sha256):
  if out['aggregate']=='BLOCKED_INSUFFICIENT':require(len(approval['overrides'])==1,'MISSING_EVIDENCE_EXCEPTION')
  ex=a['execution.json'];exact(ex,('receipt','approval_id','check','transition','identity','editors'));identity=ex['identity'];_scoped(identity,s,'identity');require(identity['id']==s['proposal_id'] and identity['revision']==s['revision'] and identity['state']=='EXECUTED' and identity['created_by']==d['submitted_by'] and _uuid(identity['submitted_by']),'PROPOSAL_IDENTITY_MISMATCH');require(type(ex['editors']) is list and ex['editors']==sorted(set(ex['editors'])) and all(_uuid(x) for x in ex['editors']) and identity['created_by'] in ex['editors'] and r['authored_by'] in ex['editors'] and d['approved_by'] not in ex['editors'],'REVIEWER_EDITOR_MISMATCH');receipt=ex['receipt'];check=ex['check'];tr=ex['transition'];_scoped(check,s,'check');_scoped(tr,s,'transition')
  require(receipt['id']==s['execution_id'] and receipt['proposal_id']==s['proposal_id'] and receipt['ledger_id']==s['ledger_id'] and receipt['revision']==s['revision'] and receipt['simulation_id']==s['simulation_id'] and receipt['state']=='RECONCILED' and receipt['proposal_state']=='EXECUTED' and receipt['commit_seq']==s['commit_seq'] and receipt['accounting_status']=='UNREVIEWED' and receipt['data_label']=='SANDBOX — not accounting records','RECEIPT_MISMATCH')
- exact(receipt,('id','proposal_id','ledger_id','revision','simulation_id','state','proposal_state','executed_by','observed_version','resulting_version','commit_seq','settlement_document_id','entry_id','comparison','accounting_status','data_label'));actor=receipt['executed_by'];require(_uuid(actor),'INVALID_ACTOR');require(actor not in (identity['created_by'],identity['submitted_by']) and identity['version']==receipt['resulting_version'] and ex['approval_id']==d['id'] and receipt['observed_version']==d['resulting_version'] and receipt['resulting_version']==receipt['observed_version']+1 and check['simulation_id']==s['simulation_id'] and check['checked_by']==actor and check['observed_version']==receipt['observed_version'] and check['resulting_version']==receipt['resulting_version'],'EXECUTION_LINK_MISMATCH');_fresh(check,seq-1)
+ exact(receipt,('id','proposal_id','ledger_id','revision','simulation_id','state','proposal_state','executed_by','observed_version','resulting_version','commit_seq','settlement_document_id','entry_id','comparison','accounting_status','data_label'));actor=receipt['executed_by'];require(_uuid(actor),'INVALID_ACTOR');require(actor not in (identity['created_by'],identity['submitted_by']) and identity['version']==receipt['resulting_version'] and ex['approval_id']==d['id'] and receipt['observed_version']==d['resulting_version'] and receipt['resulting_version']==receipt['observed_version']+1 and check['simulation_id']==s['simulation_id'] and check['checked_by']==actor and check['observed_version']==receipt['observed_version'] and check['resulting_version']==receipt['resulting_version'],'EXECUTION_LINK_MISMATCH');_fresh_semantic(check,seq-1,rechecks)
+ if original_seq<seq-1:require(check['report'].get('semantic_recheck_id') in rechecks and rechecks[check['report']['semantic_recheck_id']]['equivalent'],'MISSING_EXECUTION_RECHECK')
  require(tr['action']=='execute' and tr['from_state']=='APPROVED' and tr['to_state']=='EXECUTED' and tr['user_id']==actor and tr['version']==receipt['resulting_version'] and tr['phase']==0,'TRANSITION_MISMATCH')
  hist=a['history.json'];require(type(hist) is list and len(hist)==seq,'HISTORY_GAP');bp=ep='0'*64;last=None;entry_ids=set();doc_ids=set();prior_docs={}
  for n,h in enumerate(hist,1):
@@ -142,7 +144,10 @@ def _verify(data,expected_sha256):
     require(line['line_no']==str(index) and line['side'] in ('D','C'),'HISTORY_POSTING_MISMATCH');units=_money(line['amount'],4);require(units>0,'ZERO_LINE');balance+=units if line['side']=='D' else -units
    require(balance==0,'HISTORY_UNBALANCED')
   bp=h['batch_hash'];ep=h['event_hash'];last=event
- require(inp['snapshot']['batch_head']==hist[-2]['batch_hash'] and inp['snapshot']['event_head']==hist[-2]['event_hash'],'CAPTURE_HEAD_MISMATCH')
+ require(inp['snapshot']['batch_head']==hist[original_seq-1]['batch_hash'] and inp['snapshot']['event_head']==hist[original_seq-1]['event_hash'],'CAPTURE_HEAD_MISMATCH')
+ for q in rechecks.values():
+  captured=parse(q['input_canonical']);head=hist[int(q['seq'])-1]
+  require(captured['snapshot']['batch_head']==head['batch_hash'] and captured['snapshot']['event_head']==head['event_hash'] and str(captured['facts']['seq'])==q['seq'] and captured['facts']['batch_head']==head['batch_hash'] and captured['facts']['event_head']==head['event_hash'],'SEMANTIC_RECHECK_HEAD_MISMATCH')
  docs=a['documents.json'];require(type(docs) is list and len(docs)==1+2*len(op['items']),'DOCUMENT_SET_MISMATCH');versions={}
  for v in docs:
   _scoped(v,s,'document');key=(v['document_id'],v['version']);require(key not in versions,'DUPLICATE_DOCUMENT_VERSION');versions[key]=v;require(sha(canon(v['financial_fields'],False).encode())==v['financial_fingerprint'],'DOCUMENT_FINGERPRINT_MISMATCH')
@@ -179,7 +184,7 @@ def _verify(data,expected_sha256):
  match=sha(canon({'format':'lv-native-posting-match/1','scope':scope,'lines':normal},False).encode());require(receipt['comparison']=={'format':'lv-native-posting-match/1','comparison':'MATCHED','predicted_hash':match,'derived_hash':match,'line_count':len(wanted),'accounting_status':'UNREVIEWED','authorizes_execution':False},'POSTING_PROOF_MISMATCH')
  require(last['kind']=='EXECUTION' and last['created_by_user']==actor and last['document_id']==settle['document_id'] and last['entry_id']==entry['id'] and last['entry_no']==entry['entry_no'] and last['financial_fields']==f and last['postings']['lines']==event_lines and last['posting_rule']=='sp1-posting/1.0' and last['postings']['currency']==s['currency'] and last['postings']['effective_date']==entry['effective_date'] and last['provenance']=='SYNTHETIC' and last['document_type']=='SETTLEMENT' and last['document_version']=='1','EXECUTION_EVENT_MISMATCH')
  batch=parse(hist[-1]['batch_canonical']);require(batch['created_by_user']==actor and batch['request_hash']==sha(canon(settle['original_request'],False).encode()),'COMMIT_REQUEST_MISMATCH')
- return {'valid':True,'format':FORMAT,'file_sha256':file_hash,'manifest_sha256':b['manifest_sha256'],'execution_id':s['execution_id'],'commit_seq':s['commit_seq'],'event_head':ep,'batch_head':bp,'integrity':'INTERNAL_CONSISTENCY_VERIFIED','supplied_digest':'MATCHED' if expected_sha256 else 'NOT_SUPPLIED','authenticity':'NOT_ESTABLISHED','accounting':'UNREVIEWED','external_anchor':'NONE'}
+ return {'valid':True,'format':b['format'],'file_sha256':file_hash,'manifest_sha256':b['manifest_sha256'],'execution_id':s['execution_id'],'commit_seq':s['commit_seq'],'event_head':ep,'batch_head':bp,'integrity':'INTERNAL_CONSISTENCY_VERIFIED','supplied_digest':'MATCHED' if expected_sha256 else 'NOT_SUPPLIED','authenticity':'NOT_ESTABLISHED','accounting':'UNREVIEWED','external_anchor':'NONE'}
 
 def main(argv=None):
  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('file');parser.add_argument('--expected-sha256');args=parser.parse_args(argv)
@@ -188,4 +193,37 @@ def main(argv=None):
  except (OSError,ProofInvalid) as error:
   print(json.dumps({'valid':False,'reason':str(error) if isinstance(error,ProofInvalid) else 'FILE_UNAVAILABLE'}));return 1
  print(json.dumps(result,sort_keys=True));return 0
+
+
+def _semantic_projection(outcome):
+ # Standard-library-only counterpart of the online comparator; offline tools remain standalone.
+ import copy
+ if outcome.get('status')!='COMPLETED':return None
+ o=copy.deepcopy(outcome);seq=o.pop('snapshot_seq');o.pop('input_hash')
+ for x in o['account_deltas']:x.pop('before');x.pop('after')
+ for x in o['verdicts']:
+  if x['policy_id']=='P-CLR-02':x['facts'].pop('clearing_balance_after')
+ for k in ('input_hash','snapshot_hash','envelope_sha256'):o['calculation']['kernel'].pop(k)
+ for x in o['calculation']['evidence_observations']:
+  if x['id']=='E-DUP-01':
+   x['reason']=x['reason'].replace('snapshot seq '+seq,'snapshot seq CAPTURE');x['values']['scope']=x['values']['scope'].replace('snapshot seq '+seq,'snapshot seq CAPTURE');x['trace'].pop('batch_head');x['trace'].pop('snapshot_seq')
+ return o
+
+def _semantic_certificates(sim,s,original,out,commit_seq):
+ rows=sim.get('semantic_rechecks',[]);require(type(rows) is list and len(rows)<=2000,'SEMANTIC_RECHECK_LIMIT');result={}
+ for q in rows:
+  require(_uuid(q['id']) and q['id'] not in result and _uuid(q['actor_id']) and q['proposal_id']==s['proposal_id'] and q['simulation_id']==s['simulation_id'] and q['revision']==s['revision'] and q['action'] in ('approve','override','execute','revalidate') and _seq(q['seq']) and int(q['seq'])<commit_seq and type(q['equivalent']) is bool,'SEMANTIC_RECHECK_SCOPE')
+  for key,h in [('input_canonical','input_hash'),('outcome_canonical','result_hash')]:require(sha(q[key].encode())==q[h],'SEMANTIC_RECHECK_HASH')
+  b=parse(q['input_canonical']);o=parse(q['outcome_canonical']);require(canon(b)==q['input_canonical'] and canon(o)==q['outcome_canonical'] and o['input_hash']==q['input_hash'],'SEMANTIC_RECHECK_CANONICAL')
+  require(b['tenant_id']==s['tenant_id'] and b['ledger']==original['ledger'] and b['versions']==original['versions'] and b['proposal']['id']==s['proposal_id'] and b['proposal']['revision']==str(s['revision']) and b['proposal']['operations']==original['proposal']['operations'] and b['proposal']['evidence_refs']==original['proposal']['evidence_refs'] and b['pinned_sources']==original['pinned_sources'] and b['snapshot']['seq']==q['seq'],'SEMANTIC_RECHECK_INPUTS')
+  equivalent=o.get('status')=='COMPLETED' and _semantic_projection(o)==_semantic_projection(out);require(equivalent==q['equivalent'],'SEMANTIC_RECHECK_COMPARISON');result[q['id']]=q
+ return result
+
+def _fresh_semantic(check,expected,rechecks):
+ report=check['report'];rid=report.get('semantic_recheck_id')
+ if rid is None:_fresh(check,expected);return
+ q=rechecks.get(rid);require(q is not None and q['equivalent'] is True,'MISSING_SEMANTIC_RECHECK')
+ # Approval can occur at a later safe capture; execution must bind its immediately preceding sequence.
+ seq=int(q['seq']);require(seq>=expected and report.get('pinned_seq')==seq and report.get('observed_seq')==seq,'SEMANTIC_RECHECK_SEQUENCE');_fresh(check,seq)
+
 if __name__=='__main__':raise SystemExit(main())

@@ -58,6 +58,9 @@ def _workflow(action,pid,request,raw,key,match):
             h,problem=_request_hash(action,pid,match,raw)
             h=digest(canonical({'request':h,'query':[[k,v] for k,v in request.query_params.multi_items()]}))
             args=(token_hash(ctx.session_token),source_key(request),request.state.request_id)
+            if action=='revalidate' and problem is None and not request.query_params:
+                from .semantic import refresh
+                refresh(ctx,request,pid,'revalidate',match,key)
             result=ctx.conn.execute('SELECT lv.workflow_request(%s,%s,%s,%s,%s,%s)',(args[0],action,key,h,*args[1:])).fetchone()[0]
             if result.get('ready'):
                 try:

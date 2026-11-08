@@ -149,13 +149,13 @@ def test_force_rls_history_immutability_and_runtime_backstop(database,world,read
   with connection('lv_app',database,autocommit=True) as db:
    with tenant_transaction(db,world['B']):assert db.execute('SELECT count(*) FROM lv.'+table).fetchone()==(0,)
 
-def test_unrelated_sequence_change_is_explicit_capability_refusal_not_global_stale(database,api,world):
+def test_unrelated_sequence_change_is_recalculated_before_approval(database,api,world):
  with configuration_connection(database) as db:
   with tenant_transaction(db,world['A']):period=db.execute("INSERT INTO lv.fiscal_period(tenant_id,ledger_id,start_date,end_date) VALUES(%s,%s,'2026-09-01','2026-10-01') RETURNING id",(world['A'],world['l1']['ledger'])).fetchone()[0]
  a,pid,_=submit(api,world);c=signed_in(api,world,'controller');assert override(c,pid).status_code==200;age(database,world)
  r=signed_in(api,world,'admin').post(f'/api/v1/periods/{period}/close',headers={'If-Match':'"v1"','Idempotency-Key':uuid4().hex});assert r.status_code==200
- r=post(c,pid);assert r.status_code==422 and r.json()['reason']=='FULL_CAPTURE_CHANGED'
- assert a.get('/api/v1/proposals/'+pid).json()['state']=='READY_FOR_REVIEW'
+ r=post(c,pid);assert r.status_code==200,r.text
+ assert a.get('/api/v1/proposals/'+pid).json()['state']=='APPROVED'
 
 @pytest.mark.parametrize('missing',['audit','cache','transition','decision'])
 def test_deferred_proof_rejects_missing_atomic_artifact(database,ready,missing):
@@ -174,7 +174,7 @@ def test_deferred_proof_rejects_missing_atomic_artifact(database,ready,missing):
 def test_retained_decision_refuses_downgrade(database,ready):
  _,c,pid,_=ready;assert post(c,pid).status_code==200
  with pytest.raises(Exception):migrate(database,'0018_evidence_overrides',downgrade=True,disposable=True)
- with connection(database=database) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0029_account_patch',)
+ with connection(database=database) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0033_detection_overlap_dates',)
 
 
 def test_exact_cached_approval_receipt_is_required_at_commit(database,ready):

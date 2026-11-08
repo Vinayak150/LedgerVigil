@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {overrideCandidate} from '../src/lib/override-recovery.ts';
+const p={id:'p',ledger_id:'l',created_by:'maker',editors:['maker'],state:'BLOCKED',version:2,revision:1,ledger_purpose:'SANDBOX',target_adapter:'NATIVE',operations:[{type:'RecordSettlement'}],latest_simulation_id:'s'};
+const run={id:'s',proposal_id:'p',ledger_id:'l',revision:1,status:'COMPLETED',simulator_version:'lv-native-recordsettlement/0.3.0',outcome:{aggregate:'BLOCKED_INSUFFICIENT',verdicts:[{policy_id:'P-EVD-01',outcome:'INSUFFICIENT_EVIDENCE'}]}};
+assert.equal(overrideCandidate(p,run,'independent','"v2"'),true);
+assert.equal(overrideCandidate(p,run,'maker','"v2"'),false);
+assert.equal(overrideCandidate({...p,editors:['maker','old-editor','new-editor']},run,'old-editor','"v2"'),false);
+assert.equal(overrideCandidate({...p,editors:['maker','old-editor','new-editor']},run,'new-editor','"v2"'),false);
+assert.equal(overrideCandidate(p,run,'independent','"v1"'),false);
+console.log('5 exception-candidate assertions passed; role provenance remains enforced by the server.');

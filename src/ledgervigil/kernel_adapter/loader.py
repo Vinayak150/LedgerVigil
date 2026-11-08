@@ -44,6 +44,8 @@ def _read(c, tenant_id, ledger_id, source_refs, payout_identity=None, payment_id
         proof=c.execute("SELECT 1 FROM lv.proposal_transition WHERE tenant_id=%s AND ledger_id=%s AND to_state='SUBMITTED' "
                         "AND tx_id=pg_current_xact_id() AND session_id=nullif(current_setting('app.session_id',true),'')::uuid",
                         (tenant_id,ledger_id)).fetchone()
+        if not proof:
+            proof=c.execute("SELECT 1 FROM lv.semantic_recheck WHERE tenant_id=%s AND ledger_id=%s AND tx_id=pg_current_xact_id() AND equivalent IS NULL AND session_id=nullif(current_setting('app.session_id',true),'')::uuid",(tenant_id,ledger_id)).fetchone()
         if isolation!='read committed' or read_only or not proof:
             raise AdapterError('SUBMISSION_LOCK_PROOF_REQUIRED')
     elif isolation != REQUIRED_ISOLATION_NAME or not read_only:

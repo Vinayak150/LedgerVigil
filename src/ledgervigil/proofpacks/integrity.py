@@ -50,6 +50,7 @@ def readable(pack):
  style='body{margin:0;background:#f4f6f5;color:#172c25;font:16px/1.6 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:40px 24px}h1{font-size:32px;line-height:1.2}h2{font-size:20px}section,header{background:white;border:1px solid #d0dcd6;border-radius:12px;padding:24px;margin-bottom:20px}small,dt{color:#465e53}dl div{padding:10px 0;border-bottom:1px solid #e4eae6}dt{font-weight:600}dd{margin:4px 0 0;overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.7 ui-monospace,monospace}.status{display:inline-block;padding:4px 12px;background:#fff0cd;color:#624300;border-radius:6px;font-weight:700}@media(max-width:600px){main{padding:16px}section,header{padding:18px}h1{font-size:26px}}@media print{body{background:white}main{padding:0}section,header{break-inside:avoid}}'
  report='<header><small>LEDGERVIGIL · NATIVE EVIDENCE</small><h1>Proof pack</h1><p class="status">SANDBOX · accounting UNREVIEWED</p><p>This report presents the sealed revision and its recorded evidence. Integrity checks do not establish accounting accuracy or a digital signature.</p>'+summary+'</header>'
  for title,key in [('Proposed operations','operations'),('Evidence references','evidence'),('Recorded decisions','decisions'),('Simulation','simulation'),('Execution receipt','execution')]:report+=section(title,content.get(key))
+ if 'semantic_rechecks' in content:report+=section('Fresh settlement equivalence checks',content['semantic_rechecks'])
  report+='<section><h2>Independent verification</h2><p>Use the offline verifier and a separately trusted Git anchor repository to verify this bundle. An included hash alone does not establish independent authenticity.</p><details><summary>Full canonical manifest data</summary><pre>'+html.escape(json.dumps(pack,ensure_ascii=False,indent=2))+'</pre></details></section>'
  return ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LedgerVigil proof pack</title><style>'+style+'</style></head><body><main>'+report+'</main></body></html>').encode()
 
@@ -63,3 +64,15 @@ def archive(pack):
  data=buf.getvalue()
  if len(data)>16777216:raise IntegrityError('Compressed proof pack exceeds16MiB')
  return data
+
+
+def financial_checkpoint(content):
+ """Newest financial prefix actually included in this pack, preserving older pack bytes."""
+ facts=json.loads(content['simulation']['input_canonical'])['facts']
+ result=(str(content['snapshot']['seq']),facts['batch_head'],facts['event_head'])
+ for recheck in content.get('semantic_rechecks',[]):
+  snapshot=json.loads(recheck['input_canonical'])['snapshot']
+  if int(snapshot['seq'])>int(result[0]):result=(str(snapshot['seq']),snapshot['batch_head'],snapshot['event_head'])
+ execution=content.get('execution')
+ if execution and int(execution['receipt']['commit_seq'])>int(result[0]):result=(str(execution['receipt']['commit_seq']),execution['batch_hash'],execution['event_hash'])
+ return result

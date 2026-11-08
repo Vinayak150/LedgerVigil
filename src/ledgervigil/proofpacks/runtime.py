@@ -2,7 +2,7 @@ from uuid import UUID,uuid4
 import json,os
 from ledgervigil.maintenance.runtime import connect
 from .anchors import GitAnchors
-from .integrity import canonical,verify,seal,archive,digest
+from .integrity import canonical,verify,seal,archive,digest,financial_checkpoint
 
 def _run_job(tenant,job,*,connection_factory=connect,store=None,worker=None,lease=None):
  t,j=UUID(str(tenant)),UUID(str(job));worker=worker or 'pack-'+uuid4().hex
@@ -29,9 +29,8 @@ def _run_job(tenant,job,*,connection_factory=connect,store=None,worker=None,leas
  else:content=json.loads(claim['content'])
  if content.get('execution') and not content['execution'].get('completion_notification'):raise ValueError('Missing durable completion notification')
  pack={'manifest_schema':'lv-proofpack/1','content':content,'content_hash':claim['content_hash'],'chain':{'previous_chain_head':claim['previous_chain_head'],'chain_hash':claim['chain_hash']},'sealed_at':claim['sealed_at']};verify(pack)
- snapshot=content['snapshot'];execution=content.get('execution');sequence=str(execution['receipt']['commit_seq']) if execution else str(snapshot['seq'])
- facts=json.loads(content['simulation']['input_canonical'])['facts']
- record={'tenant_id':str(t),'pack_id':str(j),'content_hash':claim['content_hash'],'chain_hash':claim['chain_hash'],'previous_chain_head':claim['previous_chain_head'],'chain_seq':claim['chain_seq'],'ledger_id':content['ledger']['id'],'ledger_seq':sequence,'batch_head':execution['batch_hash'] if execution else facts['batch_head'],'event_head':execution['event_hash'] if execution else facts['event_head']}
+ sequence,batch_head,event_head=financial_checkpoint(content)
+ record={'tenant_id':str(t),'pack_id':str(j),'content_hash':claim['content_hash'],'chain_hash':claim['chain_hash'],'previous_chain_head':claim['previous_chain_head'],'chain_seq':claim['chain_seq'],'ledger_id':content['ledger']['id'],'ledger_seq':sequence,'batch_head':batch_head,'event_head':event_head}
  bundle=archive(pack);record['bundle_hash']=digest(bundle)
  oid=store.append(record)
  with connection_factory() as c:done=c.execute('SELECT lv.pack_anchor(%s,%s,%s,%s,%s,%s)',(t,j,worker,f,oid,bundle)).fetchone()[0]

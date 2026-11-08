@@ -74,7 +74,8 @@ def test_writer_revocation_race(database,api,world,action,kind,first):
  assert call().status_code in (401,403)
 
 
-def test_all_six_function_roundtrip(database):
+def test_all_six_function_roundtrip(migration_database):
+ database=migration_database
  def definitions():
   with connection(database=database) as db:return {n:db.execute("SELECT pg_get_functiondef(p.oid),p.proacl::text,pg_get_userbyid(p.proowner) FROM pg_proc p JOIN pg_namespace s ON s.oid=p.pronamespace WHERE s.nspname='lv' AND p.proname=%s",(n,)).fetchone() for n in NAMES.values()}
  fixed=definitions();migrate(database,'0027_account_lock_order',downgrade=True,disposable=True);old=definitions();migrate(database);assert definitions()==fixed

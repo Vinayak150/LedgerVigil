@@ -88,3 +88,8 @@ def populated(configuration,tenants):
             app.execute("INSERT INTO lv.party(tenant_id,ledger_id,name) VALUES(%s,%s,'Synthetic customer')",(tenant,lid))
             period(app,tenant,lid)
     return tenants
+
+@pytest.fixture
+def migration_database():
+    """Fresh DB for exact function round trips; retained semantic evidence forbids downgrade."""
+    yield from database.__wrapped__()

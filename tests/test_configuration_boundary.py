@@ -208,8 +208,8 @@ def test_migration_roundtrip_and_populated_history_refuses_downgrade():
  from ledgervigil.auth.settings import AuthSettings
  with disposable('0022_approved_withdrawal') as dbname:
   with connection('lv_app',dbname,autocommit=True) as app,connection('lv_seed',dbname,autocommit=True) as seeder:w=setup.__wrapped__(dbname,app,seeder)
-  before=fingerprint(dbname,{'lv_meta.alembic_version','lv.configuration_change','lv.native_export_job','lv.proof_pack','lv.proof_pack_chain','lv.proof_pack_request'});seq=counters(dbname)
-  migrate(dbname);assert fingerprint(dbname,{'lv_meta.alembic_version','lv.configuration_change','lv.native_export_job','lv.proof_pack','lv.proof_pack_chain','lv.proof_pack_request'})==before and counters(dbname)==seq
+  before=fingerprint(dbname,{'lv_meta.alembic_version','lv.configuration_change','lv.native_export_job','lv.proof_pack','lv.proof_pack_chain','lv.proof_pack_request','lv.semantic_recheck','lv.balance_dependency_step','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition'});seq=counters(dbname)
+  migrate(dbname);assert fingerprint(dbname,{'lv_meta.alembic_version','lv.configuration_change','lv.native_export_job','lv.proof_pack','lv.proof_pack_chain','lv.proof_pack_request','lv.semantic_recheck','lv.balance_dependency_step','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition'})==before and counters(dbname)==seq
   migrate(dbname,'0022_approved_withdrawal',downgrade=True,disposable=True)
   with connection('lv_app',dbname) as db:assert db.execute("SELECT has_table_privilege(current_user,'lv.account','INSERT,UPDATE')").fetchone()==(True,)
   migrate(dbname);application=create_app(AuthSettings(),connect=lambda:connection('lv_app',dbname));application.state.test_database=dbname

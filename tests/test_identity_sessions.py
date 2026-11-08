@@ -756,7 +756,7 @@ def test_fresh_chain_reaches_0007_and_downgrade_removes_the_identity_schema():
     with disposable('0006_processor_settlements') as name:
         migrate(name)
         with connection(database=name) as admin:
-            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0029_account_patch',)
+            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0033_detection_overlap_dates',)
         migrate(name, '0006_processor_settlements', downgrade=True, disposable=True)
         with connection(database=name) as admin:
             assert admin.execute("SELECT to_regnamespace('lv_identity')").fetchone() == (None,)

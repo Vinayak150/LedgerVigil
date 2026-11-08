@@ -25,7 +25,7 @@ def parse(raw):
    comment.encode('utf-8')
   return b,v.request_hash(raw,b,True),None
  except (v.Invalid,ValueError,UnicodeError):return None,v.request_hash(raw),{'status':422,'code':'SCHEMA_INVALID','detail':'revision is required; optional comment is at most 4000 well-formed Unicode characters; no other fields are accepted'}
-@router.post('/{proposal_id}/approve',response_model=Proposal,operation_id='approveNativeProposal',responses=ERRORS,openapi_extra={'x-lv-permission':'review','x-lv-idempotency':'required','requestBody':BODY,'x-lv-scope':'native SANDBOX only; maker/all editors excluded; all review grants cool for 24 hours; no execution capability'})
+@router.post('/{proposal_id}/approve',response_model=Proposal,operation_id='approveNativeProposal',responses=ERRORS,openapi_extra={'x-lv-semantic-revalidation':'when needed, locked full native recalculation must preserve economic effects and policy outcomes; original review is immutable','x-lv-permission':'review','x-lv-idempotency':'required','requestBody':BODY,'x-lv-scope':'native SANDBOX only; maker/all editors excluded; all review grants cool for 24 hours; no execution capability'})
 def approve(proposal_id:UUID,request:Request,raw:Annotated[bytes|None,Depends(raw_body)],idempotency_key:Annotated[str|None,Header(alias='Idempotency-Key',max_length=256)]=None,if_match:Annotated[str|None,Header(alias='If-Match',max_length=64)]=None):
  try:
   with session_transaction(request,permission='review',touch=False) as ctx:
@@ -34,6 +34,9 @@ def approve(proposal_id:UUID,request:Request,raw:Annotated[bytes|None,Depends(ra
    if request.query_params:problem={'status':400,'code':'UNKNOWN_QUERY_PARAMETER','detail':'approval accepts no query parameters'}
    h=digest(canonical({'proposal_id':str(proposal_id),'if_match':if_match,'body_hash':body_hash,'query':[[k,val] for k,val in request.query_params.multi_items()]}))
    if _before_write:_before_write()
+   if problem is None and not request.query_params:
+    from ledgervigil.proposals.semantic import refresh
+    refresh(ctx,request,proposal_id,'approve',if_match,idempotency_key,requested_revision=body['revision'])
    result=ctx.conn.execute('SELECT lv.approve_native(%s,%s,%s,%s,%s,%s,%s,%s,%s)',(token_hash(ctx.session_token),proposal_id,if_match,idempotency_key,h,Jsonb(body) if body else None,Jsonb(problem) if problem else None,source_key(request),request.state.request_id)).fetchone()[0]
    if _after_write:_after_write(ctx)
    if result['status']==200:

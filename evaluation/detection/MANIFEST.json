@@ -1,0 +1,6 @@
+{
+ "file": "cases-1.0.0.json",
+ "sha256": "b958d9620906c05e37764b0f8f509dd9108fce4b0f062215349b1ff4baaa8805",
+ "cases": 91,
+ "generator": "lv-detection-synthetic-cases/1.0.0"
+}

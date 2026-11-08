@@ -66,7 +66,8 @@ def test_unrelated_period_sequence_change_does_not_globally_invalidate(database,
  a,pid,_=submit(api,world);admin=signed_in(api,world,'admin')
  r=admin.post(f'/api/v1/periods/{period}/close',headers={'If-Match':'"v1"','Idempotency-Key':uuid4().hex});assert r.status_code==200,r.text
  r=act(a,pid,'revalidate',match='"v2"');assert r.status_code==200,r.text
- assert r.json()['freshness']['status']=='FRESH' and r.json()['freshness']['observed_seq']>r.json()['freshness']['pinned_seq']
+ assert r.json()['freshness']['status']=='FRESH' and r.json()['freshness']['observed_seq']==r.json()['freshness']['pinned_seq']
+ assert r.json()['freshness']['original_pinned_seq']<r.json()['freshness']['observed_seq'] and r.json()['freshness']['semantic_recheck_id']
 
 
 def test_closed_period_refuses_resimulation_without_new_revision_or_claim(database,api,world):

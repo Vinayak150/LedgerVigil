@@ -1,6 +1,6 @@
 """Compare restored data against independent committed anchors, never against a copied DB claim."""
 import json
-from .integrity import digest,canonical,chain,ZERO,IntegrityError
+from .integrity import digest,canonical,chain,ZERO,IntegrityError,financial_checkpoint
 
 def check_database(conn,store):
  store.validate()
@@ -21,7 +21,7 @@ def check_database(conn,store):
   for number,(pid,text,ch,ph,h,seq) in enumerate(rows,1):
    content=json.loads(text)
    if seq!=number or ph!=prev or digest(canonical(content))!=ch or chain(ch,ph)!=h:raise IntegrityError('Restored proof chain diverges from anchor')
-   prev=h;execution=content.get('execution');facts=json.loads(content['simulation']['input_canonical'])['facts'];lid=content['ledger']['id'];snapshot=str(execution['receipt']['commit_seq']) if execution else str(content['snapshot']['seq']);expected=(execution['batch_hash'],execution['event_hash']) if execution else (facts['batch_head'],facts['event_head'])
+   prev=h;lid=content['ledger']['id'];snapshot,batch_head,event_head=financial_checkpoint(content);expected=(batch_head,event_head)
    row=conn.execute('SELECT b.hash,e.hash FROM lv.commit_batch b JOIN lv.ledger_event e USING(tenant_id,ledger_id,seq) WHERE b.tenant_id=%s AND b.ledger_id=%s AND b.seq=%s',(tenant,lid,int(snapshot))).fetchone()
    if int(snapshot)==0:row=('0'*64,'0'*64)
    if row!=expected:raise IntegrityError('Anchored financial history is missing or rewritten')

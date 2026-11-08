@@ -338,6 +338,8 @@ def test_corrupt_projection_cannot_commit(database,app,seed,fixture_ledger):
         # disposable-only name-column grant lets this deliberate fault reach the
         # deferred projection check; production lv_seed receives neither grant.
         administrator.execute('GRANT UPDATE(name) ON lv.account TO lv_seed')
+        # Disposable fault injection only: reach the deferred projection guard past 0031 provenance.
+        administrator.execute('GRANT INSERT ON lv.balance_dependency_step TO lv_seed')
     try:
         with pytest.raises(psycopg.errors.CheckViolation,match='projection'):
             with tenant_transaction(seed,cfg['tenant']):
@@ -348,6 +350,7 @@ def test_corrupt_projection_cannot_commit(database,app,seed,fixture_ledger):
         with connection(database=database) as administrator:
             administrator.execute('REVOKE UPDATE ON lv.account_balance_current FROM lv_seed')
             administrator.execute('REVOKE UPDATE(name) ON lv.account FROM lv_seed')
+            administrator.execute('REVOKE INSERT ON lv.balance_dependency_step FROM lv_seed')
 
 def test_inactive_unbound_account_refused(configuration,seed,fixture_ledger):
     cfg=fixture_ledger

@@ -15,7 +15,9 @@ CLASSES = {'SEGREGATION_OF_DUTIES':'AUTHORIZATION','ALREADY_DECIDED':'CONFLICT',
            'UNSUPPORTED_BY_PROFILE': 'UNSUPPORTED',
            # Stage 2B §4.2 (simulation foundation, 0011). SIMULATION_VERSION_UNAVAILABLE: the contract gives replay a 409 for a
            # pinned version that is no longer installed but names no code (docs/SIMULATION.md SM-G3).
-           'PRECONDITION_FAILED': 'PRECONDITION', 'SIMULATION_VERSION_UNAVAILABLE': 'CONFLICT'}
+           'PRECONDITION_FAILED': 'PRECONDITION', 'SIMULATION_VERSION_UNAVAILABLE': 'CONFLICT',
+           # Detection slice (0030, PROPOSED DET-1..DET-8): a stale finding, an oversized default scope, rejected detector output.
+           'FINDING_STALE': 'STALE', 'SCOPE_TOO_LARGE': 'VALIDATION', 'DETECTOR_OUTPUT_REJECTED': 'INFRASTRUCTURE'}
 TITLES = {'SEGREGATION_OF_DUTIES':'Separation of duties required','ALREADY_DECIDED':'Revision already decided','PROPOSAL_STALE':'Proposal is stale','UNAUTHENTICATED': 'Authentication required', 'PERMISSION_DENIED': 'Permission denied', 'NOT_FOUND': 'Not found',
           'SCHEMA_INVALID': 'Request is not valid', 'RATE_LIMITED': 'Too many attempts', 'INTERNAL': 'Internal error',
           'DEPENDENCY_UNAVAILABLE': 'Service unavailable', 'IDEMPOTENCY_KEY_REQUIRED': 'Idempotency-Key required',
@@ -25,7 +27,9 @@ TITLES = {'SEGREGATION_OF_DUTIES':'Separation of duties required','ALREADY_DECID
           'UNKNOWN_QUERY_PARAMETER': 'Unknown query parameter', 'CURSOR_MISMATCH': 'Cursor not valid for this request',
           'MONEY_MUST_BE_STRING': 'Money amount must be a string', 'MONEY_SCALE_EXCEEDED': 'Money scale exceeded',
           'CURRENCY_MISMATCH': 'Currency mismatch', 'UNSUPPORTED_BY_PROFILE': 'Unsupported by profile',
-          'PRECONDITION_FAILED': 'Precondition failed', 'SIMULATION_VERSION_UNAVAILABLE': 'Pinned simulation version unavailable'}
+          'PRECONDITION_FAILED': 'Precondition failed', 'SIMULATION_VERSION_UNAVAILABLE': 'Pinned simulation version unavailable',
+          'FINDING_STALE': 'Finding inputs changed', 'SCOPE_TOO_LARGE': 'Detection scope too large',
+          'DETECTOR_OUTPUT_REJECTED': 'Detector output rejected'}
 
 
 class ProblemError(Exception):

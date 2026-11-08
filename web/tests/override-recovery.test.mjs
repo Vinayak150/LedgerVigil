@@ -34,6 +34,7 @@ const proposal = {
   id: scope.proposalId,
   ledger_id: scope.ledgerId,
   created_by: "maker-A",
+  editors: ["maker-A"],
   ledger_purpose: "SANDBOX",
   target_adapter: "NATIVE",
   state: "BLOCKED",
