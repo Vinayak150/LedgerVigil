@@ -298,8 +298,9 @@ def test_idempotent_and_concurrent_runs_deduplicate_overlap_findings(database, d
 def test_refusals_permissions_and_tenants(database, dapi, world):
     cfg = ledger(database, world['A']); a = signed_in(dapi, world, 'analyst'); pay(database, cfg, 'RF-P1', '3.00')
     sa = stage(database, cfg, 'RF-PA', [('RF-P1', 'PAYMENT', '3.00')]); stage(database, cfg, 'RF-PB', [('RF-P1', 'PAYMENT', '3.00')])
-    f = get(a, detect(a, cfg, sa).json(), sa, OVL); before = protected(database)
+    f = get(a, detect(a, cfg, sa).json(), sa, OVL)
     other, admin = signed_in(dapi, world, 'analystB'), signed_in(dapi, world, 'admin')
+    before = protected(database)
     assert finding(other, f['id']).status_code == 404
     assert dispose(other, f['id'], 'DISMISSED', 'NOT_A_DISCREPANCY', '"v1"').status_code == 404
     assert detect(other, cfg, sa).status_code == 404

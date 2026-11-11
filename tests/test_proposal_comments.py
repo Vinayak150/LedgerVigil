@@ -33,8 +33,9 @@ def test_analyst_controller_discussion_preserves_every_other_table_and_proposal(
         audit=c.execute("SELECT detail FROM lv_identity.audit_event WHERE event_type='PROPOSAL_COMMENTED' AND detail->>'proposal_id'=%s",(pid,)).fetchall();assert len(audit)==2 and all('body_hash' in row[0] and 'body' not in row[0] for row in audit)
 
 def test_blocked_and_withdrawn_proposals_keep_discussion_without_state_changes(database,api,world,proposal):
-    a,pid=proposal;assert act(a,pid).json()['proposal']['state']=='BLOCKED';before=fingerprint(database,EXCLUDED)
-    assert post(signed_in(api,world,'controller'),pid).status_code==201
+    a,pid=proposal;assert act(a,pid).json()['proposal']['state']=='BLOCKED'
+    controller=signed_in(api,world,'controller');before=fingerprint(database,EXCLUDED)
+    assert post(controller,pid).status_code==201
     assert fingerprint(database,EXCLUDED)==before
     assert act(a,pid,'withdraw','"v2"').status_code==200
     assert post(a,pid,'Historical discussion only.').status_code==201

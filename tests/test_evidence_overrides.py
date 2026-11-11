@@ -39,8 +39,9 @@ def test_controller_exception_is_atomic_and_preserves_raw_verdicts_and_money(dat
 
 def test_any_fail_refuses_exception_without_fabricating_verdicts(database,api,world):
     a=signed_in(api,world,'analyst');pid=new_draft(a,world,operations=[settlement(world,fee='1001.00',net='51499.50')]);r=act(a,pid);assert r.status_code==200,r.text
-    assert r.json()['simulation']['outcome']['aggregate']=='BLOCKED_FAIL';before=fingerprint(database,{'lv.api_idempotency','lv_identity.audit_event','lv_identity.audit_chain_head'})
-    refused=post(signed_in(api,world,'controller'),pid);assert refused.status_code==422,refused.text
+    assert r.json()['simulation']['outcome']['aggregate']=='BLOCKED_FAIL'
+    controller=signed_in(api,world,'controller');before=fingerprint(database,{'lv.api_idempotency','lv_identity.audit_event','lv_identity.audit_chain_head'})
+    refused=post(controller,pid);assert refused.status_code==422,refused.text
     assert refused.json()['reason']=='FAIL_CANNOT_BE_OVERRIDDEN' and fingerprint(database,{'lv.api_idempotency','lv_identity.audit_event','lv_identity.audit_chain_head'})==before
 
 def test_permission_matrix_foreign_ids_csrf_origin_and_maker_exclusion(database,api,world,blocked):
