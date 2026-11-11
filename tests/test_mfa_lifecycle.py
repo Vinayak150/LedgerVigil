@@ -62,18 +62,75 @@ def test_books_privilege_refused_in_api_and_database_without_fresh_mfa(database,
             VALUES(%s,'SYNTHETIC MFA gate','BOOKS','NATIVE','INR',2)""", (world['A'],))
         db.execute("UPDATE lv_identity.session SET mfa_verified_at=statement_timestamp()-interval '16 minutes'")
     aid = world['l1']['chart']['BANK_OPERATING']
-    r = c.patch('/api/v1/accounts/'+str(aid), json={'name': 'SYNTHETIC guarded edit'}, headers={'If-Match': '"v1"'})
+    with connection(database=database) as db:
+        version = db.execute('SELECT version FROM lv.account WHERE id=%s', (aid,)).fetchone()[0]
+    match = f'"v{version}"'
+    r = c.patch('/api/v1/accounts/'+str(aid), json={'name': 'SYNTHETIC guarded edit'}, headers={'If-Match': match})
     assert (r.status_code, r.json()['code']) == (403, 'MFA_REQUIRED')
     # Bypass HTTP entirely using the ordinary database login; it must still refuse.
     token = token_hash(c.cookies.get(api.state.auth_settings.cookie_name))
     with connection('lv_app', database) as db:
         result = db.execute('SELECT lv.edit_account(%s,%s,%s,%s,NULL,%s,%s)',
-                            (token, aid, '"v1"', Jsonb({'name': 'SYNTHETIC guarded edit'}), 'test', 'mfa-raw')).fetchone()[0]
+                            (token, aid, match, Jsonb({'name': 'SYNTHETIC guarded edit'}), 'test', 'mfa-raw')).fetchone()[0]
         assert result['status'] == 403
     assert action('CHALLENGE').status_code == 200
     assert c.get('/api/v1/me').json()['mfa_required'] is False
     assert c.patch('/api/v1/accounts/'+str(aid), json={'name': 'SYNTHETIC guarded edit'},
-                   headers={'If-Match': '"v1"'}).status_code == 200
+                   headers={'If-Match': match}).status_code == 200
     assert action('RESET_REQUEST').status_code == 200
     assert c.patch('/api/v1/accounts/'+str(aid), json={'name': 'SYNTHETIC cooling edit'},
                    headers={'If-Match': '"v2"'}).status_code == 403
+
+
+@pytest.mark.parametrize('mfa_first', [True, False])
+def test_mfa_and_session_switch_lock_orders(database, api, world, enrolled, mfa_first):
+    from concurrent.futures import ThreadPoolExecutor
+    from queue import Queue
+    import secrets
+
+    c, _ = enrolled
+    token = token_hash(c.cookies.get(api.state.auth_settings.cookie_name))
+    pid = Queue()
+
+    def switch():
+        with connection('lv_authn', database) as db:
+            db.execute("SET LOCAL statement_timeout='5s'")
+            pid.put(db.info.backend_pid)
+            return db.execute('SELECT lv_identity.switch_tenant(%s,%s,%s,%s,%s)',
+                              (token, world['A'], secrets.token_bytes(32), 'race', 'switch')).fetchone()[0]
+
+    def prepare():
+        with connection('lv_authn', database) as db:
+            db.execute("SET LOCAL statement_timeout='5s'")
+            pid.put(db.info.backend_pid)
+            return db.execute('SELECT lv_identity.mfa_prepare(%s,%s,%s,%s)',
+                              (token, 'CHALLENGE', 'race', 'mfa')).fetchone()[0]
+
+    def wait_for_transaction_lock(backend):
+        deadline = time.monotonic() + 4
+        while time.monotonic() < deadline:
+            with connection(database=database) as observer:
+                blocked = observer.execute("SELECT EXISTS(SELECT 1 FROM pg_locks WHERE pid=%s AND NOT granted)",
+                                           (backend,)).fetchone()[0]
+            if blocked:
+                return
+            time.sleep(.02)
+        raise AssertionError('race did not reach the controlled lock wait')
+
+    with ThreadPoolExecutor(1) as pool:
+        with connection(database=database) as holder:
+            holder.execute("SET LOCAL statement_timeout='5s'")
+            if mfa_first:
+                prepared = holder.execute('SELECT lv_identity.mfa_prepare(%s,%s,%s,%s)',
+                                          (token, 'CHALLENGE', 'race-holder', 'mfa')).fetchone()[0]
+                assert prepared['status'] == 'OK'
+                future = pool.submit(switch)
+            else:
+                holder.execute('SELECT id FROM lv_identity.session WHERE token_hash=%s FOR UPDATE', (token,))
+                future = pool.submit(prepare)
+            wait_for_transaction_lock(pid.get(timeout=3))
+            if not mfa_first:
+                assert holder.execute('SELECT lv_identity.switch_tenant(%s,%s,%s,%s,%s)',
+                                      (token, world['A'], secrets.token_bytes(32), 'race-holder', 'switch')).fetchone()[0]['valid']
+        result = future.result(timeout=6)
+    assert (result.get('valid') if mfa_first else result['status'] == 'INVALID')

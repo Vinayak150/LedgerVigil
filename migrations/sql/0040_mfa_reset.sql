@@ -17,7 +17,7 @@ BEGIN
  IF lv_identity.session_problem(s) IS NOT NULL THEN RETURN jsonb_build_object('status','INVALID'); END IF;
  IF p_action<>'STATUS' THEN
   PERFORM pg_advisory_xact_lock(hashtextextended('mfa-source:'||p_source,0));
-  PERFORM 1 FROM lv_identity.app_user WHERE id=s.user_id FOR UPDATE;
+  PERFORM 1 FROM lv_identity.app_user WHERE id=s.user_id FOR NO KEY UPDATE;
   SELECT * INTO s FROM lv_identity.session WHERE token_hash=p_hash FOR UPDATE;
   IF lv_identity.session_problem(s) IS NOT NULL THEN RETURN jsonb_build_object('status','INVALID'); END IF;
   IF (SELECT count(*) FROM lv_identity.mfa_attempt WHERE user_id=s.user_id AND at>since)>=10
@@ -64,7 +64,7 @@ BEGIN
  PERFORM lv_identity.check_request(p_source,p_request);
  SELECT * INTO s FROM lv_identity.session WHERE token_hash=p_hash;
  IF lv_identity.session_problem(s) IS NOT NULL THEN RETURN false; END IF;
- PERFORM 1 FROM lv_identity.app_user WHERE id=s.user_id FOR UPDATE;
+ PERFORM 1 FROM lv_identity.app_user WHERE id=s.user_id FOR NO KEY UPDATE;
  SELECT * INTO s FROM lv_identity.session WHERE token_hash=p_hash FOR UPDATE;
  IF lv_identity.session_problem(s) IS NOT NULL THEN RETURN false; END IF;
  SELECT * INTO f FROM lv_identity.mfa_factor WHERE user_id=s.user_id;

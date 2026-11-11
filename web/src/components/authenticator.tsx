@@ -187,8 +187,8 @@ export function Authenticator({ csrfToken }: { csrfToken: string }) {
               )}
               {(setup || state.enrolled) && (
                 <label>
-                  {action === "RECOVERY"
-                    ? "Recovery code"
+                  {action === "RECOVERY" || action.startsWith("RESET_")
+                    ? "Authenticator or recovery code"
                     : "Six-digit authenticator code"}
                   <input
                     ref={proof}

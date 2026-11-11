@@ -142,8 +142,8 @@
     },
     {
       "path": "src/components/authenticator.tsx",
-      "bytes": 8648,
-      "sha256": "5807dc390fbc72234910e6626333a5a616a196e6fb310d12f7686a6648e97fbf"
+      "bytes": 8696,
+      "sha256": "1d3ede648899d7b9240d3fb09f758442bfaa9c537b913a9559f4d0f5fc2cb1dc"
     },
     {
       "path": "src/components/button.tsx",

@@ -20,9 +20,11 @@ PATH = '/api/v1/auth/mfa'
 @pytest.fixture
 def key_file(tmp_path, monkeypatch):
     key = tmp_path / 'synthetic-authenticator-key'
-    key.write_text(secrets.token_hex(32))
+    material = secrets.token_bytes(32)
+    key.write_text(material.hex())
     key.chmod(0o600)
     monkeypatch.setenv('LV_MFA_KEY_FILE', str(key))
+    return material
 
 
 def test_mfa_endpoints_are_issuer_only():

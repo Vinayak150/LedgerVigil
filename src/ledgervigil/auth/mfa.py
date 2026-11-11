@@ -37,8 +37,8 @@ class Receipt(BaseModel):
     recovery_codes: list[str] | None = Field(default=None, repr=False)
 
 
-def _key():
-    filename = os.environ.get('LV_MFA_KEY_FILE')
+def _key(filename=None):
+    filename = filename or os.environ.get('LV_MFA_KEY_FILE')
     if not filename:
         raise ProblemError(503, 'DEPENDENCY_UNAVAILABLE', 'authenticator setup is unavailable')
     try:
@@ -48,6 +48,20 @@ def _key():
     except (OSError, ValueError, ConfigurationError):
         raise ProblemError(503, 'DEPENDENCY_UNAVAILABLE', 'authenticator setup is unavailable') from None
     return key
+
+
+def open_enrollment(primary, user, enrollment, envelope):
+    from cryptography.exceptions import InvalidTag
+    paths = [p for p in os.environ.get('LV_MFA_PREVIOUS_KEY_FILES', '').split(',') if p]
+    if len(paths) > 3:
+        raise ProblemError(503, 'DEPENDENCY_UNAVAILABLE', 'authenticator key ring is unavailable')
+    keys = [primary, *[_key(p) for p in paths]]
+    for key in keys:
+        try:
+            return totp.open_secret(key, user, enrollment, envelope)
+        except InvalidTag:
+            continue
+    raise InvalidTag
 
 
 @router.get('', response_model=State, operation_id='getAuthenticatorState', openapi_extra={'x-lv-permission': 'any-session'})
@@ -79,7 +93,7 @@ def _finish(conn, arguments, body, prepared, key):
             candidate = totp.recovery_digest(user, body.code or '')
             digest = candidate.hex() if candidate else None
         else:
-            secret = totp.open_secret(key, user, enrollment, bytes.fromhex(prepared['envelope']))
+            secret = open_enrollment(key, user, enrollment, bytes.fromhex(prepared['envelope']))
             step = totp.match_step(secret, body.code or '', int(time.time()))
             if step is not None and body.action in ('CONFIRM', 'REGENERATE'):
                 raw_codes = [totp.new_recovery_code() for _ in range(10)]
