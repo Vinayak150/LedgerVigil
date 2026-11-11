@@ -73,7 +73,8 @@ def test_exact_success_key_cannot_replay_after_role_removal(database,api,world,a
  with connection(database=database) as db:db.execute('DELETE FROM lv_identity.membership_role WHERE tenant_id=%s AND user_id=%s',(world['A'],world['users'][actor]['id']))
  before=fingerprint(database,set());r=fn(c,pid,key=key);assert r.status_code==403,r.text;assert fingerprint(database,set())==before
 
-def test_0029_roundtrip(database):
+def test_0029_roundtrip(migration_database):
+ database=migration_database
  sig='lv.edit_account(bytea,uuid,text,jsonb,jsonb,text,text)'
  with connection(database=database) as db:fixed=db.execute('SELECT pg_get_functiondef(%s::regprocedure),proacl::text FROM pg_proc WHERE oid=%s::regprocedure',(sig,sig)).fetchone()
  migrate(database,'0028_workflow_lock_order',downgrade=True,disposable=True)

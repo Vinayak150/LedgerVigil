@@ -63,7 +63,8 @@ def test_edit_and_revocation_have_consistent_winner(database,api,world,admin,kin
  assert counters(database)==seq and patch(admin,world,match='"v'+str(before+expected)+'"').status_code in (401,403)
 
 
-def test_forward_and_backward_function_restoration(database):
+def test_forward_and_backward_function_restoration(migration_database):
+ database=migration_database
  sig='lv.edit_account(bytea,uuid,text,jsonb,jsonb,text,text)'
  with connection(database=database) as db:fixed=db.execute('SELECT pg_get_functiondef(%s::regprocedure)',(sig,)).fetchone()[0]
  migrate(database,'0026_proof_packs',downgrade=True,disposable=True)
