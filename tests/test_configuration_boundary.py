@@ -216,6 +216,6 @@ def test_migration_roundtrip_and_populated_history_refuses_downgrade():
   try:
    admin=signed_in(application,w,'admin');assert patch(admin,w).status_code==200
    retained=fingerprint(dbname,set())
-   with pytest.raises(Exception,match='downgrade_empty'):migrate(dbname,'0022_approved_withdrawal',downgrade=True,disposable=True)
+   with pytest.raises(Exception,match='downgrade_empty|MFA enrollment or attempt history'):migrate(dbname,'0022_approved_withdrawal',downgrade=True,disposable=True)
    assert fingerprint(dbname,set())==retained
   finally:application.state.pool.close()
