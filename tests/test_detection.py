@@ -63,8 +63,10 @@ def only(run_body, staged_id):
 
 # ======================================================================== 1. the canonical discrepancy, end to end
 def test_unsettled_statement_payout_is_found_with_cited_evidence_and_no_financial_effect(database, dapi, world):
-    before = protected(database)
     a = signed_in(dapi, world, 'analyst')
+    c = signed_in(dapi, world, 'controller')
+    # Authentication is setup; keep MFA tables inside the measured invariant.
+    before = protected(database)
     r = run(a, world['l1']['ledger'])
     assert r.status_code == 201, r.text
     body = r.json()
@@ -87,7 +89,6 @@ def test_unsettled_statement_payout_is_found_with_cited_evidence_and_no_financia
     assert any(e['type'] == 'SETTLEMENT_ABSENT' and e['payout_id'] == 'STL-3001' for e in d['evidence'])
     assert d['freshness']['status'] == 'CURRENT' and d['review'] == {'version': 1, 'status': 'OPEN', 'etag': 'v1'}
     # The controller confirms after checking the evidence; nothing authoritative changes at any point.
-    c = signed_in(dapi, world, 'controller')
     ok = dispose(c, d['id'], 'CONFIRMED', 'VERIFIED_AGAINST_EVIDENCE', '"v1"')
     assert ok.status_code == 200 and ok.headers['etag'] == '"v2"' and ok.json()['review']['status'] == 'CONFIRMED', ok.text
     assert protected(database) == before
