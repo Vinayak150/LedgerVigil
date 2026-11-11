@@ -163,6 +163,8 @@ def test_revised_proposal_keeps_all_editors_and_allows_the_accepted_editor_execu
  assert act(a,pid,match='"v2"').status_code==200;assert override(c,pid,match='"v3"').status_code==200;age(database,world)
  assert approve(c,pid,match='"v4"',body={'revision':2}).status_code==200
  with connection(database=database) as db:db.execute("INSERT INTO lv_identity.membership_role(tenant_id,user_id,role,grant_source,granted_at) VALUES(%s,%s,'CONTROLLER','LOCAL_PROVISIONING',statement_timestamp()-interval '48 hours')",(world['A'],world['users']['automation']['id']))
+ # A newly privileged editor must authenticate the added role with MFA.
+ editor=signed_in(api,world,'automation')
  r=post(editor,pid,match='"v5"',revision=2);assert r.status_code==200,r.text
  _,r=download_native(database,world,c,r.json()['id']);assert r.status_code==200,r.text;assert verify(r.content)['valid']
  ex=r.json()['artifacts']['execution.json'];assert ex['editors']==sorted([world['users']['analyst']['id'],world['users']['automation']['id']]) and ex['receipt']['executed_by']==world['users']['automation']['id']
