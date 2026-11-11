@@ -14,6 +14,7 @@ def listing(c, ledger, **q):
 def test_filters_are_exact_server_side_and_cursor_bound(database, dapi, world):
     _statement(database, world['l1'], 'STL-3002', [('PMT-2001', '50000.00')], '50000.00', '500.00', '49500.00')
     a = signed_in(dapi, world, 'analyst')
+    ctl = signed_in(dapi, world, 'controller')
     ledger = world['l1']['ledger']
     assert run(a, ledger).status_code == 201
     before = (fingerprint(database, DETECTION_WRITES), counters(database))
@@ -27,7 +28,6 @@ def test_filters_are_exact_server_side_and_cursor_bound(database, dapi, world):
     assert listing(a, ledger, detector_version='1.0.0').json()['items'] == []
     assert len(listing(a, ledger, detector_version='1.1.0').json()['items']) == 4
     # Review status is the current one, read from the review row.
-    ctl = signed_in(dapi, world, 'controller')
     target = overlap['items'][0]
     assert dispose(ctl, target['id'], 'DISMISSED', 'EXPECTED_TIMING', '"v1"').status_code == 200
     assert [f['id'] for f in listing(a, ledger, review_status='DISMISSED').json()['items']] == [target['id']]
