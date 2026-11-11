@@ -165,17 +165,17 @@ services:
     depends_on: [web, api, issuer]
     deploy: {resources: {limits: {memory: 128m}}}
 secrets:
-  pg_superuser_password: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/pg_superuser_password}
-  migrator_dsn: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/migrator_dsn}
-  issuer_dsn: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/issuer_dsn}
-  app_dsn: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/app_dsn}
-  cursor_key: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/cursor_key}
-  worker_dsn: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/worker_dsn}
-  kek_public: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/api/kek-public.pem}
-  qbo_api_env: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/api/api.env}
-  kek_public_worker: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/worker/kek-public.pem}
-  kek_private: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/worker/kek-private.pem}
-  qbo_worker_env: {file: ${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/worker/worker.env}
+  pg_superuser_password: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/pg_superuser_password"}
+  migrator_dsn: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/migrator_dsn"}
+  issuer_dsn: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/issuer_dsn"}
+  app_dsn: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/app_dsn"}
+  cursor_key: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/cursor_key"}
+  worker_dsn: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/worker_dsn"}
+  kek_public: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/api/kek-public.pem"}
+  qbo_api_env: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/api/api.env"}
+  kek_public_worker: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/worker/kek-public.pem"}
+  kek_private: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/worker/kek-private.pem"}
+  qbo_worker_env: {file: "${LV_SECRETS_DIR:?set LV_SECRETS_DIR to a private directory outside the repository}/provider/worker/worker.env"}
 volumes:
   pgdata:
   broker-data:
