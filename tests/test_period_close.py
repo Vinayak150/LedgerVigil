@@ -716,7 +716,7 @@ def test_upgrade_from_populated_0008_preserves_records_and_labels_legacy_closes(
         migrate(name)
         assert columns_hash(name, cols) == before                       # every pre-existing row and column unchanged
         with connection(database=name) as admin:
-            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0039_mfa',)
+            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0040_mfa_reset',)
             rows = dict(admin.execute('SELECT id, close_provenance FROM lv.fiscal_period WHERE ledger_id IN (%s, %s)',
                                       (cfg['ledger'], legacy['ledger'])).fetchall())
         assert rows == {legacy['period']: 'LEGACY_UNAUDITED', cfg['period']: None, nov: None}
@@ -749,7 +749,7 @@ def test_fresh_chain_and_guarded_downgrade():
         with pytest.raises(Exception, match='audited period closes'):
             migrate(name, '0008_identity_force_rls', downgrade=True, disposable=True)
         with connection(database=name) as admin:
-            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0039_mfa',)
+            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0040_mfa_reset',)
 
 
 def test_committed_openapi_documents_the_period_routes():

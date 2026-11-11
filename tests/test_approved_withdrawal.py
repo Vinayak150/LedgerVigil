@@ -184,7 +184,7 @@ def test_populated_upgrade_preserves_history_and_downgrade_refuses_withdrawal():
   retained=fingerprint(name,set())
   with pytest.raises(Exception,match='downgrade_no_approved_withdraw'):migrate(name,'0021_native_execution',downgrade=True,disposable=True)
   assert fingerprint(name,set())==retained
-  with connection(database=name) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0039_mfa',)
+  with connection(database=name) as db:assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0040_mfa_reset',)
  finally:
   if application:application.state.pool.close()
   with connection(autocommit=True) as db:db.execute(sql.SQL('DROP DATABASE {} WITH (FORCE)').format(sql.Identifier(name)))

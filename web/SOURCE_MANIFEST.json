@@ -27,8 +27,8 @@
     },
     {
       "path": "openapi.json",
-      "bytes": 339432,
-      "sha256": "4ffa84a5ee837d187e7c6ba175cc9417ab3b9510b7117c598842a50d87345ab5"
+      "bytes": 339944,
+      "sha256": "f63ab469b5310e9683354a76f300f81d218e3792a2b6d1edb0da3feb373e2414"
     },
     {
       "path": "package-lock.json",
@@ -142,8 +142,8 @@
     },
     {
       "path": "src/components/authenticator.tsx",
-      "bytes": 7128,
-      "sha256": "13a8bbcec9558f78f15e253e9c7ef6cff87adc539164f239fd588b2575a88ccd"
+      "bytes": 8648,
+      "sha256": "5807dc390fbc72234910e6626333a5a616a196e6fb310d12f7686a6648e97fbf"
     },
     {
       "path": "src/components/button.tsx",
@@ -302,13 +302,13 @@
     },
     {
       "path": "src/lib/api.generated.d.ts",
-      "bytes": 260252,
-      "sha256": "4f97315f320cb42adfc50699cf2002b51fa5b69a6ab40cb0be17b14248a295b9"
+      "bytes": 260503,
+      "sha256": "4f52dd56955e4b68ad7b77bc7645b2ae96f29224f377cf16c579428823d9fe7e"
     },
     {
       "path": "src/lib/api.optional.generated.d.ts",
-      "bytes": 321858,
-      "sha256": "a19a3b74352127836cf29bf32c45cc4ca8c9f19bf87eaaa7c1b2ce208a8f7a07"
+      "bytes": 322109,
+      "sha256": "968899f8da64f1de2a29d74e64b8058944d02e90635b7273d85ae4106e80833b"
     },
     {
       "path": "src/lib/api.ts",

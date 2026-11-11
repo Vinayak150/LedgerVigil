@@ -23,11 +23,12 @@ class State(BaseModel):
     configured: bool
     enrolled: bool
     verified_at: datetime | None
+    reset_after: datetime | None = None
 
 
 class Change(BaseModel):
     model_config = ConfigDict(extra='forbid')
-    action: Literal['START', 'CONFIRM', 'CHALLENGE', 'RECOVERY', 'REGENERATE']
+    action: Literal['START', 'CONFIRM', 'CHALLENGE', 'RECOVERY', 'REGENERATE', 'RESET_REQUEST', 'RESET_CANCEL', 'RESET_COMPLETE']
     code: str | None = Field(default=None, max_length=26, repr=False)
 
 
@@ -61,7 +62,7 @@ def status(request: Request):
     if state['status'] != 'OK':
         raise ProblemError(401, 'UNAUTHENTICATED', 'no valid session')
     return State(configured=bool(os.environ.get('LV_MFA_KEY_FILE')),
-                 enrolled=state['enrolled'], verified_at=state['verified_at'])
+                 enrolled=state['enrolled'], verified_at=state['verified_at'], reset_after=state.get('reset_after'))
 
 
 def _finish(conn, arguments, body, prepared, key):
@@ -74,7 +75,7 @@ def _finish(conn, arguments, body, prepared, key):
         setup = totp.setup_key(secret)
     else:
         enrollment = UUID(prepared['enrollment'])
-        if body.action == 'RECOVERY':
+        if body.action == 'RECOVERY' or (body.action.startswith('RESET_') and len(body.code or '') == 26):
             candidate = totp.recovery_digest(user, body.code or '')
             digest = candidate.hex() if candidate else None
         else:
@@ -111,6 +112,8 @@ def change(body: Change, request: Request):
             raise ProblemError(429, 'RATE_LIMITED', 'too many authenticator attempts', headers={'Retry-After': '900'})
         case 'REAUTH_REQUIRED':
             raise ProblemError(403, 'PERMISSION_DENIED', 'confirm your password first')
+        case 'COOLING_OFF':
+            raise ProblemError(409, 'COOLING_OFF', 'authenticator removal has a mandatory 24-hour waiting period')
         case 'WRONG_STATE':
             raise ProblemError(409, 'CONFLICT', 'authenticator state changed; reload and try again')
     if not accepted:

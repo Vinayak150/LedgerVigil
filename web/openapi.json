@@ -7855,7 +7855,10 @@
               "CONFIRM",
               "CHALLENGE",
               "RECOVERY",
-              "REGENERATE"
+              "REGENERATE",
+              "RESET_REQUEST",
+              "RESET_CANCEL",
+              "RESET_COMPLETE"
             ],
             "title": "Action"
           },
@@ -10950,6 +10953,11 @@
             "type": "array",
             "title": "Permissions"
           },
+          "mfa_required": {
+            "type": "boolean",
+            "title": "Mfa Required",
+            "default": false
+          },
           "idle_expires_at": {
             "type": "string",
             "title": "Idle Expires At"
@@ -11737,6 +11745,18 @@
               }
             ],
             "title": "Verified At"
+          },
+          "reset_after": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reset After"
           }
         },
         "type": "object",

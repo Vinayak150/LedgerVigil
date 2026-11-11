@@ -159,7 +159,7 @@ def test_recheck_history_blocks_destructive_downgrade(database,pair):
  with pytest.raises(Exception):migrate(database,'0030_override_independence',downgrade=True,disposable=True)
  with connection(database=database) as db:
   # The whole multi-step downgrade is one refused Alembic run, so the head stays at the newest revision (0032 after the rebase).
-  assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0039_mfa',)
+  assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone()==('0040_mfa_reset',)
   assert db.execute('SELECT count(*) FROM lv.semantic_recheck WHERE proposal_id=%s',(second,)).fetchone()==(1,)
 
 @pytest.mark.parametrize('winner',['revocation','recheck'])

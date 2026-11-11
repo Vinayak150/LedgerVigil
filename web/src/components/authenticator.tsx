@@ -52,7 +52,11 @@ export function Authenticator({ csrfToken }: { csrfToken: string }) {
     setMessage("");
     setCodes([]);
     try {
-      if (chosen === "START" || chosen === "REGENERATE") {
+      if (
+        chosen === "START" ||
+        chosen === "REGENERATE" ||
+        chosen.startsWith("RESET_")
+      ) {
         const result = await api.POST("/api/v1/auth/reauthenticate", {
           headers,
           body: { password: String(fields.get("password") ?? "") },
@@ -82,7 +86,15 @@ export function Authenticator({ csrfToken }: { csrfToken: string }) {
       setSetup(result.data.setup_key ?? "");
       setCodes(result.data.recovery_codes ?? []);
       if (chosen !== "START") {
+        if (chosen === "RESET_COMPLETE") {
+          window.location.reload();
+          return;
+        }
         setState({ ...state, enrolled: true });
+        const refreshed = await api
+          .GET("/api/v1/auth/mfa")
+          .catch(() => undefined);
+        if (refreshed?.data) setState(refreshed.data);
         setMessage("This session has verified an authenticator proof.");
         setAction("CHALLENGE");
       }
@@ -96,7 +108,9 @@ export function Authenticator({ csrfToken }: { csrfToken: string }) {
     }
   }
   const needsPassword =
-    !setup && state && (!state.enrolled || action === "REGENERATE");
+    !setup &&
+    state &&
+    (!state.enrolled || action === "REGENERATE" || action.startsWith("RESET_"));
   return (
     <section className="card" aria-labelledby="authenticator-heading">
       <div className="card-heading">
@@ -108,6 +122,13 @@ export function Authenticator({ csrfToken }: { csrfToken: string }) {
         )}
         {state && !state.configured && (
           <p>Authenticator setup is unavailable in this environment.</p>
+        )}
+        {state?.reset_after && (
+          <p role="status">
+            Authenticator removal cannot finish before{" "}
+            {new Date(state.reset_after).toLocaleString()}. Until then,
+            protected BOOKS actions are paused.
+          </p>
         )}
         {state?.configured && (
           <form onSubmit={submit}>
@@ -125,6 +146,19 @@ export function Authenticator({ csrfToken }: { csrfToken: string }) {
                     <option value="CHALLENGE">Verify this session</option>
                     <option value="RECOVERY">Use a recovery code</option>
                     <option value="REGENERATE">Replace recovery codes</option>
+                    {!state.reset_after && (
+                      <option value="RESET_REQUEST">
+                        Request removal (24-hour wait)
+                      </option>
+                    )}
+                    {state.reset_after && (
+                      <option value="RESET_CANCEL">Cancel removal</option>
+                    )}
+                    {state.reset_after && (
+                      <option value="RESET_COMPLETE">
+                        Complete removal after waiting
+                      </option>
+                    )}
                   </select>
                 </label>
               )}
@@ -160,11 +194,21 @@ export function Authenticator({ csrfToken }: { csrfToken: string }) {
                     ref={proof}
                     name="proof"
                     required
-                    inputMode={action === "RECOVERY" ? "text" : "numeric"}
-                    autoComplete={
-                      action === "RECOVERY" ? "off" : "one-time-code"
+                    inputMode={
+                      action === "RECOVERY" || action.startsWith("RESET_")
+                        ? "text"
+                        : "numeric"
                     }
-                    maxLength={action === "RECOVERY" ? 26 : 6}
+                    autoComplete={
+                      action === "RECOVERY" || action.startsWith("RESET_")
+                        ? "off"
+                        : "one-time-code"
+                    }
+                    maxLength={
+                      action === "RECOVERY" || action.startsWith("RESET_")
+                        ? 26
+                        : 6
+                    }
                   />
                 </label>
               )}

@@ -1484,7 +1484,7 @@ export interface components {
              * Action
              * @enum {string}
              */
-            action: "START" | "CONFIRM" | "CHALLENGE" | "RECOVERY" | "REGENERATE";
+            action: "START" | "CONFIRM" | "CHALLENGE" | "RECOVERY" | "REGENERATE" | "RESET_REQUEST" | "RESET_CANCEL" | "RESET_COMPLETE";
             /** Code */
             code?: string | null;
         };
@@ -3034,6 +3034,11 @@ export interface components {
             roles: string[];
             /** Permissions */
             permissions: string[];
+            /**
+             * Mfa Required
+             * @default false
+             */
+            mfa_required: boolean;
             /** Idle Expires At */
             idle_expires_at: string;
             /** Absolute Expires At */
@@ -3381,6 +3386,8 @@ export interface components {
             enrolled: boolean;
             /** Verified At */
             verified_at: string | null;
+            /** Reset After */
+            reset_after?: string | null;
         };
         /** SubmissionResult */
         SubmissionResult: {

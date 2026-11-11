@@ -797,7 +797,7 @@ def test_downgrade_refused_while_a_connection_exists(database, world, papi, cfg,
         migrate(database, '0034_detection_review_filters', downgrade=True, disposable=True)
     assert 'no_provider_downgrade' in str(refused.value)
     with connection(database=database) as db:
-        assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0039_mfa',)
+        assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0040_mfa_reset',)
 
 
 def test_committed_contracts_match_the_generated_ones(monkeypatch):

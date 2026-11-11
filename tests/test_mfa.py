@@ -39,7 +39,7 @@ def test_setup_challenge_and_single_use_recovery(api, world, key_file, monkeypat
     def post(action, code=None):
         return client.post(PATH, json={'action': action, 'code': code})
 
-    assert client.get(PATH).json() == {'configured': True, 'enrolled': False, 'verified_at': None}
+    assert client.get(PATH).json() == {'configured': True, 'enrolled': False, 'verified_at': None, 'reset_after': None}
     assert post('START').status_code == 403
     assert client.post('/api/v1/auth/reauthenticate', json={'password': password}).status_code == 200
     setup = post('START')
@@ -62,7 +62,7 @@ def test_setup_challenge_and_single_use_recovery(api, world, key_file, monkeypat
         results = list(threads.map(lambda _: post('RECOVERY', codes[0]).status_code, range(4)))
     assert sorted(results) == [200, 401, 401, 401]
     other_session = signed_in(api, world, 'analyst')
-    assert other_session.get(PATH).json() == {'configured': True, 'enrolled': True, 'verified_at': None}
+    assert other_session.get(PATH).json() == {'configured': True, 'enrolled': True, 'verified_at': None, 'reset_after': None}
 
 
 @pytest.mark.parametrize('role', ['lv_app', 'lv_worker', 'lv_seed', 'lv_ingest'])

@@ -686,7 +686,7 @@ def test_downgrade_is_refused_while_settlements_exist():
             migrate(name, '0005_processor_payments', downgrade=True, disposable=True)
         assert isinstance(refused.value.orig, psycopg.errors.ObjectNotInPrerequisiteState)
         with connection(database=name) as admin:
-            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0039_mfa',)
+            assert admin.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0040_mfa_reset',)
             assert admin.execute('SELECT count(*) FROM lv.settlement_inclusion_current').fetchone() == (1,)
 
 

@@ -111,6 +111,8 @@ def session_transaction(request: Request, *, permission: str | None = None, tena
                 raise ProblemError(403, 'PERMISSION_DENIED', 'select a tenant first (POST /api/v1/auth/switch-tenant)')
             if permission is not None and permission not in session['permissions']:
                 raise ProblemError(403, 'PERMISSION_DENIED', f'requires {permission}')
+            if permission in ('review', 'execute', 'ledger.bootstrap', 'administer') and session.get('mfa_required'):
+                raise ProblemError(403, 'MFA_REQUIRED', 'verify an authenticator before using this permission with BOOKS data')
             yield RequestContext(conn, session, token)
 
 

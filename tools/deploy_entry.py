@@ -25,7 +25,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ROLES = ('lv_owner', 'lv_migrator', 'lv_app', 'lv_seed', 'lv_ingest', 'lv_worker', 'lv_authn')
-EXPECTED_HEAD = '0039_mfa'
+EXPECTED_HEAD = '0040_mfa_reset'
 
 
 def _secret(var):

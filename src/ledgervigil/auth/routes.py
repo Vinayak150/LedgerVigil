@@ -49,6 +49,7 @@ class Session(BaseModel):
     available_tenants: list[TenantRef]
     roles: list[str]
     permissions: list[str]
+    mfa_required: bool = False
     idle_expires_at: str
     absolute_expires_at: str
     csrf_token: str = Field(description='Send as X-CSRF-Token on unsafe requests; derived from this session and rotated with it')
@@ -68,7 +69,7 @@ def _session_body(info: dict, token: str) -> Session:
     return Session(user=UserRef(**info['user']), tenant=TenantRef(id=info['tenant_id']) if info['tenant_id'] else None,
                    tenant_selection_required=info['tenant_selection_required'],
                    available_tenants=[TenantRef(id=t) for t in info['available_tenant_ids']], roles=info['roles'],
-                   permissions=sorted(info['permissions']), idle_expires_at=info['idle_expires_at'],
+                   permissions=sorted(info['permissions']), mfa_required=info.get('mfa_required',False), idle_expires_at=info['idle_expires_at'],
                    absolute_expires_at=info['absolute_expires_at'], csrf_token=csrf_token_for(token))
 
 
