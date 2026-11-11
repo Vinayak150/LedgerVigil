@@ -229,7 +229,7 @@ def test_populated_predecessor_upgrade_preserves_every_existing_nonversion_table
  before=fingerprint(database,{'lv_meta.alembic_version'})
  migrate(database)
  # New evidence/provenance tables start empty; existing table contents remain exact.
- after=fingerprint(database,{'lv_meta.alembic_version','lv.balance_dependency_step','lv.semantic_recheck','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition','lv.provider_connection','lv.provider_oauth_state','lv.provider_credential','lv.provider_job','lv.provider_page','lv.provider_object','lv.database_binding','lv.database_binding_history','lv_identity.email_token','lv_identity.token_request','lv_identity.reauthentication'})
+ after=fingerprint(database,{'lv_meta.alembic_version','lv.balance_dependency_step','lv.semantic_recheck','lv.detection_run','lv.detection_finding','lv.detection_run_finding','lv.detection_review','lv.detection_disposition','lv.provider_connection','lv.provider_oauth_state','lv.provider_credential','lv.provider_job','lv.provider_page','lv.provider_object','lv.database_binding','lv.database_binding_history','lv_identity.email_token','lv_identity.token_request','lv_identity.reauthentication','lv_identity.mfa_factor','lv_identity.mfa_attempt'})
  assert before==after
 
 @pytest.fixture

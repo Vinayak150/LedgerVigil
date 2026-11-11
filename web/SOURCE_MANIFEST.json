@@ -27,8 +27,8 @@
     },
     {
       "path": "openapi.json",
-      "bytes": 339348,
-      "sha256": "1780bc0d082a837a302528172c702c7d8b948fa325a37fbe83a88fe131cc272d"
+      "bytes": 339432,
+      "sha256": "4ffa84a5ee837d187e7c6ba175cc9417ab3b9510b7117c598842a50d87345ab5"
     },
     {
       "path": "package-lock.json",

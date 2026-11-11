@@ -1970,7 +1970,8 @@
               }
             }
           }
-        }
+        },
+        "x-lv-permission": "any-session"
       },
       "post": {
         "tags": [
@@ -2024,7 +2025,8 @@
               }
             }
           }
-        }
+        },
+        "x-lv-permission": "any-session"
       }
     },
     "/api/v1/source-plan-registrations": {

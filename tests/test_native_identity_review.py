@@ -66,4 +66,4 @@ def test_q10_upgrade_preserves_populated_identity_and_financial_data():
                 return {table:administrator.execute('SELECT md5(coalesce(string_agg(row_to_json(t)::text,\'\' ORDER BY row_to_json(t)::text),\'\')) FROM lv_identity.'+table+' t').fetchone()[0] for table in TABLES}
         before=snapshot();migrate(name);assert snapshot()==before
         with connection(database=name) as administrator:
-            assert administrator.execute("SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='lv_identity' AND c.relkind='r' AND relforcerowsecurity").fetchone()==(8,)
+            assert administrator.execute("SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='lv_identity' AND c.relkind='r' AND relforcerowsecurity").fetchone()==(10,)

@@ -1952,6 +1952,83 @@
         "x-lv-permission": "audit.read"
       }
     },
+    "/api/v1/auth/mfa": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Status",
+        "operationId": "getAuthenticatorState",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/State"
+                }
+              }
+            }
+          }
+        },
+        "x-lv-permission": "any-session"
+      },
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Change",
+        "operationId": "changeAuthenticator",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Change"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Receipt"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No session or proof refused"
+          },
+          "403": {
+            "description": "Reauthentication required"
+          },
+          "409": {
+            "description": "Wrong enrollment state"
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "Authenticator key unavailable"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "x-lv-permission": "any-session"
+      }
+    },
     "/api/v1/source-plan-registrations": {
       "post": {
         "tags": [
@@ -8583,6 +8660,39 @@
         ],
         "title": "AuditPage"
       },
+      "Change": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "START",
+              "CONFIRM",
+              "CHALLENGE",
+              "RECOVERY",
+              "REGENERATE"
+            ],
+            "title": "Action"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 26
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "title": "Change"
+      },
       "ClosedPeriod": {
         "properties": {
           "id": {
@@ -11533,6 +11643,37 @@
         ],
         "title": "Reauthenticated"
       },
+      "Receipt": {
+        "properties": {
+          "setup_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Setup Key"
+          },
+          "recovery_codes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recovery Codes"
+          }
+        },
+        "type": "object",
+        "title": "Receipt"
+      },
       "RecordCounts": {
         "properties": {
           "VALID": {
@@ -12818,6 +12959,37 @@
           "state"
         ],
         "title": "StalenessJob"
+      },
+      "State": {
+        "properties": {
+          "configured": {
+            "type": "boolean",
+            "title": "Configured"
+          },
+          "enrolled": {
+            "type": "boolean",
+            "title": "Enrolled"
+          },
+          "verified_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verified At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "configured",
+          "enrolled",
+          "verified_at"
+        ],
+        "title": "State"
       },
       "SubmissionResult": {
         "properties": {

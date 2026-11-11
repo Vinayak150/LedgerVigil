@@ -49,7 +49,7 @@ def _key():
     return key
 
 
-@router.get('', response_model=State, operation_id='getAuthenticatorState')
+@router.get('', response_model=State, operation_id='getAuthenticatorState', openapi_extra={'x-lv-permission': 'any-session'})
 def status(request: Request):
     check_transport(request)
     token = session_token(request)
@@ -88,7 +88,7 @@ def _finish(conn, arguments, body, prepared, key):
     return accepted, Receipt(setup_key=setup, recovery_codes=raw_codes)
 
 
-@router.post('', response_model=Receipt, operation_id='changeAuthenticator',
+@router.post('', response_model=Receipt, operation_id='changeAuthenticator', openapi_extra={'x-lv-permission': 'any-session'},
              responses={401: {'description': 'No session or proof refused'}, 403: {'description': 'Reauthentication required'},
                         409: {'description': 'Wrong enrollment state'}, 429: {'description': 'Rate limited'},
                         503: {'description': 'Authenticator key unavailable'}})
