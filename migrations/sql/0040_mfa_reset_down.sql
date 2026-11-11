@@ -114,3 +114,30 @@ LANGUAGE sql STABLE SET search_path = pg_catalog, pg_temp AS $$
  SELECT EXISTS (SELECT 1 FROM lv_identity.membership_role r JOIN lv_identity.role_permission rp ON rp.role = r.role
                 WHERE r.tenant_id = p_tenant AND r.user_id = p_user AND rp.permission::text = p_permission);
 $$;
+
+CREATE OR REPLACE FUNCTION lv_identity.switch_tenant(p_token_hash bytea, p_tenant uuid, p_new_token_hash bytea, p_source text, p_request text) RETURNS jsonb
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, pg_temp AS $$
+DECLARE s lv_identity.session; problem text; sid uuid;
+BEGIN
+ PERFORM lv_identity.check_request(p_source, p_request);
+ IF p_new_token_hash IS NULL OR octet_length(p_new_token_hash) <> 32 OR p_tenant IS NULL THEN
+  RAISE EXCEPTION 'invalid tenant selection' USING ERRCODE = '22023';
+ END IF;
+ SELECT * INTO s FROM lv_identity.session WHERE token_hash = p_token_hash FOR UPDATE;
+ problem := lv_identity.session_problem(s);
+ -- A session whose current tenant membership was revoked may still select another tenant it is a member of.
+ IF problem IS NOT NULL AND problem <> 'MEMBERSHIP_INACTIVE' THEN RETURN jsonb_build_object('valid', false, 'reason', problem); END IF;
+ IF NOT EXISTS (SELECT 1 FROM lv_identity.membership WHERE tenant_id = p_tenant AND user_id = s.user_id AND status = 'ACTIVE') THEN
+  PERFORM lv_identity.audit_append('TENANT_SELECTION_DENIED', 'DENIED', s.user_id, NULL, s.id, p_source, p_request,
+    jsonb_build_object('requested_tenant_id', p_tenant::text));
+  RETURN jsonb_build_object('valid', true, 'selected', false);
+ END IF;
+ UPDATE lv_identity.session SET revoked_at = statement_timestamp(), revoke_reason = 'TENANT_SWITCH' WHERE id = s.id;
+ INSERT INTO lv_identity.session(token_hash, user_id, tenant_id, created_at, last_seen_at, idle_timeout, absolute_expires_at, source_key)
+ VALUES (p_new_token_hash, s.user_id, p_tenant, statement_timestamp(), statement_timestamp(), interval '30 minutes', s.absolute_expires_at, p_source)
+ RETURNING id INTO sid;
+ UPDATE lv_identity.session SET replaced_by = sid WHERE id = s.id;
+ PERFORM lv_identity.audit_append('TENANT_SELECTED', 'ALLOWED', s.user_id, p_tenant, sid, p_source, p_request,
+   jsonb_build_object('previous_session_id', s.id::text, 'previous_tenant_id', s.tenant_id::text));
+ RETURN jsonb_build_object('valid', true, 'selected', true, 'session', lv_identity.session_info(sid));
+END $$;

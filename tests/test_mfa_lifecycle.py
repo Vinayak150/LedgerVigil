@@ -126,11 +126,42 @@ def test_mfa_and_session_switch_lock_orders(database, api, world, enrolled, mfa_
                 assert prepared['status'] == 'OK'
                 future = pool.submit(switch)
             else:
-                holder.execute('SELECT id FROM lv_identity.session WHERE token_hash=%s FOR UPDATE', (token,))
-                future = pool.submit(prepare)
-            wait_for_transaction_lock(pid.get(timeout=3))
-            if not mfa_first:
                 assert holder.execute('SELECT lv_identity.switch_tenant(%s,%s,%s,%s,%s)',
                                       (token, world['A'], secrets.token_bytes(32), 'race-holder', 'switch')).fetchone()[0]['valid']
+                future = pool.submit(prepare)
+            wait_for_transaction_lock(pid.get(timeout=3))
         result = future.result(timeout=6)
     assert (result.get('valid') if mfa_first else result['status'] == 'INVALID')
+
+
+def test_reset_includes_session_replacement_committed_while_waiting(database, api, world, enrolled):
+    from concurrent.futures import ThreadPoolExecutor
+    import secrets
+
+    first, action = enrolled
+    second = signed_in(api, world, 'admin')
+    token = token_hash(second.cookies.get(api.state.auth_settings.cookie_name))
+    assert action('RESET_REQUEST').status_code == 200
+    with connection(database=database) as db:
+        db.execute("UPDATE lv_identity.mfa_factor SET reset_after=statement_timestamp()-interval '1 second'")
+    with ThreadPoolExecutor(1) as pool:
+        with connection(database=database) as holder:
+            # Actual switch function holds the shared user mutex until commit.
+            assert holder.execute('SELECT lv_identity.switch_tenant(%s,%s,%s,%s,%s)',
+                                  (token, world['A'], secrets.token_bytes(32), 'race', 'switch')).fetchone()[0]['valid']
+            future = pool.submit(action, 'RESET_COMPLETE')
+            deadline = time.monotonic() + 4
+            blocked = False
+            while time.monotonic() < deadline:
+                with connection(database=database) as observer:
+                    blocked = observer.execute("""SELECT EXISTS(SELECT 1 FROM pg_stat_activity
+                        WHERE datname=current_database() AND wait_event_type='Lock'
+                        AND strpos(query,'mfa_prepare')>0)""").fetchone()[0]
+                if blocked:
+                    break
+                time.sleep(.02)
+            assert blocked, 'reset did not reach controlled serialization point'
+        assert future.result(timeout=6).status_code == 200
+    with connection(database=database) as db:
+        assert db.execute('SELECT count(*) FROM lv_identity.session WHERE revoked_at IS NULL').fetchone() == (0,)
+        assert db.execute('SELECT count(*) FROM lv_identity.mfa_factor').fetchone() == (0,)

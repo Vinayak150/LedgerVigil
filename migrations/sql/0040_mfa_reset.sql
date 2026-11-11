@@ -109,7 +109,11 @@ BEGIN
 END $$;
 
 CREATE OR REPLACE FUNCTION lv_identity.session_info(p_session uuid) RETURNS jsonb
-LANGUAGE sql STABLE SET search_path = pg_catalog, pg_temp AS $$
+LANGUAGE plpgsql VOLATILE SET search_path = pg_catalog, pg_temp AS $$
+DECLARE previous_tenant text := current_setting('app.tenant_id',true); target uuid; result jsonb;
+BEGIN
+ SELECT tenant_id INTO target FROM lv_identity.session WHERE id=p_session;
+ PERFORM set_config('app.tenant_id',coalesce(target::text,''),true);
  SELECT jsonb_build_object(
   'session_id', s.id::text,
   'mfa_required', EXISTS(SELECT 1 FROM lv.ledger l WHERE l.tenant_id=s.tenant_id AND l.purpose='BOOKS')
@@ -127,8 +131,11 @@ LANGUAGE sql STABLE SET search_path = pg_catalog, pg_temp AS $$
   'tenant_selection_required', s.tenant_id IS NULL,
   'idle_expires_at', to_char((s.last_seen_at + s.idle_timeout) AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
   'absolute_expires_at', to_char(s.absolute_expires_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'))
- FROM lv_identity.session s JOIN lv_identity.app_user u ON u.id = s.user_id WHERE s.id = p_session
-$$;
+ INTO result
+ FROM lv_identity.session s JOIN lv_identity.app_user u ON u.id = s.user_id WHERE s.id = p_session;
+ PERFORM set_config('app.tenant_id',coalesce(previous_tenant,''),true);
+ RETURN result;
+END $$;
 CREATE OR REPLACE FUNCTION lv.proposal_may(p_tenant uuid, p_user uuid, p_permission text) RETURNS boolean
 LANGUAGE sql STABLE SET search_path = pg_catalog, pg_temp AS $$
  SELECT EXISTS (SELECT 1 FROM lv_identity.membership_role r JOIN lv_identity.role_permission rp ON rp.role = r.role
@@ -143,3 +150,32 @@ LANGUAGE sql STABLE SET search_path = pg_catalog, pg_temp AS $$
    AND s.mfa_verified_at>statement_timestamp()-interval '15 minutes'));
 
 $$;
+
+CREATE OR REPLACE FUNCTION lv_identity.switch_tenant(p_token_hash bytea, p_tenant uuid, p_new_token_hash bytea, p_source text, p_request text) RETURNS jsonb
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, pg_temp AS $$
+DECLARE s lv_identity.session; problem text; sid uuid;
+BEGIN
+ PERFORM lv_identity.check_request(p_source, p_request);
+ IF p_new_token_hash IS NULL OR octet_length(p_new_token_hash) <> 32 OR p_tenant IS NULL THEN
+  RAISE EXCEPTION 'invalid tenant selection' USING ERRCODE = '22023';
+ END IF;
+ SELECT * INTO s FROM lv_identity.session WHERE token_hash = p_token_hash;
+ PERFORM 1 FROM lv_identity.app_user WHERE id=s.user_id FOR SHARE;
+ SELECT * INTO s FROM lv_identity.session WHERE token_hash = p_token_hash FOR UPDATE;
+ problem := lv_identity.session_problem(s);
+ -- A session whose current tenant membership was revoked may still select another tenant it is a member of.
+ IF problem IS NOT NULL AND problem <> 'MEMBERSHIP_INACTIVE' THEN RETURN jsonb_build_object('valid', false, 'reason', problem); END IF;
+ IF NOT EXISTS (SELECT 1 FROM lv_identity.membership WHERE tenant_id = p_tenant AND user_id = s.user_id AND status = 'ACTIVE') THEN
+  PERFORM lv_identity.audit_append('TENANT_SELECTION_DENIED', 'DENIED', s.user_id, NULL, s.id, p_source, p_request,
+    jsonb_build_object('requested_tenant_id', p_tenant::text));
+  RETURN jsonb_build_object('valid', true, 'selected', false);
+ END IF;
+ UPDATE lv_identity.session SET revoked_at = statement_timestamp(), revoke_reason = 'TENANT_SWITCH' WHERE id = s.id;
+ INSERT INTO lv_identity.session(token_hash, user_id, tenant_id, created_at, last_seen_at, idle_timeout, absolute_expires_at, source_key)
+ VALUES (p_new_token_hash, s.user_id, p_tenant, statement_timestamp(), statement_timestamp(), interval '30 minutes', s.absolute_expires_at, p_source)
+ RETURNING id INTO sid;
+ UPDATE lv_identity.session SET replaced_by = sid WHERE id = s.id;
+ PERFORM lv_identity.audit_append('TENANT_SELECTED', 'ALLOWED', s.user_id, p_tenant, sid, p_source, p_request,
+   jsonb_build_object('previous_session_id', s.id::text, 'previous_tenant_id', s.tenant_id::text));
+ RETURN jsonb_build_object('valid', true, 'selected', true, 'session', lv_identity.session_info(sid));
+END $$;
