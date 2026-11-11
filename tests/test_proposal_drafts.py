@@ -128,12 +128,15 @@ def client(application):
                       client=(f'10.11.{secrets.randbelow(250)}.{secrets.randbelow(250)}', 40000))
 
 
-def signed_in(application, w, name):
+def signed_in(application, w, name, *, with_mfa=True):
     c = client(application)
     u = w['users'][name]
     r = c.post(f'{BASE}/auth/login', json={'email': u['email'], 'password': u['password']})
     assert r.status_code == 200, r.text
     c.headers['X-CSRF-Token'] = r.json()['csrf_token']
+    if with_mfa:
+        from mfa_support import establish_mfa
+        establish_mfa(application, c, u['password'], r.json())
     return c
 
 

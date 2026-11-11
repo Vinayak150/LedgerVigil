@@ -51,6 +51,8 @@ def login(application, email, password):
     r = c.post(f'{BASE}/auth/login', json={'email': email, 'password': password})
     if r.status_code == 200:
         c.headers['X-CSRF-Token'] = r.json()['csrf_token']
+        from mfa_support import establish_mfa
+        establish_mfa(application, c, password, r.json())
     return c, r
 
 

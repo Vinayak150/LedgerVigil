@@ -16,7 +16,7 @@ PATH = '/api/v1/auth/mfa'
 
 @pytest.fixture
 def enrolled(api, world, key_file, monkeypatch):
-    c = signed_in(api, world, 'admin')
+    c = signed_in(api, world, 'admin', with_mfa=False)
     password = world['users']['admin']['password']
     assert c.post('/api/v1/auth/reauthenticate', json={'password': password}).status_code == 200
     r = c.post(PATH, json={'action': 'START'})
@@ -141,7 +141,7 @@ def test_reset_includes_session_replacement_committed_while_waiting(database, ap
     import secrets
 
     first, action = enrolled
-    second = signed_in(api, world, 'admin')
+    second = signed_in(api, world, 'admin', with_mfa=False)
     token = token_hash(second.cookies.get(api.state.auth_settings.cookie_name))
     assert action('RESET_REQUEST').status_code == 200
     with connection(database=database) as db:
