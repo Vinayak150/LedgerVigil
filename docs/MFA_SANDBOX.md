@@ -37,3 +37,7 @@ For rollback, downgrade refuses to discard enrolled factors or attempt
 history. Keep the existing database backup and the key in independently
 managed private storage. A production installer and key-rotation drill
 are still required.
+
+## 0040 extension
+
+The reset, BOOKS permission enforcement and rotation extensions are documented in MFA_LIFECYCLE.md. Earlier limitations above describe the 0039 snapshot. Production and BOOKS writes remain disabled; workspace test evidence does not enable them.

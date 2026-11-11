@@ -36,3 +36,22 @@ def test_rotation_refuses_busy_audit_before_touching_factors(database, enrolled,
         with pytest.raises(LockNotAvailable):
             with connection(database=database) as rotator:
                 rotate(rotator, key_file, secrets.token_bytes(32))
+
+
+def test_keyring_reads_old_and_new_envelopes_without_fallback_keys_in_api(tmp_path, monkeypatch):
+    from uuid import uuid4
+    from ledgervigil.auth.mfa import open_enrollment
+    from ledgervigil.auth.totp import new_secret, seal_secret
+    user, enrollment = uuid4(), uuid4()
+    old, new = secrets.token_bytes(32), secrets.token_bytes(32)
+    key_path = tmp_path / 'synthetic-previous-key'
+    key_path.write_text(old.hex())
+    key_path.chmod(0o600)
+    secret = new_secret()
+    envelope = seal_secret(old, user, enrollment, secret)
+    monkeypatch.setenv('LV_MFA_PREVIOUS_KEY_FILES', str(key_path))
+    assert open_enrollment(new, user, enrollment, envelope) == secret
+    assert open_enrollment(new, user, enrollment, seal_secret(new, user, enrollment, secret)) == secret
+    monkeypatch.delenv('LV_MFA_PREVIOUS_KEY_FILES')
+    with pytest.raises(InvalidTag):
+        open_enrollment(new, user, enrollment, envelope)

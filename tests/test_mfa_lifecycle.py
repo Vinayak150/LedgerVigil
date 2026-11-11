@@ -25,7 +25,9 @@ def enrolled(api, world, key_file, monkeypatch):
     clock = [int(time.time()) // 30]
     from ledgervigil.auth import mfa
     monkeypatch.setattr(mfa, 'time', type('Clock', (), {'time': staticmethod(lambda: clock[0] * 30)}))
-    assert c.post(PATH, json={'action': 'CONFIRM', 'code': at_step(secret, clock[0])}).status_code == 200
+    confirmed = c.post(PATH, json={'action': 'CONFIRM', 'code': at_step(secret, clock[0])})
+    assert confirmed.status_code == 200
+    c.synthetic_recovery_codes = confirmed.json()['recovery_codes']
 
     def action(name):
         clock[0] += 1
@@ -165,3 +167,12 @@ def test_reset_includes_session_replacement_committed_while_waiting(database, ap
     with connection(database=database) as db:
         assert db.execute('SELECT count(*) FROM lv_identity.session WHERE revoked_at IS NULL').fetchone() == (0,)
         assert db.execute('SELECT count(*) FROM lv_identity.mfa_factor').fetchone() == (0,)
+
+
+
+def test_reset_recovery_proofs_are_consumed(database, enrolled):
+    c, _ = enrolled
+    codes = c.synthetic_recovery_codes
+    assert c.post(PATH, json={'action': 'RESET_REQUEST', 'code': codes[0]}).status_code == 200
+    assert c.post(PATH, json={'action': 'RESET_CANCEL', 'code': codes[1]}).status_code == 200
+    assert c.post(PATH, json={'action': 'RESET_REQUEST', 'code': codes[0]}).status_code == 401

@@ -1,58 +1,49 @@
-# Release candidate 0037 — clean-clone setup, verification and decision
+# LedgerVigil candidate 0040
 
-**Candidate head:** `0037_restore_interlock`. **Decision:** ready for local and sandbox use, and for a deployment-validation
-exercise on SANDBOX ledgers and the QuickBooks sandbox only. **Not** ready for production, real BOOKS data or production
-QuickBooks: named blockers below. Accounting is UNREVIEWED. Nothing here has been installed on the owner's Mac or deployed.
+Migration head: `0040_mfa_reset`. This source is a review candidate, not an
+installed or deployed release. Accounting remains UNREVIEWED.
 
-## Clean clone (development and tests)
+## Current scope
 
-Supported runtimes: Python 3.14, Node 22.23.4, PostgreSQL 18, Redis 7.4 (pinned dependencies in `requirements.lock`,
-`worker-requirements.lock`, `web/package-lock.json`).
+Native SANDBOX RecordSettlement proposals, independent approval, execution,
+withdrawal, semantic revalidation, financial reads, audited period close,
+proof/export and recovery checks are implemented. Detection and the read-only
+QuickBooks SANDBOX connector remain separately gated. Identity uses the isolated
+issuer login; ordinary API database credentials cannot issue sessions or attest
+password checks. MFA adds enrollment, challenge, recovery codes, reset cooling-off,
+BOOKS privilege checks, and transactional key rotation. See MFA_LIFECYCLE.md.
 
-```sh
-git clone <repository> ledgervigil && cd ledgervigil
-python3.14 -m venv .venv
-.venv/bin/python -m pip install --no-deps -r requirements.lock -r worker-requirements.lock
-.venv/bin/python -m pip install --no-deps -e .
-.venv/bin/python -m pip check
-# A disposable PostgreSQL 18 listening on 127.0.0.1:55432 (for example: docker compose up -d db, using compose.yaml,
-# after scripts/setup has written .env), then:
-POSTGRES_PASSWORD=<that server's superuser password> PATH=.venv/bin:$PATH sh scripts/ci_prepare.sh
-PYTHONPATH=src:. .venv/bin/python -m tools.dev_db migrate
-PYTHONPATH=src:.:tests .venv/bin/python -m pytest -q tests        # serial: tests share one server
-cd web && npm ci && npx tsc --noEmit && node --test tests/*.test.mjs scripts/*.test.mjs && node scripts/check-api.mjs && npx next build
-```
+Execution receipts and exact-commit test results belong to the dated review
+package. Do not infer a current-tree pass from historical counts in older docs.
+The previous installed source was 0029; no installation or deployment is implied.
 
-Optional test inputs and their effect:
-- `LV_PG_CLIENT=local LV_PG_BIN=<PostgreSQL 18 bin>` — recovery drills use local client tools instead of the Mac Docker path.
-- `LV_TEST_REDIS_URL` — a disposable Redis for the real-broker tests (otherwise a local `redis-server`, then Docker).
-- `LV_PUBLIC_INDEX` — the pinned public UCI index; without it `tests/test_plan_inspection.py` cannot run and must be
-  reported as not run (CI does exactly that).
+## Reproduce
 
-CI (`.github/workflows/ci.yml`): secret scan of tracked files and history, the full backend suite against PostgreSQL 18 and
-Redis services, Python and npm dependency audits, frontend typecheck, unit tests, contract parity, delivered-source
-manifest, formatting and production build. **CI has not run yet**: the repository was not pushed from this workspace.
+Use pinned Python 3.14 dependencies from requirements.lock and worker-requirements.lock,
+Node 22.23.4 and web/package-lock.json, and a fresh PostgreSQL 18 instance.
+Run scripts/ci_prepare.sh only against a disposable database, migrate to head,
+then execute pytest serially with PYTHONPATH=src:.:tests. For recovery tests set
+LV_PG_CLIENT=local and LV_PG_BIN to PostgreSQL 18 client tools. LV_PUBLIC_INDEX must
+name the pinned UCI index; absence is a blocked input, never a passing test.
 
-## Deployment artifacts
+Frontend: typecheck, node --test tests/*.test.mjs scripts/*.test.mjs, check:api,
+source manifest, CI formatting, and production build. Real browser/axe checks
+are additional to unit tests. Deployment Compose is in deploy/compose.yaml;
+the issuer-only MFA key overlay is deploy/compose.mfa.yaml. Build images locally,
+validate the configuration, and rehearse backup/upgrade/rollback before install.
 
-`deploy/` (compose, Dockerfiles, Caddy TLS proxy, secret layout, runbook). Not built or run: no container runtime was
-available where they were prepared. See `deploy/README.md` and `deploy/RUNBOOK.md` (backups, restore, key rotation,
-incidents, rollback).
+## Open gates
 
-## Production blockers (named, unmet)
-
-1. **MFA (TOTP)** for review, execute, ledger.bootstrap and administer — not implemented (ADR-027 gate).
-2. **Q-16** — the database trusts the API's password verdict; a stolen `lv_app` credential can mint sessions. Needs a separate
-   authentication service and login (architecture decision).
-3. **Accounting review** — no qualified accounting review of any posting rule, oracle or evaluation label.
-4. **Native installation** — the Mac still runs `0029_account_patch`; no install receipts.
-5. **Live QuickBooks sandbox** — never run (Intuit unreachable from the workspace and the VM; no sandbox app configured).
-   Experiments X-1..X-10 not run; provider writes stay disabled.
-6. **Offsite backup and measured RPO/RTO** — no authorized offsite destination; only same-host drills measured.
-7. **Real email delivery** — the SMTP adapter is untested against a mail service.
-8. **Deployment images** — written, never built or run.
-9. Remaining Low security items: shared `lv_worker` login for maintenance and provider workers (N2); Redis without a
-   password; frontend image with dev dependencies; Caddy filters unvalidated against a Caddy binary.
-
-Everything else that the completion matrix marks NOT IMPLEMENTED (for example CDC/webhooks, provider writes, typed operations
-beyond RecordSettlement, metrics/alerts, HTTP import upload) is outside what this candidate claims.
+- No qualified accounting review or independent business-outcome labels.
+- No installation rehearsal or native installation of this candidate.
+- MFA defaults remain PROPOSED; production key rotation/reset require a
+  deployment drill. No administrator lost-factor bypass is implemented.
+- First-BOOKS bootstrap and provider production writes remain disabled; the
+  unresolved accounting contracts must not be silently filled in.
+- Live QuickBooks receipts are scoped to OAuth, realm verification and one
+  read synchronization, not X-1–X-10 or write safety.
+- Full browser/axe, real email, offsite recovery and measured offsite RPO/RTO
+  remain open until executed and recorded.
+- HTTP import upload, CDC/webhooks, broader typed financial operations, metrics
+  and alerts remain unfinished implementation.
+- Hosted CI and push are not implied by local checks.
