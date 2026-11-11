@@ -1,9 +1,11 @@
-# Frontend (Next.js production server). The API origin is read at start-up from LV_API_ORIGIN (next.config.ts rewrites).
+# Frontend. Next.js serializes rewrites at build time; bake the internal API service address.
 FROM node:22-slim AS build
 WORKDIR /web
 COPY web/package.json web/package-lock.json ./
 RUN npm ci --ignore-scripts
 COPY web ./
+ARG LV_API_ORIGIN=http://api:8000
+ENV LV_API_ORIGIN=$LV_API_ORIGIN
 RUN npm run build
 FROM node:22-slim
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
