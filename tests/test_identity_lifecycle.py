@@ -198,6 +198,9 @@ def test_member_changes_need_recent_password_confirmation(database, world, lapi)
     with connection(database=database) as db:
         db.execute('SET session_replication_role = replica')   # superuser test setup only: the sign-in was 20 minutes ago
         db.execute("UPDATE lv_identity.session SET created_at=created_at-interval '20 minutes', absolute_expires_at=absolute_expires_at-interval '20 minutes' WHERE user_id=%s AND revoked_at IS NULL", (a['id'],))
+        # MFA setup now performs a real password reconfirmation. Age that proof
+        # too; keep the independent authenticator proof fresh to isolate this guard.
+        db.execute("UPDATE lv_identity.reauthentication SET at=at-interval '20 minutes' WHERE session_id IN (SELECT id FROM lv_identity.session WHERE user_id=%s)", (a['id'],))
         db.commit()
     m = member(admin, an['id'])
     r = write(admin, 'PATCH', f'/members/{an["id"]}', {'roles': ['ANALYST']}, match=m['etag'])
