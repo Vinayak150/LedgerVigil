@@ -809,9 +809,18 @@ def test_key_rotation_rewraps_stored_tokens_without_a_refresh(database, world, p
 def test_downgrade_refused_while_a_connection_exists(database, world, papi, cfg, qbo):
     admin = signed_in(papi, world, 'admin')
     post(admin, '/provider-connections')
+    before = fingerprint(database)
+    # Verify the actual provider guard independently: the complete downgrade
+    # now reaches the newer MFA retention guard before migration 0035.
+    from pathlib import Path
+    guard = (Path(__file__).parents[1] / 'migrations/sql/0035_provider_connections_down.sql').read_text().split(';')[0]
+    with pytest.raises(psycopg.errors.CheckViolation, match='no_provider_downgrade'):
+        with owner_transaction(database) as owner:
+            owner.execute(guard)
     with pytest.raises(Exception) as refused:
         migrate(database, '0034_detection_review_filters', downgrade=True, disposable=True)
-    assert 'no_provider_downgrade' in str(refused.value)
+    assert 'MFA enrollment or attempt history exists; refusing downgrade' in str(refused.value)
+    assert fingerprint(database) == before
     with connection(database=database) as db:
         assert db.execute('SELECT version_num FROM lv_meta.alembic_version').fetchone() == ('0040_mfa_reset',)
 
