@@ -345,3 +345,29 @@ DECLARE w lv.provider_job;c lv.provider_connection;k lv.provider_credential;BEGI
   'credential',CASE WHEN k.connection_id IS NULL THEN NULL ELSE jsonb_build_object('kek_id',k.kek_id,'envelope_hex',encode(k.envelope,'hex'),'token_version',k.token_version,
    'access_expires_at',extract(epoch FROM k.access_expires_at)::bigint,'refresh_expires_at',extract(epoch FROM k.refresh_expires_at)::bigint) END);
 END $$;
+
+CREATE OR REPLACE FUNCTION lv_identity.session_context(p_token_hash bytea, p_touch boolean) RETURNS jsonb
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, pg_temp AS $$
+DECLARE s lv_identity.session; problem text;
+BEGIN
+ PERFORM set_config('app.tenant_id', '', true);
+ PERFORM set_config('app.user_id', '', true);
+ PERFORM set_config('app.session_id', '', true);
+ IF p_token_hash IS NULL OR octet_length(p_token_hash) <> 32 THEN RETURN jsonb_build_object('valid', false, 'reason', 'MALFORMED'); END IF;
+ SELECT * INTO s FROM lv_identity.session WHERE token_hash = p_token_hash;
+ problem := lv_identity.session_problem(s);
+ IF problem IS NOT NULL THEN RETURN jsonb_build_object('valid', false, 'reason', problem); END IF;
+ IF p_touch THEN
+  UPDATE lv_identity.session AS current_session
+   SET last_seen_at = greatest(current_session.last_seen_at, statement_timestamp())
+   WHERE current_session.id = s.id AND lv_identity.session_problem(current_session) IS NULL
+   RETURNING current_session.* INTO s;
+  IF NOT FOUND THEN RETURN jsonb_build_object('valid',false,'reason','REVOKED'); END IF;
+  problem := lv_identity.session_problem(s);
+  IF problem IS NOT NULL THEN RETURN jsonb_build_object('valid',false,'reason',problem); END IF;
+ END IF;
+ PERFORM set_config('app.tenant_id', coalesce(s.tenant_id::text, ''), true);
+ PERFORM set_config('app.user_id', s.user_id::text, true);
+ PERFORM set_config('app.session_id', s.id::text, true);
+ RETURN jsonb_build_object('valid', true, 'session', lv_identity.session_info(s.id));
+END $$;

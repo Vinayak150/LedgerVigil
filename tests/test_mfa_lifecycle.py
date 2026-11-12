@@ -180,3 +180,30 @@ def test_reset_recovery_proofs_are_consumed(database, enrolled):
     assert c.post(PATH, json={'action': 'RESET_REQUEST', 'code': codes[0]}).status_code == 200
     assert c.post(PATH, json={'action': 'RESET_CANCEL', 'code': codes[1]}).status_code == 200
     assert c.post(PATH, json={'action': 'RESET_REQUEST', 'code': codes[0]}).status_code == 401
+
+
+def test_inflight_session_touch_loses_cleanly_to_real_logout(database, api, world):
+    from concurrent.futures import ThreadPoolExecutor
+
+    client = signed_in(api, world, 'admin', with_mfa=False)
+    digest = token_hash(client.cookies.get(api.state.auth_settings.cookie_name))
+    with connection(database=database) as observer:
+        before = observer.execute('SELECT last_seen_at FROM lv_identity.session WHERE token_hash=%s', (digest,)).fetchone()
+    with ThreadPoolExecutor(1) as pool:
+        with connection('lv_authn', database) as logout:
+            assert logout.execute("SELECT lv_identity.logout(%s,'race','real-logout')", (digest,)).fetchone() == (True,)
+            pending = pool.submit(client.get, '/api/v1/me')
+            deadline = time.monotonic() + 5
+            while time.monotonic() < deadline:
+                with connection(database=database) as observer:
+                    waiting = observer.execute("""SELECT EXISTS(SELECT 1 FROM pg_stat_activity
+                      WHERE datname=current_database() AND wait_event_type='Lock'
+                      AND query LIKE 'SELECT lv_identity.session_context%%')""").fetchone()[0]
+                if waiting:
+                    break
+                time.sleep(.02)
+            assert waiting, 'read did not reach the observed session lock wait'
+        assert pending.result(timeout=6).status_code == 401
+    with connection(database=database) as observer:
+        assert observer.execute('SELECT last_seen_at FROM lv_identity.session WHERE token_hash=%s', (digest,)).fetchone() == before
+        assert observer.execute("SELECT revoke_reason FROM lv_identity.session WHERE token_hash=%s", (digest,)).fetchone() == ('LOGOUT',)
