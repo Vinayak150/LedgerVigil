@@ -743,6 +743,8 @@ def test_oauth_state_superseded_cancelled_and_wrong_tenant(database, world, papi
     sel = c.post(f'{BASE}/auth/switch-tenant', json={'tenant_id': str(world['A'])})
     assert sel.status_code == 200, sel.text
     c.headers['X-CSRF-Token'] = sel.json()['csrf_token']
+    from mfa_support import establish_mfa
+    establish_mfa(papi, c, password, sel.json())
     here = sel.json()['tenant']['id']
     first = post(c, '/provider-connections')
     s1 = parse_qs(urlsplit(first.json()['authorization_url']).query)['state'][0]
