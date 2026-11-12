@@ -125,9 +125,9 @@ def test_unauthenticated_request_is_401_and_changes_nothing(database, api, world
 def test_missing_wrong_and_cross_session_csrf_and_foreign_origin_are_refused_before_any_effect(database, api, world):
     admin = signed_in(api, world, 'admin')
     other = signed_in(api, world, 'controller')
+    refused_clients = [signed_in(api, world, 'admin') for _ in range(3)]
     before = everything(database)
-    for csrf in (None, 'x' * 64, other.headers['X-CSRF-Token']):
-        c = signed_in(api, world, 'admin')
+    for c, csrf in zip(refused_clients, (None, 'x' * 64, other.headers['X-CSRF-Token'])):
         if csrf is None:
             del c.headers['X-CSRF-Token']
         else:
@@ -138,7 +138,7 @@ def test_missing_wrong_and_cross_session_csrf_and_foreign_origin_are_refused_bef
     assert r.status_code == 403 and 'cross-origin' in r.json()['detail']
     assert period_row(database, world['cfg']['period'])[0] == 'OPEN'
     assert kinds(database, world['cfg']['ledger']) == []
-    # Only the new login sessions differ; no lv table and no audit event changed.
+    # Authentication/MFA setup precedes the snapshot; refused writes change nothing.
     after = everything(database)
     assert {k for k in after if after[k] != before[k]} <= {'lv_identity.audit_event', 'lv_identity.audit_chain_head'}
     with connection(database=database) as a:
