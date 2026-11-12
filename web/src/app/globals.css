@@ -5407,3 +5407,31 @@ select:focus-visible,
 .admin-check input {
   margin-top: 3px;
 }
+
+.authenticator-form fieldset {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.authenticator-form label {
+  display: grid;
+  gap: 8px;
+}
+.authenticator-form input,
+.authenticator-form select {
+  width: 100%;
+  min-width: 0;
+}
+.authenticator-form button {
+  justify-self: start;
+}
+.authenticator-form .id-label {
+  overflow-wrap: anywhere;
+}
+.table-scroll:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

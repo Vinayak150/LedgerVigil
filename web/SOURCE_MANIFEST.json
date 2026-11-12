@@ -117,8 +117,8 @@
     },
     {
       "path": "src/app/globals.css",
-      "bytes": 98330,
-      "sha256": "e837f53134653cb31e0c91ecf1a7c6220f30803000181fca88ca51a6ac68e447"
+      "bytes": 98814,
+      "sha256": "01bf4ebfc6e48b2759a7c04e7ec0b6a4fada5d309eec239dbf4a2a8261ce0b60"
     },
     {
       "path": "src/app/layout.tsx",
@@ -142,8 +142,8 @@
     },
     {
       "path": "src/components/authenticator.tsx",
-      "bytes": 8696,
-      "sha256": "1d3ede648899d7b9240d3fb09f758442bfaa9c537b913a9559f4d0f5fc2cb1dc"
+      "bytes": 8788,
+      "sha256": "21307cc44492ae9548cb39d21aa6647a41e58bbceb5f3ffe1dbea8b5ee863789"
     },
     {
       "path": "src/components/button.tsx",
@@ -202,8 +202,8 @@
     },
     {
       "path": "src/components/organization-admin.tsx",
-      "bytes": 22922,
-      "sha256": "79c703deb9b45b7d9ae32c239ef41df048ebe31f805d93cdf6ec386263e4dc6b"
+      "bytes": 23056,
+      "sha256": "7eea687b98450e16c76ade2c6af8413389e16475d312756f9aaea2c9536bd389"
     },
     {
       "path": "src/components/organization-picker.tsx",

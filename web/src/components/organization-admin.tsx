@@ -617,7 +617,12 @@ export function AuditLogPanel({ canRead }: { canRead: boolean }) {
         ) : items.length === 0 ? (
           <RecordEmpty>No audit events yet.</RecordEmpty>
         ) : (
-          <div className="table-scroll">
+          <div
+            className="table-scroll"
+            role="region"
+            aria-label="Audit events for this organization"
+            tabIndex={0}
+          >
             <table className="admin-audit">
               <caption className="sr-only">
                 Audit events for this organization

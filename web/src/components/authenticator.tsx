@@ -131,7 +131,7 @@ export function Authenticator({ csrfToken }: { csrfToken: string }) {
           </p>
         )}
         {state?.configured && (
-          <form onSubmit={submit}>
+          <form className="authenticator-form" onSubmit={submit}>
             <fieldset disabled={loading}>
               {state.enrolled && !setup && (
                 <label>
@@ -187,9 +187,11 @@ export function Authenticator({ csrfToken }: { csrfToken: string }) {
               )}
               {(setup || state.enrolled) && (
                 <label>
-                  {action === "RECOVERY" || action.startsWith("RESET_")
-                    ? "Authenticator or recovery code"
-                    : "Six-digit authenticator code"}
+                  {action === "RECOVERY"
+                    ? "Recovery code"
+                    : action.startsWith("RESET_")
+                      ? "Authenticator or recovery code"
+                      : "Six-digit authenticator code"}
                   <input
                     ref={proof}
                     name="proof"
