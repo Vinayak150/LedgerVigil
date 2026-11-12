@@ -210,6 +210,18 @@ BEGIN
  PERFORM set_config('app.tenant_id', t::text, true);
  PERFORM set_config('app.user_id', u::text, true);
  PERFORM set_config('app.session_id', s.id::text, true);
+ IF p_idempotency_key IS NULL OR p_idempotency_key !~ '^[!-~]{1,64}$' THEN
+  RAISE EXCEPTION 'invalid idempotency key' USING ERRCODE = '22023';
+ END IF;
+ IF p_if_match IS NOT NULL AND length(p_if_match) > 64 THEN
+  RAISE EXCEPTION 'invalid If-Match' USING ERRCODE = '22023';
+ END IF;
+ -- Part 8.1: a repeat while the first is still running is 409 REQUEST_IN_PROGRESS (never a second execution).
+ IF NOT pg_try_advisory_xact_lock(hashtextextended('lv-idem:' || t::text || ':' || u::text || ':POST:' || v_route || ':' || p_idempotency_key, 0)) THEN
+  RETURN jsonb_build_object('status', 409, 'code', 'REQUEST_IN_PROGRESS', 'detail', 'the first request with this Idempotency-Key is still running',
+                            'retry_after', 1, 'stored', false);
+ END IF;
+ -- No stored response or financial effect is released before the locked authority recheck.
  PERFORM 1 FROM lv_identity.app_user WHERE id=u FOR SHARE;
  PERFORM 1 FROM lv_identity.membership WHERE tenant_id=t AND user_id=u FOR SHARE;
  PERFORM 1 FROM lv_identity.membership_role WHERE tenant_id=t AND user_id=u ORDER BY role FOR SHARE;
@@ -223,19 +235,8 @@ BEGIN
   RETURN jsonb_build_object('status', 403, 'code', 'PERMISSION_DENIED', 'detail', 'requires administer', 'stored', false);
  END IF;
  PERFORM lv_identity.session_context(p_token_hash,true);
- IF p_idempotency_key IS NULL OR p_idempotency_key !~ '^[!-~]{1,64}$' THEN
-  RAISE EXCEPTION 'invalid idempotency key' USING ERRCODE = '22023';
- END IF;
- IF p_if_match IS NOT NULL AND length(p_if_match) > 64 THEN
-  RAISE EXCEPTION 'invalid If-Match' USING ERRCODE = '22023';
- END IF;
  req_hash := encode(sha256(convert_to(lv.canonical_seed_json(jsonb_build_object('method', 'POST', 'route', v_route,
               'period_id', p_period::text, 'if_match', p_if_match)), 'UTF8')), 'hex');
- -- Part 8.1: a repeat while the first is still running is 409 REQUEST_IN_PROGRESS (never a second execution).
- IF NOT pg_try_advisory_xact_lock(hashtextextended('lv-idem:' || t::text || ':' || u::text || ':POST:' || v_route || ':' || p_idempotency_key, 0)) THEN
-  RETURN jsonb_build_object('status', 409, 'code', 'REQUEST_IN_PROGRESS', 'detail', 'the first request with this Idempotency-Key is still running',
-                            'retry_after', 1, 'stored', false);
- END IF;
  SELECT * INTO prior FROM lv.api_idempotency i WHERE i.tenant_id = t AND i.principal_id = u AND i.method = 'POST'
   AND i.route = v_route AND i.idempotency_key = p_idempotency_key;
  IF FOUND THEN
