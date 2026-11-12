@@ -117,8 +117,8 @@
     },
     {
       "path": "src/app/globals.css",
-      "bytes": 98814,
-      "sha256": "01bf4ebfc6e48b2759a7c04e7ec0b6a4fada5d309eec239dbf4a2a8261ce0b60"
+      "bytes": 98819,
+      "sha256": "bb07548081f232bb0c2ac5a279038f0246fdafd213a148e8d61d47faf9607c8d"
     },
     {
       "path": "src/app/layout.tsx",

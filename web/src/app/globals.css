@@ -5432,6 +5432,6 @@ select:focus-visible,
   overflow-wrap: anywhere;
 }
 .table-scroll:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--color-focus);
   outline-offset: 3px;
 }
