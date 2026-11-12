@@ -808,12 +808,13 @@ def test_key_rotation_rewraps_stored_tokens_without_a_refresh(database, world, p
 
 def test_downgrade_refused_while_a_connection_exists(database, world, papi, cfg, qbo):
     admin = signed_in(papi, world, 'admin')
-    post(admin, '/provider-connections')
+    assert post(admin, '/provider-connections').status_code == 201
     before = fingerprint(database)
     # Verify the actual provider guard independently: the complete downgrade
     # now reaches the newer MFA retention guard before migration 0035.
     from pathlib import Path
-    guard = (Path(__file__).parents[1] / 'migrations/sql/0035_provider_connections_down.sql').read_text().split(';')[0]
+    guard = next(line for line in (Path(__file__).parents[1] / 'migrations/sql/0035_provider_connections_down.sql').read_text().splitlines()
+                 if line.startswith('ALTER TABLE'))
     with pytest.raises(psycopg.errors.CheckViolation, match='no_provider_downgrade'):
         with owner_transaction(database) as owner:
             owner.execute(guard)
