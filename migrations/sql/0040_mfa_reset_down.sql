@@ -141,3 +141,132 @@ BEGIN
    jsonb_build_object('previous_session_id', s.id::text, 'previous_tenant_id', s.tenant_id::text));
  RETURN jsonb_build_object('valid', true, 'selected', true, 'session', lv_identity.session_info(sid));
 END $$;
+
+CREATE OR REPLACE FUNCTION lv.close_period(p_token_hash bytea, p_period uuid, p_if_match text, p_idempotency_key text,
+                                p_source text, p_request text) RETURNS jsonb
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, pg_temp AS $$
+DECLARE
+ v_route constant text := '/api/v1/periods/{period_id}/close';
+ s lv_identity.session; v_problem text; t uuid; u uuid;
+ req_hash text; prior lv.api_idempotency; result jsonb; refusal text;
+ p lv.fiscal_period; l lv.ledger; counter lv.ledger_counter; wanted integer;
+ next_seq bigint; batch_content text; event_content text; bh text; eh text;
+ job uuid := uuidv7(); v_now timestamptz := statement_timestamp();
+BEGIN
+ PERFORM lv_identity.check_request(p_source, p_request);
+ IF p_token_hash IS NULL OR octet_length(p_token_hash) <> 32 THEN
+  RAISE EXCEPTION 'an authenticated session is required' USING ERRCODE = '42501';
+ END IF;
+ SELECT * INTO s FROM lv_identity.session WHERE token_hash = p_token_hash;
+ v_problem := lv_identity.session_problem(s);
+ IF v_problem IS NOT NULL OR s.tenant_id IS NULL THEN
+  RAISE EXCEPTION 'an authenticated session with a selected tenant is required' USING ERRCODE = '42501';
+ END IF;
+ t := s.tenant_id; u := s.user_id;
+ -- Never adopt a context the caller set for someone else; bind this transaction to the verified session.
+ IF coalesce(current_setting('app.tenant_id', true), '') NOT IN ('', t::text)
+    OR coalesce(current_setting('app.user_id', true), '') NOT IN ('', u::text)
+    OR coalesce(current_setting('app.session_id', true), '') NOT IN ('', s.id::text) THEN
+  RAISE EXCEPTION 'transaction context belongs to a different session' USING ERRCODE = '42501';
+ END IF;
+ PERFORM set_config('app.tenant_id', t::text, true);
+ PERFORM set_config('app.user_id', u::text, true);
+ PERFORM set_config('app.session_id', s.id::text, true);
+ IF NOT EXISTS (SELECT 1 FROM lv_identity.membership_role r JOIN lv_identity.role_permission rp ON rp.role = r.role
+                WHERE r.tenant_id = t AND r.user_id = u AND rp.permission = 'administer') THEN
+  PERFORM lv_identity.audit_append('PERIOD_CLOSE_DENIED', 'DENIED', u, t, s.id, p_source, p_request,
+   jsonb_build_object('period_id', p_period::text, 'reason', 'PERMISSION_DENIED'));
+  RETURN jsonb_build_object('status', 403, 'code', 'PERMISSION_DENIED', 'detail', 'requires administer', 'stored', false);
+ END IF;
+ IF p_idempotency_key IS NULL OR p_idempotency_key !~ '^[!-~]{1,64}$' THEN
+  RAISE EXCEPTION 'invalid idempotency key' USING ERRCODE = '22023';
+ END IF;
+ IF p_if_match IS NOT NULL AND length(p_if_match) > 64 THEN
+  RAISE EXCEPTION 'invalid If-Match' USING ERRCODE = '22023';
+ END IF;
+ req_hash := encode(sha256(convert_to(lv.canonical_seed_json(jsonb_build_object('method', 'POST', 'route', v_route,
+              'period_id', p_period::text, 'if_match', p_if_match)), 'UTF8')), 'hex');
+ -- Part 8.1: a repeat while the first is still running is 409 REQUEST_IN_PROGRESS (never a second execution).
+ IF NOT pg_try_advisory_xact_lock(hashtextextended('lv-idem:' || t::text || ':' || u::text || ':POST:' || v_route || ':' || p_idempotency_key, 0)) THEN
+  RETURN jsonb_build_object('status', 409, 'code', 'REQUEST_IN_PROGRESS', 'detail', 'the first request with this Idempotency-Key is still running',
+                            'retry_after', 1, 'stored', false);
+ END IF;
+ SELECT * INTO prior FROM lv.api_idempotency i WHERE i.tenant_id = t AND i.principal_id = u AND i.method = 'POST'
+  AND i.route = v_route AND i.idempotency_key = p_idempotency_key;
+ IF FOUND THEN
+  IF prior.expires_at <= statement_timestamp() THEN
+   DELETE FROM lv.api_idempotency i WHERE i.tenant_id = t AND i.principal_id = u AND i.method = 'POST'
+    AND i.route = v_route AND i.idempotency_key = p_idempotency_key;
+  ELSIF prior.request_hash <> req_hash THEN
+   RETURN jsonb_build_object('status', 422, 'code', 'IDEMPOTENCY_KEY_REUSED', 'detail', 'this Idempotency-Key was used with a different request',
+                             'stored', false);
+  ELSE
+   RETURN prior.response || jsonb_build_object('replayed', true, 'stored', true);
+  END IF;
+ END IF;
+
+ -- Every effect happens inside this block; any refusal rolls the block back (including locks and the counter row it may
+ -- have created) before the refusal itself is stored and audited.
+ BEGIN
+  IF p_if_match IS NULL THEN
+   PERFORM lv.period_close_refusal(428, 'VERSION_REQUIRED', 'If-Match is required', NULL);
+  END IF;
+  SELECT * INTO p FROM lv.fiscal_period WHERE tenant_id = t AND id = p_period;
+  IF NOT FOUND THEN PERFORM lv.period_close_refusal(404, 'NOT_FOUND', 'period not found', NULL); END IF;
+  -- Lock order shared with every posting path: ledger (share) -> counter (update) -> period.
+  SELECT * INTO l FROM lv.ledger WHERE tenant_id = t AND id = p.ledger_id FOR SHARE;
+  IF l.purpose <> 'SANDBOX' OR l.source_kind <> 'NATIVE' THEN
+   PERFORM lv.period_close_refusal(422, 'CAPABILITY_UNAVAILABLE', 'period close is enabled for native SANDBOX ledgers only', NULL);
+  END IF;
+  INSERT INTO lv.ledger_counter(tenant_id, ledger_id) VALUES (t, l.id) ON CONFLICT DO NOTHING;
+  SELECT * INTO counter FROM lv.ledger_counter WHERE tenant_id = t AND ledger_id = l.id FOR UPDATE;
+  PERFORM pg_advisory_xact_lock(hashtextextended('lv-period-config:' || t::text || ':' || l.id::text, 0));
+  SELECT * INTO p FROM lv.fiscal_period WHERE tenant_id = t AND ledger_id = l.id AND id = p_period FOR UPDATE;
+  wanted := CASE WHEN p_if_match ~ '^"?v[0-9]{1,9}"?$' THEN substring(p_if_match FROM 'v([0-9]+)')::integer ELSE -1 END;
+  IF wanted <> p.version THEN
+   PERFORM lv.period_close_refusal(412, 'VERSION_MISMATCH', 'If-Match does not match the current period version',
+    jsonb_build_object('current_version', p.version));
+  END IF;
+  IF p.status <> 'OPEN' THEN
+   PERFORM lv.period_close_refusal(409, 'INVALID_STATE_TRANSITION', 'the period is already closed',
+    jsonb_build_object('state', p.status::text, 'current_version', p.version));
+  END IF;
+  IF EXISTS (SELECT 1 FROM lv.fiscal_period WHERE tenant_id = t AND ledger_id = l.id AND status = 'OPEN' AND start_date < p.start_date) THEN
+   PERFORM lv.period_close_refusal(409, 'INVALID_STATE_TRANSITION', 'an earlier period is still open',
+    jsonb_build_object('state', p.status::text, 'current_version', p.version));
+  END IF;
+
+  next_seq := counter.last_seq + 1;
+  batch_content := lv.canonical_seed_json(jsonb_build_object('tenant_id', t::text, 'ledger_id', l.id::text, 'seq', next_seq::text,
+   'kind', 'PERIOD_CLOSE', 'created_by_user', u::text, 'period_id', p.id::text, 'request_hash', req_hash));
+  bh := encode(sha256(convert_to(batch_content || counter.batch_head, 'UTF8')), 'hex');
+  INSERT INTO lv.commit_batch(tenant_id, ledger_id, seq, kind, created_by, created_by_user, previous_seq, previous_hash, canonical_content, hash)
+  VALUES (t, l.id, next_seq, 'PERIOD_CLOSE', NULL, u, nullif(next_seq - 1, 0), counter.batch_head, batch_content, bh);
+  UPDATE lv.fiscal_period SET status = 'CLOSED', version = p.version + 1, closed_seq = next_seq, closed_at = v_now,
+   closed_by = u, close_provenance = 'AUDITED_COMMIT'
+  WHERE tenant_id = t AND ledger_id = l.id AND id = p.id AND status = 'OPEN' AND version = p.version;
+  INSERT INTO lv.work_item(tenant_id, id, kind, subject_type, subject_id, ledger_id, trigger_seq)
+  VALUES (t, job, 'STALENESS_SCAN', 'PERIOD', p.id, l.id, next_seq);
+  INSERT INTO lv.outbox(tenant_id, topic, work_item_id, dedupe_key)
+  VALUES (t, 'maintenance', job, 'STALENESS_SCAN:' || l.id::text || ':' || p.id::text || ':' || next_seq::text);
+  event_content := lv.period_close_event(t, l.id, next_seq, s.id, p_request);
+  eh := encode(sha256(convert_to(event_content || counter.event_head, 'UTF8')), 'hex');
+  INSERT INTO lv.ledger_event VALUES (t, l.id, next_seq, nullif(next_seq - 1, 0), counter.event_head, eh, event_content);
+  UPDATE lv.ledger_counter SET last_seq = next_seq, batch_head = bh, event_head = eh WHERE tenant_id = t AND ledger_id = l.id;
+  PERFORM lv_identity.audit_append('PERIOD_CLOSED', 'ALLOWED', u, t, s.id, p_source, p_request,
+   jsonb_build_object('ledger_id', l.id::text, 'period_id', p.id::text, 'seq', next_seq::text, 'start_date', p.start_date::text,
+                      'end_date', p.end_date::text, 'period_version', (p.version + 1)::text, 'staleness_work_item_id', job::text));
+  SELECT * INTO p FROM lv.fiscal_period WHERE tenant_id = t AND ledger_id = l.id AND id = p_period;
+  result := jsonb_build_object('status', 200, 'etag', 'v' || p.version::text,
+   'body', lv.period_json(p) || jsonb_build_object('staleness_job', jsonb_build_object('id', job::text, 'kind', 'STALENESS_SCAN', 'state', 'QUEUED')));
+ EXCEPTION WHEN SQLSTATE 'LVR01' THEN
+  GET STACKED DIAGNOSTICS refusal = PG_EXCEPTION_DETAIL;
+  result := refusal::jsonb;
+  PERFORM lv_identity.audit_append('PERIOD_CLOSE_REFUSED', 'DENIED', u, t, s.id, p_source, p_request,
+   jsonb_build_object('period_id', p_period::text, 'reason', result ->> 'code'));
+ END;
+ -- Part 8.1: success and 4xx refusals are stored in the same transaction and replayed for the same key and request.
+ INSERT INTO lv.api_idempotency(tenant_id, principal_id, method, route, idempotency_key, request_hash, response_status, response, expires_at)
+ VALUES (t, u, 'POST', v_route, p_idempotency_key, req_hash, (result ->> 'status')::smallint, result, transaction_timestamp() + interval '24 hours');
+ RETURN result || jsonb_build_object('replayed', false, 'stored', true);
+END $$;

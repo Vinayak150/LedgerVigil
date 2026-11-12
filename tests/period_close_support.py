@@ -23,12 +23,27 @@ def admin_token(database, tenant, roles=('ADMINISTRATOR',)):
     token = new_session_token()
     with connection('lv_authn', database) as c:
         prepared = c.execute("SELECT lv_identity.login_prepare(%s, 'test-support', 'test-login')", (email,)).fetchone()[0]
-        c.commit()
         ok = verify_password(prepared['password_hash'], password)
         result = c.execute("SELECT lv_identity.login_finish(%s, %s, %s, NULL, 'test-support', 'test-login')",
                            (prepared['attempt_id'], ok, token_hash(token))).fetchone()[0]
         c.commit()
-    assert result['authenticated'] and result['session']['tenant_id'] == str(tenant), result
+    assert result['authenticated'] and result['session']['tenant_id'] == str(tenant)
+    if result['session'].get('mfa_required'):
+        from fastapi.testclient import TestClient
+        from ledgervigil.app import create_app
+        from ledgervigil.auth.settings import AuthSettings
+        from ledgervigil.auth.crypto import csrf_token_for
+        from mfa_support import establish_mfa
+        application = create_app(AuthSettings(), connect=lambda: connection('lv_app',database),
+                                 issuer_connect=lambda: connection('lv_authn',database))
+        try:
+            with TestClient(application,base_url='https://testserver') as client:
+                client.headers['Cookie'] = application.state.auth_settings.cookie_name+'='+token
+                client.headers['X-CSRF-Token'] = csrf_token_for(token)
+                establish_mfa(application,client,password,result['session'])
+        finally:
+            application.state.pool.close()
+            application.state.issuer_pool.close()
     return token
 
 

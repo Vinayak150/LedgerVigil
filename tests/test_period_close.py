@@ -79,6 +79,8 @@ def signed_in(application, w, name):
     r = c.post('/api/v1/auth/login', json={'email': w['users'][name]['email'], 'password': w['passwords'][name]})
     assert r.status_code == 200, r.text
     c.headers['X-CSRF-Token'] = r.json()['csrf_token']
+    from mfa_support import establish_mfa
+    establish_mfa(application, c, w['passwords'][name], r.json())
     return c
 
 

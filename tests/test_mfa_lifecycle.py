@@ -75,6 +75,10 @@ def test_books_privilege_refused_in_api_and_database_without_fresh_mfa(database,
         result = db.execute('SELECT lv.edit_account(%s,%s,%s,%s,NULL,%s,%s)',
                             (token, aid, match, Jsonb({'name': 'SYNTHETIC guarded edit'}), 'test', 'mfa-raw')).fetchone()[0]
         assert result['status'] == 403
+    with connection('lv_app', database) as db:
+        closed = db.execute('SELECT lv.close_period(%s,%s,%s,%s,%s,%s)',
+                            (token, world['l1']['period'], '"v1"', 'mfa-period-denied', 'test', 'mfa-close')).fetchone()[0]
+        assert closed['status'] == 403
     assert action('CHALLENGE').status_code == 200
     assert c.get('/api/v1/me').json()['mfa_required'] is False
     assert c.patch('/api/v1/accounts/'+str(aid), json={'name': 'SYNTHETIC guarded edit'},

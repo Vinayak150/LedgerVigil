@@ -116,7 +116,7 @@ def close_period(period_id: UUID, request: Request,
         raise ProblemError(422, 'SCHEMA_INVALID', 'Idempotency-Key must be 1-64 printable ASCII characters',
                            errors=[{'pointer': '/headers/Idempotency-Key', 'code': 'pattern'}])
     request_id = request.state.request_id
-    with session_transaction(request, permission='administer') as ctx:
+    with session_transaction(request, permission='administer', touch=False) as ctx:
         result = ctx.conn.execute('SELECT lv.close_period(%s, %s, %s, %s, %s, %s)',
                                   (token_hash(ctx.session_token), period_id, if_match, idempotency_key,
                                    source_key(request), request_id)).fetchone()[0]
