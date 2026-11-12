@@ -136,6 +136,9 @@ def signed_in(application, w, name, *, with_mfa=True):
     c.headers['X-CSRF-Token'] = r.json()['csrf_token']
     if with_mfa:
         from mfa_support import establish_mfa
+        # A test may construct several application objects over the same world.
+        # Keep its unused synthetic recovery proofs with that world, not one app.
+        application.state.synthetic_mfa = w.setdefault('_synthetic_mfa', {})
         establish_mfa(application, c, u['password'], r.json())
     return c
 
