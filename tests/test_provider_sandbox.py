@@ -505,6 +505,20 @@ def test_requester_revoked_before_exchange_denies_and_fails(database, world, pap
     assert qbo.calls == []   # nothing was sent to Intuit
 
 
+def test_books_stepup_is_required_to_enqueue_but_worker_does_not_impersonate_session(database, world, papi, cfg, qbo):
+    unverified = signed_in(papi, world, 'admin', with_mfa=False)
+    refused = post(unverified, '/provider-connections')
+    assert refused.status_code == 403
+    assert qbo.calls == []
+    verified = signed_in(papi, world, 'admin')
+    connect(verified, qbo)
+    # A completed authorization can outlive the interactive step-up. The worker
+    # still checks current role/membership (covered by the adjacent revocation test).
+    with connection(database=database) as db:
+        db.execute("UPDATE lv_identity.session SET mfa_verified_at=statement_timestamp()-interval '16 minutes'")
+    assert [x['outcome'] for x in work(database, cfg, qbo)] == ['CONNECTED']
+
+
 def test_exchange_record_failure_revokes_the_new_grant(database, world, papi, cfg, qbo, monkeypatch):
     """M1: once Intuit has issued tokens, any failure before they are recorded revokes them; nothing is left live and unrecorded."""
     admin = signed_in(papi, world, 'admin')

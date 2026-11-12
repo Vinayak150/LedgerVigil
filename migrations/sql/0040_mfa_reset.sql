@@ -316,3 +316,32 @@ BEGIN
  VALUES (t, u, 'POST', v_route, p_idempotency_key, req_hash, (result ->> 'status')::smallint, result, transaction_timestamp() + interval '24 hours');
  RETURN result || jsonb_build_object('replayed', false, 'stored', true);
 END $$;
+
+-- Read-only provider jobs are authorized by the locked HTTP producer.
+-- Workers re-check current actor roles; they do not impersonate a browser session.
+CREATE OR REPLACE FUNCTION lv.provider_claim(t uuid,j uuid,worker text) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,pg_temp AS $$
+DECLARE w lv.provider_job;c lv.provider_connection;k lv.provider_credential;BEGIN
+ PERFORM lv.maintenance_context(t);
+ IF worker IS NULL OR worker!~'^[A-Za-z0-9_.:-]{1,100}$' THEN RAISE EXCEPTION 'invalid worker' USING ERRCODE='22023';END IF;
+ SELECT * INTO w FROM lv.provider_job WHERE tenant_id=t AND id=j FOR UPDATE;
+ IF NOT FOUND OR w.state<>'QUEUED' OR w.available_at>clock_timestamp() OR w.attempts>=5 THEN RETURN NULL;END IF;
+ SELECT * INTO c FROM lv.provider_connection WHERE tenant_id=t AND id=w.connection_id;
+ IF w.kind='REVOKE' AND EXISTS(SELECT 1 FROM lv.provider_job x WHERE x.tenant_id=t AND x.connection_id=w.connection_id AND x.kind='SYNC' AND x.state='CLAIMED' AND x.lease_expires_at>clock_timestamp()) THEN
+  UPDATE lv.provider_job SET available_at=clock_timestamp()+interval '5 seconds',dispatched_at=NULL WHERE tenant_id=t AND id=j;RETURN NULL;
+ END IF;
+ IF w.kind<>'REVOKE' AND (NOT EXISTS(SELECT 1 FROM lv_identity.membership_role r
+  JOIN lv_identity.role_permission rp ON rp.role=r.role
+  WHERE r.tenant_id=t AND r.user_id=w.requested_by AND rp.permission::text='administer') OR NOT EXISTS(SELECT 1 FROM lv_identity.app_user u JOIN lv_identity.membership m ON m.user_id=u.id WHERE u.id=w.requested_by AND u.disabled_at IS NULL AND m.tenant_id=t AND m.status='ACTIVE')
+     OR (w.kind='EXCHANGE' AND c.state<>'EXCHANGING') OR (w.kind='SYNC' AND c.state<>'ACTIVE')) THEN
+  UPDATE lv.provider_job SET state='DENIED',fence=fence+1,payload=NULL,last_error=CASE WHEN w.kind='SYNC' AND c.state<>'ACTIVE' THEN 'CONNECTION_NOT_ACTIVE' ELSE 'REQUESTER_REVOKED' END,finished_at=clock_timestamp() WHERE tenant_id=t AND id=j RETURNING * INTO w;
+  PERFORM lv.provider_settle_connection(w,w.last_error);RETURN NULL;
+ END IF;
+ UPDATE lv.provider_job SET state='CLAIMED',fence=fence+1,attempts=attempts+1,lease_owner=worker,lease_expires_at=clock_timestamp()+interval '120 seconds',started_at=coalesce(started_at,clock_timestamp())
+  WHERE tenant_id=t AND id=j RETURNING * INTO w;
+ SELECT * INTO k FROM lv.provider_credential WHERE tenant_id=t AND connection_id=w.connection_id;
+ RETURN jsonb_build_object('fence',w.fence,'kind',w.kind,'connection_id',w.connection_id::text,'realm_id',c.realm_id,'progress',w.progress,'attempts',w.attempts,
+  'payload_hex',CASE WHEN w.kind='EXCHANGE' THEN encode(w.payload,'hex') END,
+  'state_hash',CASE WHEN w.kind='EXCHANGE' THEN (SELECT o.state_hash FROM lv.provider_oauth_state o WHERE o.tenant_id=t AND o.connection_id=w.connection_id AND o.outcome='CODE_RECEIVED') END,
+  'credential',CASE WHEN k.connection_id IS NULL THEN NULL ELSE jsonb_build_object('kek_id',k.kek_id,'envelope_hex',encode(k.envelope,'hex'),'token_version',k.token_version,
+   'access_expires_at',extract(epoch FROM k.access_expires_at)::bigint,'refresh_expires_at',extract(epoch FROM k.refresh_expires_at)::bigint) END);
+END $$;

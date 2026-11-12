@@ -53,3 +53,13 @@ backup-retention window: database backups may still contain old envelopes.
 The tools do not delete ciphertext in backups or WAL and do not establish an
 offsite backup policy. This protocol requires an operator-run deployment drill
 before production use.
+
+## Read-only background provider jobs
+
+The provider API checks the initiating session's step-up before enqueueing work.
+The dedicated worker re-checks current administer membership and user status, not
+a nonexistent browser session in its database connection. An already-authorized
+read-only SANDBOX job may outlive the initiating session's step-up lifetime;
+removing the actor's role or membership still denies the job at claim. This
+asynchronous authorization lifetime is a PROPOSED policy, limited to the existing
+read-only SANDBOX connector. It does not authorize any provider or BOOKS write.
