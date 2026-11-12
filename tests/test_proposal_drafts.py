@@ -309,15 +309,16 @@ def test_commit_time_validator_refuses_a_revision_without_its_audit_event(databa
 # ------------------------------------------------------------------------------------------- authentication and authorization
 def test_writes_need_a_session_csrf_and_propose_and_the_administrator_still_has_no_propose(database, api, world):
     p = create(signed_in(api, world, 'analyst'), draft(world)).json()
+    no_csrf = signed_in(api, world, 'analyst'); del no_csrf.headers['X-CSRF-Token']
+    cross_origin = signed_in(api, world, 'analyst')
+    refused_actors = [signed_in(api, world, name) for name in ('controller', 'admin')]
     rows, before = proposal_rows(database, world), fingerprint(database, exclude={'lv_identity.audit_event', 'lv_identity.audit_chain_head'})
     problem(create(client(api), draft(world)), 401, 'UNAUTHENTICATED')
     problem(edit(client(api), p['id'], {'rationale': 'x'}), 401, 'UNAUTHENTICATED')
-    no_csrf = signed_in(api, world, 'analyst'); del no_csrf.headers['X-CSRF-Token']
     assert 'CSRF' in problem(create(no_csrf, draft(world)), 403, 'PERMISSION_DENIED')['detail']
-    assert 'cross-origin' in problem(create(signed_in(api, world, 'analyst'), draft(world), Origin='https://evil.example'), 403,
+    assert 'cross-origin' in problem(create(cross_origin, draft(world), Origin='https://evil.example'), 403,
                                      'PERMISSION_DENIED')['detail']
-    for name in ('controller', 'admin'):
-        c = signed_in(api, world, name)
+    for c in refused_actors:
         assert problem(create(c, draft(world)), 403, 'PERMISSION_DENIED')['detail'] == 'requires propose'
         bootstrap = draft(world, operations=[{'type': 'BootstrapLedger', 'schema_version': 1}])
         problem(create(c, bootstrap), 403, 'PERMISSION_DENIED')
